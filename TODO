@@ -1,6 +1,5 @@
 TODO
 * Figure out how to fix the error when running rake test
-* Adding -L and -l entries 
 * Allowing use of "have_library"
 * Other mkmf functions?
 
@@ -14,6 +13,7 @@ WAITING ON RICE
 
 DONE
 * Adding -I entries
+* Adding -L and -l entries 
 * Adding classes to global (define_class)
 * Adding modules
 * Adding methods to modules (define_module_function)
