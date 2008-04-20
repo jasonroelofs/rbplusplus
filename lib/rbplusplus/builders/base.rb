@@ -1,5 +1,5 @@
 module RbPlusPlus
-  module Builder
+  module Builders
 
     # Top class for all source generation classes. A builder has three seperate
     # code "parts" to fill up for the source writer:

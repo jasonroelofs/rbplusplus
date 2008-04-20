@@ -1,6 +1,3 @@
-require 'builders'
-require 'writers'
-
 module RbPlusPlus
 
   # This is the starting class for Rb++ wrapping. All Rb++ projects start with this
@@ -134,7 +131,7 @@ module RbPlusPlus
       raise ConfigurationError.new("Must specify working directory") unless @working_dir
       raise ConfigurationError.new("Must specify which sources to wrap") unless @parser
 
-      @builder = ExtensionBuilder.new(@name, @node || @parser)
+      @builder = Builders::ExtensionBuilder.new(@name, @node || @parser)
       @builder.modules = @modules
       @builder.build
     end
@@ -145,11 +142,11 @@ module RbPlusPlus
       prepare_working_dir
       
       # Create the code
-      writer_class = @writer_mode == :multiple ? MultipleFilesWriter : SingleFileWriter
+      writer_class = @writer_mode == :multiple ? Writers::MultipleFilesWriter : Writers::SingleFileWriter
       writer_class.new(@builder, @working_dir).write
 
       # Create the extconf.rb
-      extconf = ExtensionWriter.new(@builder, @working_dir)
+      extconf = Writers::ExtensionWriter.new(@builder, @working_dir)
       extconf.includes = @includes
       extconf.library_paths = @lib_paths
       extconf.libraries = @libraries

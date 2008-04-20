@@ -1,5 +1,5 @@
 module RbPlusPlus
-  module Writer
+  module Writers
 
     # Base class for all source code writers
     class Base

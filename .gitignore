@@ -1,0 +1,5 @@
+*.swp
+html
+doc
+pkg
+test/generated
