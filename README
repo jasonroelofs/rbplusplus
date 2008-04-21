@@ -1,0 +1,146 @@
+== What is rb++?
+
+Rb++ makes it almost trivially easy to create Ruby extensions for any C
+or C++ library / code. In the simplest of cases, there is no need to ever
+touch C, everything is done in a very simple and clean Ruby API.
+
+Note: For those familiary with py++, the similarities are minimal. 
+Outside of the purpose of both libraries, rb++ was built from scratch to 
+provide a Ruby-esque query and wrapping API instead of being a port. However, 
+many thanks to Roman for his work, the major inspiration for this library.
+
+== Requirements
+
+* rbgccxml
+* rice (http://rice.rubyforge.org)
+
+== Installation
+
+The only difficult part of this installation will be installing GCC-XML for
+rbgccxml. Please see http://rbplusplus.rubyforge.org/rbgccxml for instructions
+on how to set this up. 
+
+Rice builds and installs on any *nix system, including Mac OS X and Cygwin. Rice,
+and therefor rb++ will not work on Windows outside of Cygwin.
+
+Then it's a simple last step:
+
+  gem install rbplusplus
+
+== The Project
+
+For bug reports, patch submissions, project annoucements and downloads, visit rb++'s rubyforge
+project page at:
+
+  http://www.rubyforge.org/projects/rbplusplus
+
+Feel free to post help request, hints, or general ideas on the forums.
+
+Rb++'s source is in a git repository hosted on github:
+
+Project page: 
+
+  http://github.com/jameskilton/rbgplusplus/tree/master
+
+Clone with: 
+
+  git clone git://github.com/jameskilton/rbplusplus.git
+
+== Getting Started
+
+All rb++ projects start off with the Extension class:
+
+  Extension.new "extension_name"
+
+The one requirement on the C++ code for rb++ to easily handle it, is that the code that's
+to be wrapped is in its own namespace. If the code to be wrapped is in the global namespace,
+then you should build a seperate header file that includes all the files to be wrapped 
+inside of a namespace:
+
+  namespace to_wrap {
+    #include "file1.h"
+    #include "file2.h"
+    #include "file3.h"
+    ...
+  }
+
+Extension has two ways of being used: block syntax for simple projects and immediate
+syntax for more control over the whole process.
+
+=== Block Mode
+
+For basic reading and wrapping needs, the block syntax makes rb++ very easy to write and
+read
+
+  Extension.new "extension" do |e|
+    ...
+  end
+
+=== Immediate Mode
+
+For those that want more fine-grained control over the parsing / building / writing / compiling
+process, immediate syntax is also available
+
+  e = Extension.new "extension"
+  ...
+  e.build    # => Generates the C++ code
+  e.write    # => Writes out to files
+  e.compile  # => Compiles into an extension
+
+Please note the ##build ##write and ##compile methods. These are required for an extension to be
+built. These calls are made automatically in Block Mode. See the RbPlusPlus::Extension class
+for more details.
+
+== Basic Usage
+
+For the most basic usage, where there are C++ header files to wrap and it's simple enough
+to not need extra processing, there are only two required calls: Extension.sources and 
+Extension.namespace. Extension.sources has a few ways to be called (as RbGCCXML.parse):
+
+  # A single header file
+  Extension.new "extension" do |e|
+    e.sources "/path/to/header.h"
+  end
+
+  # An array of header files
+  Extension.new "extension" do |e|
+    e.sources ["/path/to/header.h", "/path/there.h"]
+  end
+
+  # A glob
+  Extension.new "extension" do |e|
+    e.sources "/path/to/*.h"
+  end
+
+  # An array of globs
+  Extension.new "extension" do |e|
+    e.sources ["/path/to/*.h", "/elsewhere/*.hpp"]
+  end
+
+For extensions that need to include other files, or link to libraries elsewhere in the system,
+Extension.sources takes that information as well
+
+  Extension.new "extension" do |e|
+    e.sources "my_file.h",
+      :include_paths => header_or_array_of_headers (-I),
+      :library_paths => path_or_array_of_paths_where_libraries_are_found (-L),
+      :libraries => name_or_array_of_libraries_to_link (-l)
+  end
+
+One special method that's also required in the Immediate Mode is Extension.working_dir=. This
+specifies where rb++ will put the generated code. In Block Mode, the default is to put the code
+in __FILE__/generated, but as rb++ cannot ascertain the __FILE__ information without a block, 
+it will need to be stated explicitly. This does work in Block Mode, it will just overrite the 
+default.
+
+  e = Extension.new "extension" 
+  e.working_dir = "/path/to/generate/files/"
+
+The last required method is Extension.namespace. As mentioned above, all extensions 
+are built from code in a given C++ namespace. That namespace needs to be specified before
+Rb++ will start any processing
+
+  # Wrap all code under the 'to_wrap' namespace
+  Extension.new "extension" do |e|
+    e.namespace "to_wrap"
+  end
