@@ -83,10 +83,11 @@ module RbPlusPlus
     #  +include_paths+:: An array or string of full paths to be added as -I flags
     #  +library_paths+:: An array or string of full paths to be added as -L flags
     def sources(dirs, options = {})
+      parser_options = {}
 
       if (paths = options.delete(:include_paths))
-        RbGCCXML.add_include_paths(paths)
         @includes << paths
+        parser_options[:includes] = @includes
       end
 
       if (lib_paths = options.delete(:library_paths))
@@ -97,7 +98,7 @@ module RbPlusPlus
         @libraries << libs
       end
 
-      @parser = RbGCCXML.parse(dirs)
+      @parser = RbGCCXML.parse(dirs, parser_options)
     end
 
     # Set a namespace to be the main namespace used for this extension.
