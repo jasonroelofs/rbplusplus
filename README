@@ -28,7 +28,7 @@ Everything is installed with a simple line:
 For bug reports, patch submissions, project annoucements and downloads, visit rb++'s rubyforge
 project page at:
 
-  http://www.rubyforge.org/projects/rbplusplus
+http://www.rubyforge.org/projects/rbplusplus
 
 Feel free to post help request, hints, or general ideas on the forums.
 
@@ -36,11 +36,11 @@ Rb++'s source is in a git repository hosted on github:
 
 Project page: 
 
-  http://github.com/jameskilton/rbgplusplus/tree/master
+http://github.com/jameskilton/rbgplusplus/tree/master
 
 Clone with: 
 
-  git clone git://github.com/jameskilton/rbplusplus.git
+git clone git://github.com/jameskilton/rbplusplus.git
 
 == Getting Started
 

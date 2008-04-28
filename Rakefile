@@ -37,7 +37,7 @@ task :upload_web => :rdoc  do |t|
     mkdir "publish"
     mkdir "publish/rbplusplus"
   end
-  sh "svn export --force website publish/"
+  sh "cp -r website publish/"
   sh "cp -r html/* publish/rbplusplus/"
 	Rake::SshDirPublisher.new("#{RUBYFORGE_USERNAME}@rubyforge.org", PROJECT_WEB_PATH, "publish").upload
   rm_rf "publish"
