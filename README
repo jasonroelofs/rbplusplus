@@ -16,14 +16,10 @@ many thanks to Roman for his work, the major inspiration for this library.
 
 == Installation
 
-The only difficult part of this installation will be installing GCC-XML for
-rbgccxml. Please see http://rbplusplus.rubyforge.org/rbgccxml for instructions
-on how to set this up. 
-
 Rice builds and installs on any *nix system, including Mac OS X and Cygwin. Rice,
 and therefor rb++ will not work on Windows outside of Cygwin.
 
-Then it's a simple last step:
+Everything is installed with a simple line:
 
   gem install rbplusplus
 
