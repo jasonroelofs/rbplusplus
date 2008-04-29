@@ -1,5 +1,9 @@
 module RbPlusPlus
   module Writers
+
+    # Writes out the code for building the extension.
+    # This writer takes care of building the extconf.rb
+    # file with the appropriate options.
     class ExtensionWriter < Base
 
       # List of -I directives

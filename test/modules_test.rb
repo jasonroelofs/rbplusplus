@@ -16,9 +16,9 @@ context "Extension with modules" do
         e.module "Empty" do |m|
         end
 
-        e.module "Wrapper" do |m|
-          m.namespace "classes"
-        end
+        # Can use without a block
+        wrapper = e.module "Wrapper"
+        wrapper.namespace "classes"
 
         # Uncomment when implicit self change is fixed
 #        e.module "Functions" do |m|

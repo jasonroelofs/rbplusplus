@@ -8,7 +8,7 @@ module RbPlusPlus
   #   end
   #
   # "extension_name" is what the resulting Ruby library will be named, aka in your code
-  # you will 
+  # you will have
   #
   #   require "extension_name"
   #
@@ -80,8 +80,9 @@ module RbPlusPlus
     #
     # Options can be the following:
     #
-    #  +include_paths+:: An array or string of full paths to be added as -I flags
-    #  +library_paths+:: An array or string of full paths to be added as -L flags
+    # * <tt>:include_paths</tt> - An array or string of full paths to be added as -I flags
+    # * <tt>:library_paths</tt> - An array or string of full paths to be added as -L flags
+    # * <tt>:libraries</tt> - An array or string of full paths to be added as -l flags
     def sources(dirs, options = {})
       parser_options = {}
 
@@ -109,19 +110,18 @@ module RbPlusPlus
       @node = @parser.namespaces(name)
     end
 
-    # Specify extra include directories for the compile step
-    def add_include(inc_dir)
-    end
-
     # Mark that this extension needs to create a Ruby module of
-    # a give name
+    # a give name. Like Extension, this can be used with or without
+    # a block.
     def module(name, &block)
-      @modules << RbModule.new(name, @parser, &block)
+      m = RbModule.new(name, @parser, &block)
+      @modules << m
+      m
     end
 
     # How should we write out the source code? This can be one of two modes:
-    #   :multiple (default) - Each class and module gets it's own set of hpp/cpp files
-    #   :single - Everything gets written to a single file
+    # * <tt>:multiple</tt> (default) - Each class and module gets it's own set of hpp/cpp files
+    # * <tt>:single</tt> - Everything gets written to a single file
     def writer_mode(mode)
       raise "Unknown writer mode #{mode}" unless [:multiple, :single].include?(mode)
       @writer_mode = mode

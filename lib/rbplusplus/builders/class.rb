@@ -1,6 +1,7 @@
 module RbPlusPlus
   module Builders
-    # This class handles generating source for a given class
+
+    # This class handles generating source for Class nodes
     class ClassBuilder < Base
 
       # Different initializer to keep things clean
