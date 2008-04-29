@@ -46,6 +46,9 @@ git clone git://github.com/jameskilton/rbplusplus.git
 
 All rb++ projects start off with the Extension class:
 
+  require 'rbplusplus'
+  include RbPlusPlus
+
   Extension.new "extension_name"
 
 The one requirement on the C++ code for rb++ to easily handle it, is that the code that's
