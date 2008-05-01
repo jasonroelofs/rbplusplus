@@ -2,8 +2,7 @@ require File.dirname(__FILE__) + '/test_helper'
 
 context "Extension with globally available functions" do
 
-  # Implicit self
-  xspecify "should make functions available" do
+  specify "should make functions available" do
     Extension.new "functions" do |e|
       e.sources full_dir("headers/functions.h")
       e.namespace "functions"
@@ -16,7 +15,7 @@ context "Extension with globally available functions" do
     end
 
     should.not.raise NameError do
-      test2.should.be.close 1.0 
+      assert_in_delta 1.0, test2(2.0), 0.001
     end
 
     should.not.raise NameError do

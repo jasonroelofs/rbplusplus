@@ -18,7 +18,8 @@ module RbPlusPlus
         if @node.name != "::"
           @node.functions.each do |func|
             includes << "#include \"#{func.file_name(false)}\""
-            body << "\tdefine_global_function(\"#{Inflector.underscore(func.name)}\", &#{func.qualified_name});"
+            wrapper_name = build_function_wrapper(func)
+            body << "\tdefine_global_function(\"#{Inflector.underscore(func.name)}\", &#{wrapper_name});"
           end
 
           build_classes

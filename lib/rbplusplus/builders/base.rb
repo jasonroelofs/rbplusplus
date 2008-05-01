@@ -64,7 +64,7 @@ module RbPlusPlus
       # Builders should use to_s to make finishing touches on the generated
       # code before it gets written out to a file.
       def to_s
-        [self.includes.uniq, "", self.declarations, "", self.body].flatten.join("\n")
+        [self.includes.flatten.uniq, "", self.declarations, "", self.body].flatten.join("\n")
       end
 
       # Get the full qualified name of the related gccxml node
@@ -80,6 +80,37 @@ module RbPlusPlus
           builders << builder
         end
       end
+
+      # Compatibility with Rice 1.0.1's explicit self requirement, build a quick
+      # wrapper that includes a self and discards it, forwarding the call as needed.
+      #
+      # Returns: the name of the wrapper function
+      def build_function_wrapper(function)
+        wrapper_func = "wrap_#{function.qualified_name.gsub(/::/, "_")}"
+
+        proto_string = ["Rice::Object self"]
+        call_string = []
+
+        function.arguments.map{|arg| [arg.cpp_type.name, arg.name]}.each do |parts|
+          type = parts[0]
+          name = parts[1]
+          proto_string << "#{type} #{name}"
+          call_string << "#{name}"
+        end
+
+        proto_string = proto_string.join(",")
+        call_string = call_string.join(",")
+        return_type = function.return_type.name
+        returns = "" if return_type == "void"
+        returns ||= "return"
+
+        declarations << "#{return_type} #{wrapper_func}(#{proto_string}) {"
+        declarations << "\t#{returns} #{function.qualified_name}(#{call_string});"
+        declarations << "}"
+
+        wrapper_func
+      end
+
     end
   end
 end

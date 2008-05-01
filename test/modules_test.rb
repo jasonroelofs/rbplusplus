@@ -13,6 +13,8 @@ context "Extension with modules" do
           full_dir("headers/Subtracter.hpp")
         ]
 
+        e.writer_mode :single
+
         e.module "Empty" do |m|
         end
 
@@ -20,10 +22,9 @@ context "Extension with modules" do
         wrapper = e.module "Wrapper"
         wrapper.namespace "classes"
 
-        # Uncomment when implicit self change is fixed
-#        e.module "Functions" do |m|
-#          m.namespace "functions"
-#        end
+        e.module "Functions" do |m|
+          m.namespace "functions"
+        end
 
         e.module "Nested" do |m|
           m.module "Nested" do |n|
@@ -51,7 +52,7 @@ context "Extension with modules" do
     a.get_class_name.should == "Adder"
   end
 
-  xspecify "should wrap up C++ functions in the module" do
+  specify "should wrap up C++ functions in the module" do
     assert defined?(Functions)
     Functions::test2(2).should.be.close 1.0, 0.001
     Functions::test3(4, 6).should == 4

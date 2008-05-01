@@ -48,7 +48,8 @@ module RbPlusPlus
           includes << "#include \"#{func.file_name(false)}\""
 
           func_name = Inflector.underscore(func.name)
-          body << "\t#{self.rice_variable}.define_module_function(\"#{func_name}\", &#{func.qualified_name});"
+          wrapped_name = build_function_wrapper(func)
+          body << "\t#{self.rice_variable}.define_module_function(\"#{func_name}\", &#{wrapped_name});"
         end
       end
 

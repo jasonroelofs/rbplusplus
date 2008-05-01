@@ -3,6 +3,9 @@
  * parsing and querying
  */
 
+#ifndef __FUNCTIONS__H__
+#define __FUNCTIONS__H__
+
 namespace functions {
 
   void test1() { }
@@ -12,3 +15,5 @@ namespace functions {
   int test3(int arg1, float arg2) { return arg1; }
 
 }
+
+#endif

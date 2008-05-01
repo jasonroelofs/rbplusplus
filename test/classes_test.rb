@@ -33,7 +33,7 @@ context "Extension with wrapped classes" do
     adder.get_class_name.should == "Adder"
   end
 
-  # Implicit self
+  # Explicit self
   xspecify "should properly wrap static methods as class methods" do
     Adder.do_adding(1, 2, 3, 4, 5).should == 15
   end
