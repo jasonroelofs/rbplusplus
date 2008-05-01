@@ -53,7 +53,6 @@ module RbPlusPlus
           # Modifications to this current node's code:
           # 
           # * Add a register prototype to the header file
-          # * Move node includes into the header
           # * Set include in node to the header file
           # * Wrap the body in a register method
 
@@ -61,13 +60,11 @@ module RbPlusPlus
             hpp.puts "#ifndef #{include_guard}"
             hpp.puts "#define #{include_guard}"
             hpp.puts ""
-            hpp.puts node.includes.uniq.join("\n")
-            hpp.puts ""
             hpp.puts "void #{register_func}(#{register_func_prototype});"
             hpp.puts "#endif"
           end
 
-          node.includes = [hpp_include]
+          node.includes << hpp_include
 
           node.body = [
             "void #{register_func}(#{register_func_prototype}) {",

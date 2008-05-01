@@ -13,7 +13,7 @@ context "Extension with modules" do
           full_dir("headers/Subtracter.hpp")
         ]
 
-        e.writer_mode :single
+#        e.writer_mode :single
 
         e.module "Empty" do |m|
         end
