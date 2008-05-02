@@ -160,6 +160,9 @@ a ##namespace call. This defines which C++ code will be wrapped into this module
 This will create an extension with the module +MyModule+ in which all the C++ code under the +my_module+
 namespace will be wrapped.
 
+== Possible 'Gotchas'
+
+* Method / function names are underscored by default. So <tt>YourClass::doSomething</tt> becomes <tt>YourClass#do_something</tt>
 
 == Misc Options
 
@@ -174,7 +177,7 @@ By default, rb++ will write out the extension in multiple files, following the c
   ModuleName_ClassName.rb.cpp
   ...
 
-rb++ can instead write out the extension code in a single file with Extension.writer_mode
+rb++ can instead write out the extension code in a single file (extension_name.cpp) with Extension.writer_mode
 
   Extension.new "extension" do |e|
     e.writer_mode :single 
