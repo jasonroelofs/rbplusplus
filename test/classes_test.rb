@@ -34,7 +34,7 @@ context "Extension with wrapped classes" do
   end
 
   # Explicit self
-  xspecify "should properly wrap static methods as class methods" do
+  specify "should properly wrap static methods as class methods" do
     Adder.do_adding(1, 2, 3, 4, 5).should == 15
   end
 

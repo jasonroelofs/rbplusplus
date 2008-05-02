@@ -39,9 +39,14 @@ module RbPlusPlus
         # Methods
         node.methods.each do |method|
           m = "define_method"
-          m = "define_singleton_method" if method.static?
+          name = method.qualified_name
 
-          body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{method.qualified_name});"
+          if method.static?
+            m = "define_singleton_method"
+            name = build_function_wrapper(method)
+          end
+
+          body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"
         end
 
         # Nested Classes

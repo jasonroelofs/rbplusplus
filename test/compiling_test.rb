@@ -82,8 +82,4 @@ context "Compiler settings" do
     contents.should.match(%r(-lwonko))
     contents.should.match(%r(-lprankit))
   end
-
-  xspecify "should be able to use various mkmf methods" do
-
-  end
 end
