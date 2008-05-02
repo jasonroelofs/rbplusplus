@@ -7,10 +7,6 @@ STARTED
 * Adding constructor
   - Test constructor arguments
 
-WAITING ON RICE
-* Adding global methods (Kernel-level methods)
-* Adding class-level methods (define_singleton_method)
-
 DONE
 * Adding -I entries
 * Adding -L and -l entries 
@@ -22,3 +18,8 @@ DONE
 * Adding classes to classes (ad infinitum)
 * Look into file naming when dealing with Modules
 * Nested Modules
+
+No longer waiting on rice - just building a wrapper myself now. 
+* Adding global methods (Kernel-level methods)
+* Adding class-level methods (define_singleton_method)
+
