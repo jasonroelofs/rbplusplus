@@ -25,6 +25,7 @@ module RbPlusPlus
         lib_str = @libraries.flatten.uniq.map {|i| "-l#{i}"}.join(" ")
 
         File.open(extconf, "w+") do |file|
+          file.puts "require \"rubygems\""
           file.puts "require \"mkmf-rice\""
           file.puts %Q($CPPFLAGS = $CPPFLAGS + " -I#{working_dir} #{inc_str} #{lib_path_str} #{lib_str}")
           file.puts "create_makefile(\"#{builder.name}\")"
