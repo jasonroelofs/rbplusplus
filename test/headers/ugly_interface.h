@@ -79,6 +79,9 @@ namespace I_LEARN_C {
     inline int mod(int a, int b) {
       return a%b;
     }
+    inline int mod2(int a, int b) {
+      return a%b;
+    }
     class Modder {
     public:
       Modder() {}

@@ -47,6 +47,7 @@ context "Ugly interfaces cleaner" do
         modder = node.namespaces("I_LEARN_C").classes("Modder")
         m.map "Modulus", modder
         modder.map "mod", node.namespaces("I_LEARN_C").functions("mod")
+        modder.map "mod", node.namespaces("I_LEARN_C").functions("mod2").as_method
         
       end
     end
@@ -96,6 +97,10 @@ context "Ugly interfaces cleaner" do
     
     should.not.raise NoMethodError do
       UI::Modulus.mod(3,2).should == 1
+    end
+    
+    should.raise TypeError do
+      UI::Modulus.new.mod(2)
     end
   end
 end
