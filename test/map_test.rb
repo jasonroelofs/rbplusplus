@@ -43,6 +43,7 @@ context "Ugly interfaces cleaner" do
         #module mapping
         m.include bad_ui
         
+        #mapping stray functions to singleton methods
         modder = node.namespaces("I_LEARN_C").classes("Modder")
         m.map "Modulus", modder
         modder.map "mod", node.namespaces("I_LEARN_C").functions("mod")

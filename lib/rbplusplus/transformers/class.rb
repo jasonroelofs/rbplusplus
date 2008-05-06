@@ -16,6 +16,7 @@ end
 
 module RbGCCXML
   class Function
+    # always true for functions
     def static?
       true
     end

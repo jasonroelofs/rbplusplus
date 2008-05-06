@@ -1,5 +1,6 @@
 module RbPlusPlus
  class GlobalNamespace < RbGCCXML::Namespace
+    #accepts the gccxml parser
     def initialize(parser)
       @functions = parser.functions
       @functions = RbGCCXML::QueryResult.new @functions.select { |fun| !(/^__built/ === fun.name) } # filter out builtin functions
@@ -8,14 +9,17 @@ module RbPlusPlus
       @structs = parser.structs
     end
     
+    # parent always returns the GlobalNamespace
     def parent
       self
     end
     
+    # not used
     def name
       "GlobalNamespace"
     end
     
+    # GlobalNamespace has no qualified name
     def qualified_name
       ""
     end
