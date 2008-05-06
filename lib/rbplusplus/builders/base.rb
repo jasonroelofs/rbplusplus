@@ -86,6 +86,7 @@ module RbPlusPlus
       #
       # Returns: the name of the wrapper function
       def build_function_wrapper(function)
+        return if function.ignored?
         wrapper_func = "wrap_#{function.qualified_name.gsub(/::/, "_")}"
 
         proto_string = ["Rice::Object self"]

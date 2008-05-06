@@ -1,0 +1,27 @@
+module RbGCCXML
+  class Function
+    def ignore
+      @ignored = true
+    end
+    
+    def ignored?
+      @ignored || false
+    end
+  end
+end
+
+module RbPlusPlus
+  class FunctionReference
+    def initialize(from)
+      @delegate = from
+    end
+    
+    def method_missing(name, *args)
+      @delegate.send name, *args
+    end
+    
+    def ignored?
+      false
+    end
+  end
+end

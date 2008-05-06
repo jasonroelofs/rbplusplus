@@ -109,6 +109,14 @@ module RbPlusPlus
     def namespace(name)
       @node = @parser.namespaces(name)
     end
+ 
+    # Sets the global namespace and returns it.  Calling this will add all functions, classes, structs, and namespaces
+    # from the global namespace to the parser, provided they are not already specified by namespace()
+    #
+    def global_namespace
+      @global = GlobalNamespace.new(@parser)
+    end
+    
 
     # Mark that this extension needs to create a Ruby module of
     # a give name. Like Extension, this can be used with or without
@@ -132,7 +140,7 @@ module RbPlusPlus
       raise ConfigurationError.new("Must specify working directory") unless @working_dir
       raise ConfigurationError.new("Must specify which sources to wrap") unless @parser
 
-      @builder = Builders::ExtensionBuilder.new(@name, @node || @parser)
+      @builder = Builders::ExtensionBuilder.new(@name, @node || @global || @parser)
       @builder.modules = @modules
       @builder.build
     end

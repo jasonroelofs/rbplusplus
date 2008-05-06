@@ -5,7 +5,7 @@ namespace classes {
   class TestClass {
     public: 
       TestClass() {  }
-
+      
       class InnerClass {
         public:
           InnerClass() {}

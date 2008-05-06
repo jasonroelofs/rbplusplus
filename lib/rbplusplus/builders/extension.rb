@@ -17,6 +17,7 @@ module RbPlusPlus
         # Explicitly ignore anything from the :: namespace
         if @node.name != "::"
           @node.functions.each do |func|
+            next if func.ignored? 
             includes << "#include \"#{func.file_name(false)}\""
             wrapper_name = build_function_wrapper(func)
             body << "\tdefine_global_function(\"#{Inflector.underscore(func.name)}\", &#{wrapper_name});"

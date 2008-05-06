@@ -29,8 +29,8 @@ module RbPlusPlus
         body << mod_defn
 
         # If a namespace has been given to this module, find and wrap the appropriate code
+        build_functions unless @module.functions.empty?
         if @node
-          build_functions
           build_classes
         end
 
@@ -44,7 +44,8 @@ module RbPlusPlus
 
       # Process functions to be added to this module
       def build_functions
-        @node.functions.each do |func|
+        @module.functions.each do |func|
+          next if func.ignored? # fine grained function filtering
           includes << "#include \"#{func.file_name(false)}\""
 
           func_name = Inflector.underscore(func.name)
