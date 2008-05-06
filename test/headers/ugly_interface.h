@@ -14,9 +14,9 @@ f = function
 c = class
 
   m f c
-F   x 
+F    
 M x x x
-C   x x
+C   x 
 
 */
 
@@ -50,6 +50,8 @@ class C_UIVector {
 namespace __UI {
   namespace BAD_UI {
     class Multiplier {
+    public:
+      Multiplier() {}
       inline int multiply(int a, int b) {
         return a*b;
       }
@@ -72,5 +74,16 @@ struct C_STRUCT_Quaternion {
       return -1;
     }
 };
+
+namespace I_LEARN_C {
+    inline int mod(int a, int b) {
+      return a%b;
+    }
+    class Modder {
+    public:
+      Modder() {}
+      
+    };
+} 
 
 #endif

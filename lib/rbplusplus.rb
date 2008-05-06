@@ -32,7 +32,7 @@ module RbPlusPlus
 end
 
 require 'rbplusplus/transformers/node'
-require 'rbplusplus/transformers/global_namespace'
-require 'rbplusplus/transformers/function'
+require 'rbplusplus/transformers/class'
 require 'rbplusplus/transformers/module'
+require 'rbplusplus/transformers/global_namespace'
 
