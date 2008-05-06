@@ -38,6 +38,7 @@ module RbPlusPlus
 
         # Methods
         node.methods.each do |method|
+         next if method.ignored?
           m = "define_method"
           name = method.qualified_name
 
@@ -51,6 +52,7 @@ module RbPlusPlus
 
         # Nested Classes
         node.classes.each do |klass|
+          next if klass.ignored?
           b = ClassBuilder.new(self, klass)
           b.build
           builders << b

@@ -31,6 +31,7 @@ module RbPlusPlus
   end
 end
 
+require 'rbplusplus/transformers/node'
 require 'rbplusplus/transformers/global_namespace'
 require 'rbplusplus/transformers/function'
 require 'rbplusplus/transformers/module'

@@ -1,19 +1,9 @@
-module RbGCCXML
-  class Function
-    def ignore
-      @ignored = true
-    end
-    
-    def ignored?
-      @ignored || false
-    end
-  end
-end
-
 module RbPlusPlus
   class FunctionReference
-    def initialize(from)
+    attr_reader :name
+    def initialize(from, name)
       @delegate = from
+      @name = name
     end
     
     def method_missing(name, *args)
@@ -23,5 +13,6 @@ module RbPlusPlus
     def ignored?
       false
     end
+    
   end
 end

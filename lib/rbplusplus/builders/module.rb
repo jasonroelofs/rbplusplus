@@ -30,9 +30,8 @@ module RbPlusPlus
 
         # If a namespace has been given to this module, find and wrap the appropriate code
         build_functions unless @module.functions.empty?
-        if @node
-          build_classes
-        end
+        build_classes(@module.classes) unless @module.classes.empty?
+   
 
         # Build each inner module
         @module.modules.each do |mod|

@@ -73,8 +73,10 @@ module RbPlusPlus
       end
 
       # Register all classes
-      def build_classes
-        @node.classes.each do |klass|
+      def build_classes(classes = nil)
+        classes ||= @node.classes
+        classes.each do |klass|
+          next if klass.ignored?
           builder = ClassBuilder.new(self, klass)
           builder.build
           builders << builder

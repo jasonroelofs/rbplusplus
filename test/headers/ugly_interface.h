@@ -37,6 +37,7 @@ class C_UIVector {
   private:
     int x;
   public:
+    C_UIVector() {}
     int x_() {
       return this->x;
     }
@@ -45,11 +46,23 @@ class C_UIVector {
     }
 };
 
+
 namespace __UI {
   namespace BAD_UI {
-    inline int multiply(int a, int b) {
-      return a*b;
+    class Multiplier {
+      inline int multiply(int a, int b) {
+        return a*b;
+      }
+    };
+    inline int multiply(int a, int b, int c) {
+      return a*b*c;
     }
+  }
+}
+
+namespace DMath {
+  inline float divide(float a,float b) {
+    return a/b;
   }
 }
 
