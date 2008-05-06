@@ -34,7 +34,7 @@ context "Ugly interfaces cleaner" do
         
     #    m.map "math_add", node.functions("uiAdd") -- doesn't work due to duplicate wrap_ name generation
         m.map "Vector", node.classes("C_UIVector")
-        
+        m.include bad_ui
       end
     end
     
@@ -74,6 +74,11 @@ context "Ugly interfaces cleaner" do
     
     should.not.raise NoMethodError do
       UI::Math::divide(2,1).should == 2
+    end
+    
+    should.not.raise Error do
+      UI::multiply(1,2,3).should == 6
+      UI::Multiplier.new.multiply(1,2).should == 2
     end
   end
 end
