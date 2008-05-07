@@ -58,6 +58,7 @@ make Ruby wrapping extensions easier to write than ever.
   END
 
   s.add_dependency "rbgccxml", "0.1"
+  s.add_dependency "rice", "1.0.1"
 
   patterns = [
     'TODO',
