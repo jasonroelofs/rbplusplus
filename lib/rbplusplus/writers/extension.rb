@@ -27,10 +27,10 @@ module RbPlusPlus
         @includes ||= []
 
         inc_str = @includes.flatten.uniq.map {|i| "-I#{i}"}.join(" ")
-        inc_str += " " + @cxxflags.join(" ")
+        inc_str += " " + @cxxflags.flatten.join(" ")
         lib_path_str = @library_paths.flatten.uniq.map {|i| "-L#{i}"}.join(" ")
         lib_str = @libraries.flatten.uniq.map {|i| "-l#{i}"}.join(" ")
-        lib_str += " " + @ldflags.join(" ")
+        lib_str += " " + @ldflags.flatten.join(" ")
 
         File.open(extconf, "w+") do |file|
           file.puts "require \"rubygems\""
