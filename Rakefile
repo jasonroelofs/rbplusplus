@@ -3,7 +3,7 @@ require 'rake/rdoctask'
 require 'rake/contrib/sshpublisher'
 
 PROJECT_NAME = "rb++"
-RBPLUSPLUS_VERSION = "0.1"
+RBPLUSPLUS_VERSION = "0.1.1"
 
 task :default => :test
 
