@@ -82,4 +82,48 @@ context "Compiler settings" do
     contents.should.match(%r(-lwonko))
     contents.should.match(%r(-lprankit))
   end
+
+  specify "can add extra cxxflags for gccxml and compiling" do
+    e = Extension.new "flags_test" 
+    e.working_dir = full_dir("generated")
+    e.sources full_dir("headers/empty.h"),
+      :cxxflags => "-I/i/love/scotch -D__AND_DEFINE_THAT"
+    e.build
+    e.write
+
+    ext_file = full_dir("generated/extconf.rb")
+
+    contents = File.read(ext_file)
+
+    contents.should.match(%r(-I/i/love/scotch))
+    contents.should.match(%r(-D__AND_DEFINE_THAT))
+  end
+
+  specify "can add extra ldflags for gccxml and compiling" do
+    e = Extension.new "flags_test" 
+    e.working_dir = full_dir("generated")
+    e.sources full_dir("headers/empty.h"),
+      :ldflags => "-R/wootage/to/you -lthisandthat -nothing_here"
+    e.build
+    e.write
+
+    ext_file = full_dir("generated/extconf.rb")
+
+    contents = File.read(ext_file)
+
+    contents.should.match(%r(-R/wootage/to/you))
+    contents.should.match(%r(-lthisandthat))
+    contents.should.match(%r(-nothing_here))
+  end
+
+  specify "should pass cxxflags to rbgccxml" do
+    should.not.raise do
+      e = Extension.new "parsing_test" 
+      e.working_dir = full_dir("generated")
+      e.sources full_dir("headers/requires_define.h"),
+        :cxxflags => "-DMUST_BE_DEFINED"
+      e.build
+      e.write
+    end
+  end
 end

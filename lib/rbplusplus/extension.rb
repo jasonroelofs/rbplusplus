@@ -54,6 +54,12 @@ module RbPlusPlus
     # List of libraries to link
     attr_accessor :libraries
 
+    # List of extra CXXFLAGS that might need to be added to compile lines
+    attr_accessor :cxxflags
+
+    # List of extra LDFLAGS that might need to be added to compile lines
+    attr_accessor :ldflags
+
     # Create a new Ruby extension with a given name. This name will be
     # the module built into the extension. 
     # This constructor can be standalone or take a block. 
@@ -64,6 +70,8 @@ module RbPlusPlus
       @includes = []
       @lib_paths = []
       @libraries = []
+      @cxxflags = []
+      @ldflags = []
 
       if block
         build_working_dir(&block)
@@ -97,6 +105,15 @@ module RbPlusPlus
 
       if (libs = options.delete(:libraries))
         @libraries << libs
+      end
+
+      if (flags = options.delete(:cxxflags))
+        @cxxflags << flags
+        parser_options[:cxxflags] = @cxxflags
+      end
+
+      if (flags = options.delete(:ldflags))
+        @ldflags << flags
       end
 
       @parser = RbGCCXML.parse(dirs, parser_options)
@@ -151,6 +168,8 @@ module RbPlusPlus
       extconf.includes = @includes
       extconf.library_paths = @lib_paths
       extconf.libraries = @libraries
+      extconf.cxxflags = @cxxflags
+      extconf.ldflags = @ldflags
       extconf.write
     end
 
