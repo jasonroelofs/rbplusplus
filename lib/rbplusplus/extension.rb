@@ -91,6 +91,8 @@ module RbPlusPlus
     # * <tt>:include_paths</tt> - An array or string of full paths to be added as -I flags
     # * <tt>:library_paths</tt> - An array or string of full paths to be added as -L flags
     # * <tt>:libraries</tt> - An array or string of full paths to be added as -l flags
+    # * <tt>:cxxflags</tt> - An array or string of flags to be added to command line for parsing / compiling
+    # * <tt>:ldflags</tt> - An array or string of flags to be added to command line for linking
     def sources(dirs, options = {})
       parser_options = {}
 
