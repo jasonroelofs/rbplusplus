@@ -66,3 +66,10 @@ For those familiar with py++ / pygccxml, the similarities are in function only. 
 Bugs, patches, feature requests, et al should be posted to the project's tracker.
 
 Discussion can be here or the project's rubyforge forums.
+
+== CHANGELOG
+
+=== 0.1.1
+
+* rb++:: Added rice as a gem dependency
+* Added ldflags / cxxflags options to Extension#sources
