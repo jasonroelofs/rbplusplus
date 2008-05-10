@@ -1,36 +1,34 @@
 module RbGCCXML
   class Class
-    # Class can map external methods/functions as class level methods
+    
+    # Class can include external methods/functions as class level methods
     # also supports instance level methods
     #
     # ex. 
-    #    math_class.map "mod", node.namespaces("Math").functions("mod")
+    #    math_class.includes node.namespaces("Math").functions("mod")
     # or for a instance method:
-    #    math_class.map "mod", node.namespaces("Math").functions("mod").as_method
+    #    math_class.includes node.namespaces("Math").functions("mod").as_method
     #
-    def map(name, val)
+    def includes(val)
       @methods ||= []
-      @methods << NodeReference.new(val, name)
+      @methods << NodeReference.new(val)
       val.ignore 
     end
     
     alias_method :rbgccxml_methods, :methods
     def methods(*args)
-      return rbgccxml_methods(*args) + (@methods || [])
+      nodes = rbgccxml_methods(*args)
+      methods = @methods || QueryResult.new
+      methods << cache(nodes)
+      methods.flatten!
+      return (methods.size == 1 ? methods[0] : methods)
     end
+    
+    alias_method :rbgccxml_name, :name
+    def name
+      @renamed || rbgccxml_name
+    end
+    
   end
 end
 
-module RbGCCXML
-  class Function
-    # always true for functions, false for methods
-    def static?
-      !(@as_method || false)
-    end
-    
-    def as_method
-      @as_method = true
-      return self
-    end
-  end
-end

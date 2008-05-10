@@ -64,6 +64,8 @@ module RbPlusPlus
       @includes = []
       @lib_paths = []
       @libraries = []
+      
+      NodeCache.instance.clear
 
       if block
         build_working_dir(&block)
@@ -98,7 +100,8 @@ module RbPlusPlus
       if (libs = options.delete(:libraries))
         @libraries << libs
       end
-
+    
+      @sources = Dir.glob dirs
       @parser = RbGCCXML.parse(dirs, parser_options)
     end
 
@@ -109,14 +112,6 @@ module RbPlusPlus
     def namespace(name)
       @node = @parser.namespaces(name)
     end
- 
-    # Sets the global namespace and returns it.  Calling this will add all functions, classes, structs, and namespaces
-    # from the global namespace to the parser, provided they are not already specified by namespace()
-    #
-    def global_namespace
-      @global = GlobalNamespace.new(@parser)
-    end
-    
 
     # Mark that this extension needs to create a Ruby module of
     # a give name. Like Extension, this can be used with or without
@@ -134,13 +129,13 @@ module RbPlusPlus
       raise "Unknown writer mode #{mode}" unless [:multiple, :single].include?(mode)
       @writer_mode = mode
     end
-
+    
     # Start the code generation process. 
     def build
       raise ConfigurationError.new("Must specify working directory") unless @working_dir
       raise ConfigurationError.new("Must specify which sources to wrap") unless @parser
 
-      @builder = Builders::ExtensionBuilder.new(@name, @node || @global || @parser)
+      @builder = Builders::ExtensionBuilder.new(@name, @sources, @node || @parser)
       @builder.modules = @modules
       @builder.build
     end

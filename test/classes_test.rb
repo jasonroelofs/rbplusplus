@@ -48,7 +48,7 @@ context "Wrapping Classes within classes" do
       @@nested_built = true 
       Extension.new "nested" do |e|
         e.sources full_dir("headers/nested_classes.h")
-        e.namespace "classes"
+        node = e.namespace "classes"
       end
 
       require 'nested'

@@ -41,8 +41,11 @@ class C_UIVector {
     int x_() {
       return this->x;
     }
-    void set_X(int x) {
+    void set_x(int x) {
       this->x = x;
+    }
+    static int one() {
+      return 1;
     }
 };
 

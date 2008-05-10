@@ -47,13 +47,25 @@ module RbPlusPlus
       attr_accessor :rice_variable_type
 
       # Create a new builder.
-      def initialize(name, parser)
+      def initialize(name, sources, parser)
         @name = name
         @node = parser
         @builders = []
         @includes = []
         @declarations = []
         @body = []
+        @sources = sources
+      end
+      
+      def header_files(node)
+        return [node.file_name(false)] if @sources.include?(node.file_name(false))
+        @sources
+      end
+      
+      def add_includes_for(node)
+        header_files(node).each do |header|
+          includes << "#include \"#{header}\""
+        end
       end
 
       # All builders must implement this method
@@ -77,7 +89,7 @@ module RbPlusPlus
         classes ||= @node.classes
         classes.each do |klass|
           next if klass.ignored?
-          builder = ClassBuilder.new(self, klass)
+          builder = ClassBuilder.new(self, @sources, klass)
           builder.build
           builders << builder
         end

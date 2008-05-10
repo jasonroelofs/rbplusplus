@@ -18,7 +18,7 @@ module RbPlusPlus
         if @node.name != "::"
           @node.functions.each do |func|
             next if func.ignored? 
-            includes << "#include \"#{func.file_name(false)}\""
+            add_includes_for func 
             wrapper_name = build_function_wrapper(func)
             body << "\tdefine_global_function(\"#{Inflector.underscore(func.name)}\", &#{wrapper_name});"
           end
@@ -31,7 +31,7 @@ module RbPlusPlus
 
       def build_modules
         @modules.each do |mod|
-          builder = ModuleBuilder.new(self, mod)
+          builder = ModuleBuilder.new(self, @sources, mod)
           builder.build
           builders << builder
         end

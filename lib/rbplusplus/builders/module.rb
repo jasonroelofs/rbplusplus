@@ -5,8 +5,8 @@ module RbPlusPlus
     class ModuleBuilder < Base
 
       # Initializer takes the parent object and the RbModule construction
-      def initialize(parent, mod)
-        super(mod.name, mod.node)
+      def initialize(parent, sources, mod)
+        super(mod.name, sources, mod.node)
         @module = mod
         self.parent = parent
       end
@@ -35,7 +35,7 @@ module RbPlusPlus
 
         # Build each inner module
         @module.modules.each do |mod|
-          builder = ModuleBuilder.new(self, mod)
+          builder = ModuleBuilder.new(self, @sources, mod)
           builder.build
           builders << builder
         end
@@ -45,7 +45,7 @@ module RbPlusPlus
       def build_functions
         @module.functions.each do |func|
           next if func.ignored? # fine grained function filtering
-          includes << "#include \"#{func.file_name(false)}\""
+          add_includes_for func
 
           func_name = Inflector.underscore(func.name)
           wrapped_name = build_function_wrapper(func)
