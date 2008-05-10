@@ -11,7 +11,6 @@ module RbPlusPlus
     #
     # ex. m.include node.classes("Vector3")
     #
-
     def includes(val)
       if is_a?(val, RbGCCXML::Function)
         reference_function(val)
@@ -35,12 +34,14 @@ module RbPlusPlus
     end
     
     private
+    # Map a function from a different namespace
     def reference_function(val)
       @functions ||= []
       @functions << NodeReference.new(val)
       val.ignore 
     end
     
+    # Map a class from a different namespace
     def reference_class(val)
       @classes ||= []
       @classes << NodeReference.new(val)

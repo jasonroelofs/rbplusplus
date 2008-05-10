@@ -65,7 +65,7 @@ module RbPlusPlus
       @lib_paths = []
       @libraries = []
       
-      NodeCache.instance.clear
+      NodeCache.instance.clear # Called to prevent cache collisions
 
       if block
         build_working_dir(&block)

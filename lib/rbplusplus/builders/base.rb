@@ -57,11 +57,17 @@ module RbPlusPlus
         @sources = sources
       end
       
+      # The name of the header file to include
+      # This is the file default, so long as it matches one of the export files
+      # If not this returns all exported files.
+      #
+      # This was added to workaround badly declared namespaces
       def header_files(node)
         return [node.file_name(false)] if @sources.include?(node.file_name(false))
         @sources
       end
       
+      # Adds the necessary includes in order to compile the specified node
       def add_includes_for(node)
         header_files(node).each do |header|
           includes << "#include \"#{header}\""

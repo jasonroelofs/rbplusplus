@@ -5,7 +5,9 @@ module RbGCCXML
       !(@as_method || false)
     end
     
-    def as_method
+    # Sets this function to be an instance method.
+    # Useful for custom function declaration.
+    def as_instance_method
       @as_method = true
       return self
     end

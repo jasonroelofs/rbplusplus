@@ -30,7 +30,7 @@ context "Ugly interfaces cleaner" do
         #mapping stray functions to singleton methods
         modder = node.namespaces("I_LEARN_C").classes("Modder").wrap_as("Modulus")
         modder.includes node.namespaces("I_LEARN_C").functions("mod")
-        modder.includes node.namespaces("I_LEARN_C").functions("mod2").wrap_as("method_mod").as_method
+        modder.includes node.namespaces("I_LEARN_C").functions("mod2").wrap_as("method_mod").as_instance_method
         m.includes modder
         
       end

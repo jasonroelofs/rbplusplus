@@ -1,9 +1,11 @@
 module RbGCCXML
   class Node    
+    # Specifies to not export this function
     def ignore
       @ignored = true
     end
     
+    # Returns true if this object is ignored in exporting
     def ignored?
       @ignored || false
     end
@@ -33,12 +35,14 @@ module RbGCCXML
       @renamed || rbgccxml_name
     end
     
+    # Renames the ruby name of this node
     def wrap_as(name)
       @renamed = name
       self
     end
     
     private
+    # Looks up the objects in the node cache.
     def cache(nodes)
      if nodes.is_a?(QueryResult)
         retv = QueryResult.new 
