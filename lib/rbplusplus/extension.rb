@@ -54,6 +54,12 @@ module RbPlusPlus
     # List of libraries to link
     attr_accessor :libraries
 
+    # List of extra CXXFLAGS that might need to be added to compile lines
+    attr_accessor :cxxflags
+
+    # List of extra LDFLAGS that might need to be added to compile lines
+    attr_accessor :ldflags
+
     # Create a new Ruby extension with a given name. This name will be
     # the module built into the extension. 
     # This constructor can be standalone or take a block. 
@@ -64,7 +70,8 @@ module RbPlusPlus
       @includes = []
       @lib_paths = []
       @libraries = []
-      
+      @cxxflags = []
+      @ldflags = []
       NodeCache.instance.clear # Called to prevent cache collisions
 
       if block
@@ -85,6 +92,8 @@ module RbPlusPlus
     # * <tt>:include_paths</tt> - An array or string of full paths to be added as -I flags
     # * <tt>:library_paths</tt> - An array or string of full paths to be added as -L flags
     # * <tt>:libraries</tt> - An array or string of full paths to be added as -l flags
+    # * <tt>:cxxflags</tt> - An array or string of flags to be added to command line for parsing / compiling
+    # * <tt>:ldflags</tt> - An array or string of flags to be added to command line for linking
     def sources(dirs, options = {})
       parser_options = {}
 
@@ -100,7 +109,16 @@ module RbPlusPlus
       if (libs = options.delete(:libraries))
         @libraries << libs
       end
-    
+
+      if (flags = options.delete(:cxxflags))
+        @cxxflags << flags
+        parser_options[:cxxflags] = @cxxflags
+      end
+
+      if (flags = options.delete(:ldflags))
+        @ldflags << flags
+      end
+
       @sources = Dir.glob dirs
       @parser = RbGCCXML.parse(dirs, parser_options)
     end
@@ -154,6 +172,8 @@ module RbPlusPlus
       extconf.includes = @includes
       extconf.library_paths = @lib_paths
       extconf.libraries = @libraries
+      extconf.cxxflags = @cxxflags
+      extconf.ldflags = @ldflags
       extconf.write
     end
 

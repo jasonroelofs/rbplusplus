@@ -18,6 +18,7 @@ module RbPlusPlus
         if @node.name != "::"
           @node.functions.each do |func|
             next if func.ignored? 
+            puts "#{@node.name}::#{func.name} from #{func.file_name(false)}"
             add_includes_for func 
             wrapper_name = build_function_wrapper(func)
             body << "\tdefine_global_function(\"#{Inflector.underscore(func.name)}\", &#{wrapper_name});"

@@ -15,19 +15,28 @@ module RbPlusPlus
       # List of -l directives
       attr_accessor :libraries
 
+      # Extra CXXFLAGS
+      attr_accessor :cxxflags
+
+      # Extra LDFLAGS
+      attr_accessor :ldflags
+
       def write
         extconf = File.join(working_dir, "extconf.rb")
 
         @includes ||= []
 
         inc_str = @includes.flatten.uniq.map {|i| "-I#{i}"}.join(" ")
+        inc_str += " " + @cxxflags.flatten.join(" ")
         lib_path_str = @library_paths.flatten.uniq.map {|i| "-L#{i}"}.join(" ")
         lib_str = @libraries.flatten.uniq.map {|i| "-l#{i}"}.join(" ")
+        lib_str += " " + @ldflags.flatten.join(" ")
 
         File.open(extconf, "w+") do |file|
           file.puts "require \"rubygems\""
           file.puts "require \"mkmf-rice\""
-          file.puts %Q($CPPFLAGS = $CPPFLAGS + " -I#{working_dir} #{inc_str} #{lib_path_str} #{lib_str}")
+          file.puts %Q($CPPFLAGS = $CPPFLAGS + " -I#{working_dir} #{inc_str}")
+          file.puts %Q($LDFLAGS = $LDFLAGS + " #{lib_path_str} #{lib_str}")
           file.puts "create_makefile(\"#{builder.name}\")"
         end
       end

@@ -187,13 +187,16 @@ rb++ can instead write out the extension code in a single file (extension_name.c
 
 rb++ takes care of setting up the extension to be properly compiled, but sometimes certain
 compiler options can't be deduced. rb++ has options to specify library paths (-L), libraries (-l),
-and include paths (-I) to add to the compilation lines. These are options on Extension.sources
+and include paths (-I) to add to the compilation lines, as well as just adding your own flags 
+directly to the command line. These are options on Extension.sources
 
   Extension.new "extension" do |e|
     e.sources *header_dirs,
-      :library_paths => *paths,   # Adds to -L
-      :libraries => *libs,        # Adds to -l
-      :include_paths => *includes # Adds to -I
+      :library_paths => *paths,    # Adds to -L
+      :libraries => *libs,         # Adds to -l
+      :include_paths => *includes, # Adds to -I
+      :cxxflags => *flags,         # For those flags that don't match the above three
+      :ldflags => *flags,          # For extra linking flags that don't match the above
   end
 
 Any compiler errors and the full build log will be found in rbpp_compile.log.

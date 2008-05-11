@@ -3,7 +3,7 @@ require 'rake/rdoctask'
 require 'rake/contrib/sshpublisher'
 
 PROJECT_NAME = "rb++"
-RBPLUSPLUS_VERSION = "0.1"
+RBPLUSPLUS_VERSION = "0.1.1"
 
 task :default => :test
 
@@ -58,6 +58,7 @@ make Ruby wrapping extensions easier to write than ever.
   END
 
   s.add_dependency "rbgccxml", "0.1"
+  s.add_dependency "rice", "1.0.1"
 
   patterns = [
     'TODO',

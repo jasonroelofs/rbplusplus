@@ -21,12 +21,8 @@ module RbGCCXML
       methods = @methods || QueryResult.new
       methods << cache(nodes)
       methods.flatten!
+      return methods if args.empty?
       return (methods.size == 1 ? methods[0] : methods)
-    end
-    
-    alias_method :rbgccxml_name, :name
-    def name
-      @renamed || rbgccxml_name
     end
     
   end
