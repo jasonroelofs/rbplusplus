@@ -47,14 +47,13 @@ module RbPlusPlus
       attr_accessor :rice_variable_type
 
       # Create a new builder.
-      def initialize(name, sources, parser)
+      def initialize(name, parser)
         @name = name
         @node = parser
         @builders = []
         @includes = []
         @declarations = []
         @body = []
-        @sources = sources
       end
       
       # The name of the header file to include
@@ -64,8 +63,8 @@ module RbPlusPlus
       # This was added to workaround badly declared namespaces
       def header_files(node)
         file = node.file_name(false)
-        return [file] if @sources.include?(file)
-        @sources
+        return [file] if self.class.sources.include?(file)
+        self.class.sources
       end
       
       # Adds the necessary includes in order to compile the specified node
@@ -73,6 +72,34 @@ module RbPlusPlus
         header_files(node).each do |header|
           includes << "#include \"#{header}\""
         end
+      end
+      
+      # Include any user specified include files
+      def add_additional_includes
+        self.class.additional_includes.each do |inc|
+          includes << "#include \"#{inc}\""
+        end
+      end
+      
+      # Set a list of user specified include files
+      def self.additional_includes=(addl)
+        @@additional_includes = addl
+      end
+      
+      # Get an array of user specified include files
+      def self.additional_includes
+        @@additional_includes || []
+      end
+      
+      # A list of all the source files.  This is used in order to prevent files 
+      # that are not in the list from being included and mucking things up
+      def self.sources=(sources)
+        @@sources = sources
+      end
+      
+      # Retrieves a list of user specified source files
+      def self.sources
+        @@sources || []
       end
 
       # All builders must implement this method
@@ -96,7 +123,7 @@ module RbPlusPlus
         classes ||= @node.classes
         classes.each do |klass|
           next if klass.ignored?
-          builder = ClassBuilder.new(self, @sources, klass)
+          builder = ClassBuilder.new(self, klass)
           builder.build
           builders << builder
         end

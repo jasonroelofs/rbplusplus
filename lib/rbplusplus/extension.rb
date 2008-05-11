@@ -72,6 +72,7 @@ module RbPlusPlus
       @libraries = []
       @cxxflags = []
       @ldflags = []
+      @add_includes = []
       
       # Called to prevent cache collisions
       NodeCache.instance.clear 
@@ -121,6 +122,10 @@ module RbPlusPlus
       if (flags = options.delete(:ldflags))
         @ldflags << flags
       end
+      
+      if (flags = options.delete(:includes))
+        @add_includes += Dir.glob(flags)
+      end
 
       @sources = Dir.glob dirs
       @parser = RbGCCXML.parse(dirs, parser_options)
@@ -156,7 +161,9 @@ module RbPlusPlus
       raise ConfigurationError.new("Must specify working directory") unless @working_dir
       raise ConfigurationError.new("Must specify which sources to wrap") unless @parser
 
-      @builder = Builders::ExtensionBuilder.new(@name, @sources, @node || @parser)
+      @builder = Builders::ExtensionBuilder.new(@name, @node || @parser)
+      Builders::Base.additional_includes  = @add_includes
+      Builders::Base.sources              = @sources
       @builder.modules = @modules
       @builder.build
     end

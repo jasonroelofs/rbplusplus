@@ -5,8 +5,8 @@ module RbPlusPlus
     class ClassBuilder < Base
 
       # Different initializer to keep things clean
-      def initialize(parent, sources, node)
-        super(node.name, sources, node)
+      def initialize(parent, node)
+        super(node.name, node)
         self.parent = parent
       end
 
@@ -21,6 +21,7 @@ module RbPlusPlus
         includes << "#include <rice/Constructor.hpp>"
       
         add_includes_for node
+        add_additional_includes
 
         class_defn = "\t#{rice_variable_type} #{rice_variable} = "
         if !parent.is_a?(ExtensionBuilder)
@@ -55,7 +56,7 @@ module RbPlusPlus
         # Nested Classes
         node.classes.each do |klass|
           next if klass.ignored?
-          b = ClassBuilder.new(self, @sources, klass)
+          b = ClassBuilder.new(self, klass)
           b.build
           builders << b
         end

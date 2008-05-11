@@ -5,8 +5,8 @@ module RbPlusPlus
     class ModuleBuilder < Base
 
       # Initializer takes the parent object and the RbModule construction
-      def initialize(parent, sources, mod)
-        super(mod.name, sources, mod.node)
+      def initialize(parent, mod)
+        super(mod.name, mod.node)
         @module = mod
         self.parent = parent
       end
@@ -18,6 +18,8 @@ module RbPlusPlus
         self.rice_variable_type = "Rice::Module"
 
         includes << "#include <rice/Module.hpp>"
+        
+        add_additional_includes
 
         mod_defn = "\t#{rice_variable_type} #{rice_variable} = "
         if !parent.is_a?(ExtensionBuilder)
@@ -35,7 +37,7 @@ module RbPlusPlus
 
         # Build each inner module
         @module.modules.each do |mod|
-          builder = ModuleBuilder.new(self, @sources, mod)
+          builder = ModuleBuilder.new(self, mod)
           builder.build
           builders << builder
         end

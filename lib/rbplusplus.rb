@@ -37,3 +37,4 @@ require 'rbplusplus/transformers/node_reference'
 require 'rbplusplus/transformers/function'
 require 'rbplusplus/transformers/class'
 require 'rbplusplus/transformers/module'
+

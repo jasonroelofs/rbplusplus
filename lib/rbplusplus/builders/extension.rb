@@ -11,6 +11,8 @@ module RbPlusPlus
       def build
         includes << "#include <rice/global_function.hpp>"
 
+        add_additional_includes
+
         body << "extern \"C\""
         body << "void Init_#{@name}() {"
 
@@ -31,7 +33,7 @@ module RbPlusPlus
 
       def build_modules
         @modules.each do |mod|
-          builder = ModuleBuilder.new(self, @sources, mod)
+          builder = ModuleBuilder.new(self, mod)
           builder.build
           builders << builder
         end
