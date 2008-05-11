@@ -49,6 +49,11 @@ class C_UIVector {
     }
 };
 
+class NoConstructor {
+  public:
+    NoConstructor() {}
+};
+
 
 namespace __UI {
   namespace BAD_UI {

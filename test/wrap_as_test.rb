@@ -33,6 +33,9 @@ context "Ugly interfaces cleaner" do
         modder.includes node.namespaces("I_LEARN_C").functions("mod2").wrap_as("method_mod").as_instance_method
         m.includes modder
         
+        nc = node.classes("NoConstructor")
+        nc.constructors.each { |c| c.ignore }
+        m.includes nc 
       end
     end
     
@@ -82,6 +85,10 @@ context "Ugly interfaces cleaner" do
     
     should.not.raise NoMethodError do
       UI::Math::divide(2,1).should == 2
+    end
+    
+    should.raise TypeError do
+      UI::NoConstructor.new
     end
   end
 end
