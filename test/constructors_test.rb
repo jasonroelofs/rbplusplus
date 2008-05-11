@@ -19,6 +19,12 @@ context "Extension with constructors out the whazoo" do
       s2.get_name.should == "one"
     end
 
+    should.not.raise NameError do
+      # Test complex constructors
+      d = DoubleStringHolder.new(StringHolder.new("one"), StringHolder.new("two"))
+      d.get_one.get_name.should == "one"
+      d.get_two.get_name.should == "two"
+    end
   end
 
 end
