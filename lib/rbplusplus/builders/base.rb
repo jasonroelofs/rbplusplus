@@ -141,9 +141,13 @@ module RbPlusPlus
         call_string = []
         
         #Type names are stored in the demangled string
-        types = function.attributes["demangled"].split(/[\(,\)]/)
-        types.delete_at 0
-        
+        demangled = function.attributes["demangled"] 
+        types = []
+        unless demangled.nil?
+          types = demangled.split(/[\(,\)]/)
+          types.delete_at 0
+        end
+              
         function.arguments.map{|arg| arg.name}.each_with_index do |name, i|
           type = types[i]
           proto_string << "#{type} #{name}"
