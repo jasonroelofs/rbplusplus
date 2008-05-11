@@ -5,7 +5,7 @@ context "Extension with constructors out the whazoo" do
   specify "should make constructors available" do
     Extension.new "constructors" do |e|
       e.sources full_dir("headers/constructors.h")
-      e.namespace "constructors"
+      node = e.namespace "constructors"
     end
 
     require 'constructors'
