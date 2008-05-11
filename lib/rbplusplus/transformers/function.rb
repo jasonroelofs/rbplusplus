@@ -11,5 +11,9 @@ module RbGCCXML
       @as_method = true
       return self
     end
+    
+    def public?
+      true
+    end
   end
 end

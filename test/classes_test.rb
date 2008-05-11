@@ -65,3 +65,30 @@ context "Wrapping Classes within classes" do
     TestClass::InnerClass::Inner2.new.should.not.be.nil
   end
 end
+
+context "Correct handling of encapsulated methods" do
+  def setup
+    if !defined?(@@encapsulated)
+      super
+      @@encapsulated = true 
+      Extension.new "encapsulation" do |e|
+        e.sources full_dir("headers/encapsulation.h")
+        node = e.namespace "encapsulation"
+      end
+
+      require 'encapsulation'
+    end
+  end
+
+  specify "should handle private/protected/public" do
+    ext = Extended.new
+    ext.public_method.should == 1
+    should.raise NoMethodError do
+      ext.private_method
+    end
+    should.raise NoMethodError do
+      ext.protected_method
+    end
+  end
+  
+end

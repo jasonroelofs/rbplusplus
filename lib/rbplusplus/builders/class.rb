@@ -45,6 +45,7 @@ module RbPlusPlus
         # Methods
         node.methods.each do |method|
           next if method.ignored?
+          next unless method.public?
           
           m = "define_method"
           name = method.qualified_name
