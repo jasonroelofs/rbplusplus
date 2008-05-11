@@ -63,7 +63,8 @@ module RbPlusPlus
       #
       # This was added to workaround badly declared namespaces
       def header_files(node)
-        return [node.file_name(false)] if @sources.include?(node.file_name(false))
+        file = node.file_name(false)
+        return [file] if @sources.include?(file)
         @sources
       end
       
