@@ -139,10 +139,13 @@ module RbPlusPlus
 
         proto_string = ["Rice::Object self"]
         call_string = []
-
-        function.arguments.map{|arg| [arg.cpp_type.name, arg.name]}.each do |parts|
-          type = parts[0]
-          name = parts[1]
+        
+        #Type names are stored in the demangled string
+        types = function.attributes["demangled"].split(/[\(,\)]/)
+        types.delete_at 0
+        
+        function.arguments.map{|arg| arg.name}.each_with_index do |name, i|
+          type = types[i]
           proto_string << "#{type} #{name}"
           call_string << "#{name}"
         end
