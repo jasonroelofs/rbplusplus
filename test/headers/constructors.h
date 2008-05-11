@@ -37,6 +37,11 @@ namespace constructors {
         return this->two;
       }
   };
+  
+  class PrivateConstructor {
+    private:
+      PrivateConstructor() {}
+  };
 }
 
 #endif

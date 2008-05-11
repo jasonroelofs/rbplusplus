@@ -35,6 +35,7 @@ module RbPlusPlus
         # Constructors
         node.constructors.each do |init|
           next if init.ignored?
+          next unless init.public?
           
           demangled = init.attributes["demangled"]
           constructor_args = demangled.split(/[\(,\)]/)

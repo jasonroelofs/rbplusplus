@@ -1,5 +1,5 @@
 module RbGCCXML
-  class Method
+  class Constructor
     def public?
       return !(attributes["access"] == "private" || attributes["access"] == "protected")
     end

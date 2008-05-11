@@ -25,6 +25,10 @@ context "Extension with constructors out the whazoo" do
       d.get_one.get_name.should == "one"
       d.get_two.get_name.should == "two"
     end
+    
+    should.raise TypeError do
+      PrivateConstructor.new
+    end
   end
 
 end
