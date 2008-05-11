@@ -72,7 +72,10 @@ module RbPlusPlus
       @libraries = []
       @cxxflags = []
       @ldflags = []
-      NodeCache.instance.clear # Called to prevent cache collisions
+      
+      # Called to prevent cache collisions
+      NodeCache.instance.clear 
+      RbGCCXML::XMLParsing.clear_cache
 
       if block
         build_working_dir(&block)

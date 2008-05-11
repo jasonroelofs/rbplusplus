@@ -96,7 +96,6 @@ module RbPlusPlus
         classes ||= @node.classes
         classes.each do |klass|
           next if klass.ignored?
-          puts klass.name
           builder = ClassBuilder.new(self, @sources, klass)
           builder.build
           builders << builder
