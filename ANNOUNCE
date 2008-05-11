@@ -71,5 +71,6 @@ Discussion can be here or the project's rubyforge forums.
 
 === 0.1.1
 
-* rb++:: Added rice as a gem dependency
-* Added ldflags / cxxflags options to Extension#sources
+* rb++: Added rice as a gem dependency
+* all: Added ldflags / cxxflags options for passing in other custom command line arguments
+* gccxml: Error message about how to fix the file execution flags is now consistent across platforms.
