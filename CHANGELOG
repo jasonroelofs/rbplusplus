@@ -1,0 +1,8 @@
+== 0.1.1
+
+* rb++: Added rice as a gem dependency
+* rb++: explicitly requiring fileutils now
+* all: Added ldflags / cxxflags options for passing in other custom
+command line arguments
+* gccxml: Error message about how to fix the file execution flags is
+now consistent across platforms.

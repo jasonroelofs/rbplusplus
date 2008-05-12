@@ -14,7 +14,7 @@ This single command will grab the whole stack needed for rb++ to work.
 
   gem install rbplusplus
 
-The stack includes three libraries: rb++, rbgccxml, and gccxml_gem
+The stack includes three libraries: rb++, rbgccxml, and gccxml_gem and will install rice
 
 == rb++
 
@@ -66,11 +66,3 @@ For those familiar with py++ / pygccxml, the similarities are in function only. 
 Bugs, patches, feature requests, et al should be posted to the project's tracker.
 
 Discussion can be here or the project's rubyforge forums.
-
-== CHANGELOG
-
-=== 0.1.1
-
-* rb++: Added rice as a gem dependency
-* all: Added ldflags / cxxflags options for passing in other custom command line arguments
-* gccxml: Error message about how to fix the file execution flags is now consistent across platforms.
