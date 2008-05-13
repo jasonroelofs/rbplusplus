@@ -72,6 +72,7 @@ module RbPlusPlus
       @libraries = []
       @cxxflags = []
       @ldflags = []
+      @node = nil
 
       if block
         build_working_dir(&block)
