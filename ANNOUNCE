@@ -1,4 +1,4 @@
-Announcing the rb++ / rbgccxml Ruby extension generation framework!
+= What is rb++ / rbgccxml?
 
 For anyone who wants an alternative to SWIG for generating Ruby extensions from C++ header files, look no further. 
 

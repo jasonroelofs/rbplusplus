@@ -1,3 +1,18 @@
+== 0.2
+
+=== all
+
+
+=== rbgccxml
+
+* All GCCXML types implemented. Added ReferenceType, CvQualifiedType, Enumeration.
+* Now caches the current XML parsing. Significant speed boost.
+* Can now search for C++ nodes by either single name or fully qualified name
+
+=== rb++
+
+* When printing out types, properly prints out a fully qualified type name (e.g. std::string instead of just string)
+
 == 0.1.1
 
 * rb++: Added rice as a gem dependency
