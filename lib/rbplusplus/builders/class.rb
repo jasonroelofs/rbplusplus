@@ -32,7 +32,7 @@ module RbPlusPlus
 
         # Constructors
         node.constructors.each do |init|
-          args = [full_name, init.arguments.map {|a| a.cpp_type }].flatten
+          args = [full_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
           body << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
 

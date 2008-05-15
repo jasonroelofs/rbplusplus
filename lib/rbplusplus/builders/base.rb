@@ -91,7 +91,7 @@ module RbPlusPlus
         proto_string = ["Rice::Object self"]
         call_string = []
 
-        function.arguments.map{|arg| [arg.cpp_type.name, arg.name]}.each do |parts|
+        function.arguments.map{|arg| [arg.cpp_type.to_s(true), arg.name]}.each do |parts|
           type = parts[0]
           name = parts[1]
           proto_string << "#{type} #{name}"
