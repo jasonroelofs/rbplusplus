@@ -1,4 +1,11 @@
 TODO
+* Enumerations
+* Recognizing and building to_ruby / from_ruby methods for const type references
+* Working with the defined C++ heirarchy chain
+* (m&m) include
+* (m&m) exclude
+* (m&m) rename
+
 * Figure out how to fix the error when running rake test
 * Allowing use of "have_library"
 * Other mkmf functions?
