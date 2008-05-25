@@ -42,9 +42,8 @@ module RbPlusPlus
       # Finish up the required code before doing final output
       def to_s
         includes << "using namespace Rice;"
-        body << "}"
-
-        super
+        
+        super + "\n}"
       end
     end
   end

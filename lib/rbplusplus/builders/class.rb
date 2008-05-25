@@ -18,16 +18,24 @@ module RbPlusPlus
 
         includes << "#include <rice/Class.hpp>"
         includes << "#include <rice/Data_Type.hpp>"
-        includes << "#include <rice/Constructor.hpp>"
-      
-        add_includes_for node
-        add_additional_includes
-
+        includes << "#include <rice/Constructor.hpp>"  
+        
         class_defn = "\t#{rice_variable_type} #{rice_variable} = "
+        
+        supers = node.super_classes
+   
+        #Needs to know about super classes
+        supers.each do |n|
+          add_includes_for n
+        end
+        add_additional_includes
+        
+        super_names = supers.collect { |s| s.qualified_name }.join(",")
+        
         if !parent.is_a?(ExtensionBuilder)
-          class_defn += "Rice::define_class_under<#{full_name}>(#{parent.rice_variable}, \"#{class_name}\");"
+          class_defn += "Rice::define_class_under<#{super_names}>(#{parent.rice_variable}, \"#{class_name}\");"
         else
-          class_defn += "Rice::define_class<#{full_name}>(\"#{class_name}\");"
+          class_defn += "Rice::define_class<#{super_names}>(\"#{class_name}\");"
         end
 
         body << class_defn

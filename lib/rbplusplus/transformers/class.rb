@@ -25,6 +25,19 @@ module RbGCCXML
       return (methods.size == 1 ? methods[0] : methods)
     end
     
+    
+    def super_classes
+      retv = []
+      retv << self
+      unless node.attributes['bases'].nil?
+        node.attributes['bases'].split.each do |cls_id|
+          retv << XMLParsing.find(:type => "Class", :id => cls_id)
+        end
+      end
+      
+      return retv
+    end
+    
   end
 end
 
