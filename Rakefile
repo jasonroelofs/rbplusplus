@@ -3,7 +3,7 @@ require 'rake/rdoctask'
 require 'rake/contrib/sshpublisher'
 
 PROJECT_NAME = "rb++"
-RBPLUSPLUS_VERSION = "0.1.1"
+RBPLUSPLUS_VERSION = "0.2"
 
 task :default => :test
 
@@ -57,7 +57,11 @@ Rb++ combines the powerful query interface of rbgccxml and the Rice library to
 make Ruby wrapping extensions easier to write than ever.
   END
 
+<<<<<<< HEAD:Rakefile
   s.add_dependency "rbgccxml", "0.1.1"
+=======
+  s.add_dependency "rbgccxml", "0.2"
+>>>>>>> 23d26c511338c529add2e631a9e5c90d35ed1404:Rakefile
   s.add_dependency "rice", "1.0.1"
 
   patterns = [

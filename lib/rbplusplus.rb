@@ -5,6 +5,7 @@ gem 'rbgccxml'
 require 'rbgccxml'
 
 require 'inflector'
+require 'fileutils'
 require 'rbplusplus/rbplusplus'
 
 require 'fileutils'

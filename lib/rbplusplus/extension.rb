@@ -73,10 +73,7 @@ module RbPlusPlus
       @cxxflags = []
       @ldflags = []
       @add_includes = []
-      
-      # Called to prevent cache collisions
-      NodeCache.instance.clear 
-      RbGCCXML::XMLParsing.clear_cache
+      @node = nil
 
       if block
         build_working_dir(&block)
@@ -204,7 +201,7 @@ module RbPlusPlus
     # and if it does exist, clean it out
     def prepare_working_dir
       FileUtils.mkdir_p @working_dir unless File.directory?(@working_dir)
-      FileUtils.rm_rf "#{@working_dir}/*"
+      FileUtils.rm_rf Dir["#{@working_dir}/*"]
     end
 
     # Cool little eval / binding hack, from need.rb

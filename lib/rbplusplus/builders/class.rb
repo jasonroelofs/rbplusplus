@@ -36,12 +36,7 @@ module RbPlusPlus
         node.constructors.each do |init|
           next if init.ignored?
           next unless init.public?
-          
-          demangled = init.attributes["demangled"]
-          constructor_args = demangled.split(/[\(,\)]/)
-          constructor_args.delete_at 0
-
-          args = [full_name, constructor_args].flatten
+          args = [full_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
           body << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
 

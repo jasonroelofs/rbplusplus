@@ -16,4 +16,8 @@ class Test::Unit::TestCase
   def setup
     `rm -rf #{full_dir('generated')}/*`
   end
+
+  def teardown
+    RbGCCXML::XMLParsing.clear_cache
+  end
 end
