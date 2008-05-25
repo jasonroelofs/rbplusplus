@@ -26,12 +26,18 @@ module RbGCCXML
     end
     
     
+    # returns a list of superclasses of this node
     def super_classes
       retv = []
       retv << self
-      unless node.attributes['bases'].nil?
+      unless node.attributes['bases'] == ""
         node.attributes['bases'].split.each do |cls_id|
-          retv << XMLParsing.find(:type => "Class", :id => cls_id)
+          x = XMLParsing.find(:type => "Class", :id => cls_id)
+          if x.nil?
+            puts "#{self.qualified_name} has base ids #{node.attributes['bases']}, specifically #{cls_id} returning null "
+            next
+          end
+          retv << x
         end
       end
       

@@ -21,15 +21,10 @@ module RbPlusPlus
         includes << "#include <rice/Constructor.hpp>"  
         
         class_defn = "\t#{rice_variable_type} #{rice_variable} = "
-        
-        supers = node.super_classes
-   
-        #Needs to know about super classes
-        supers.each do |n|
-          add_includes_for n
-        end
+        add_includes_for node
         add_additional_includes
         
+        supers = node.super_classes        
         super_names = supers.collect { |s| s.qualified_name }.join(",")
         
         if !parent.is_a?(ExtensionBuilder)
