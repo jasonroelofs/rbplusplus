@@ -28,9 +28,9 @@ module RbPlusPlus
         super_names = supers.collect { |s| s.qualified_name }.join(",")
         
         if !parent.is_a?(ExtensionBuilder)
-          class_defn += "Rice::define_class_under<#{super_names}>(#{parent.rice_variable}, \"#{class_name}\");"
+          class_defn += "Rice::define_class_under<#{super_names} >(#{parent.rice_variable}, \"#{class_name}\");"
         else
-          class_defn += "Rice::define_class<#{super_names}>(\"#{class_name}\");"
+          class_defn += "Rice::define_class<#{super_names} >(\"#{class_name}\");"
         end
 
         body << class_defn
