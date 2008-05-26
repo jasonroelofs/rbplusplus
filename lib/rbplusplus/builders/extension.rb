@@ -19,6 +19,11 @@ module RbPlusPlus
           @node.functions.each do |func|
             includes << "#include \"#{func.file_name(false)}\""
             wrapper_name = build_function_wrapper(func)
+
+            if func.return_type.const?
+              build_const_converter(func.return_type)
+            end
+
             body << "\tdefine_global_function(\"#{Inflector.underscore(func.name)}\", &#{wrapper_name});"
           end
 
@@ -38,7 +43,6 @@ module RbPlusPlus
 
       # Finish up the required code before doing final output
       def to_s
-        includes << "using namespace Rice;"
         body << "}"
 
         super
