@@ -38,14 +38,14 @@ module RbPlusPlus
     def reference_function(val)
       @functions ||= []
       @functions << NodeReference.new(val)
-      val.ignore 
+      val.moved=true 
     end
     
     # Map a class from a different namespace
     def reference_class(val)
       @classes ||= []
       @classes << NodeReference.new(val)
-      val.ignore
+      val.moved=true
     end
         
     def is_a?(val, klass)

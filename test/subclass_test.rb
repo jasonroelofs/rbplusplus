@@ -6,6 +6,8 @@ context "Extension with class hierachies" do
     Extension.new "subclass" do |e|
       e.sources full_dir("headers/subclass.h")
       node = e.namespace "subclass"
+      
+      node.classes("SuperSuper").ignore
       e.module("Sub") do |m|
         node.classes.each do |c|
           m.includes c

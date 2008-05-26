@@ -10,6 +10,17 @@ module RbGCCXML
       @ignored || false
     end
 
+    # Specifies that this function has been included somewhere else
+    def moved=(val)
+      @moved = val
+    end
+    
+    # Returns true if the object has been moved
+    def moved?
+      @moved || false
+    end
+
+
     alias_method :rbgccxml_namespaces, :namespaces
     def namespaces(*args)
       nodes = rbgccxml_namespaces(*args)

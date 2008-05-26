@@ -46,7 +46,7 @@ module RbPlusPlus
       # Process functions to be added to this module
       def build_functions
         @module.functions.each do |func|
-          next if func.ignored? # fine grained function filtering
+          next if func.ignored? || func.moved? # fine grained function filtering
           add_includes_for func
 
           func_name = Inflector.underscore(func.name)

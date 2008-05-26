@@ -1,7 +1,11 @@
 #ifndef __SUBCLASS_H__
 #define __SUBCLASS_H__
 namespace subclass {
-  class Super {
+  class SuperSuper {
+    public:
+    inline int minOne() { return -1; }
+  };
+  class Super : public SuperSuper {
     public:
     inline int zero() { return 0; }
   };

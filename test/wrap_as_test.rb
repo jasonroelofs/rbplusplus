@@ -17,6 +17,9 @@ context "Ugly interfaces cleaner" do
         m.module "Math" do |m_math|
           #function wrapping
           m_math.includes node.functions("uiAdd").wrap_as("add")
+          node.functions("uiAdd").ignored?.should == false
+          node.functions("uiAdd").moved?.should == true
+          
           m_math.includes node.functions("ui_Subtract").wrap_as("subtract")
           m_math.includes node.namespaces("DMath").functions("divide")
         end

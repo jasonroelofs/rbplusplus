@@ -12,7 +12,7 @@ module RbGCCXML
     def includes(val)
       @methods ||= []
       @methods << NodeReference.new(val)
-      val.ignore 
+      val.moved=true 
     end
     
     alias_method :rbgccxml_methods, :methods
@@ -26,7 +26,7 @@ module RbGCCXML
     end
     
     
-    # returns a list of superclasses of this node
+    # returns a list of superclasses of this node, including the nodes class
     def super_classes
       retv = []
       retv << self
@@ -37,7 +37,8 @@ module RbGCCXML
             puts "#{self.qualified_name} has base ids #{node.attributes['bases']}, specifically #{cls_id} returning null "
             next
           end
-          retv << c
+          c = NodeCache.instance.get(c)
+          retv << c unless c.ignored?
         end
       end
       

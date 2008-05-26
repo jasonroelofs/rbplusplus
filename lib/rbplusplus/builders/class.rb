@@ -45,7 +45,7 @@ module RbPlusPlus
 
         # Methods
         node.methods.each do |method|
-          next if method.ignored?
+          next if method.ignored? || method.moved?
           next unless method.public?
           
           m = "define_method"
@@ -61,7 +61,7 @@ module RbPlusPlus
 
         # Nested Classes
         node.classes.each do |klass|
-          next if klass.ignored?
+          next if klass.ignored? || klass.moved?
           b = ClassBuilder.new(self, klass)
           b.build
           builders << b

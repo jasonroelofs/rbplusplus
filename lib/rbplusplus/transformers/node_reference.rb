@@ -12,7 +12,7 @@ module RbPlusPlus
     end
     
     # Always false
-    def ignored?
+    def moved?
       false
     end
     

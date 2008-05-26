@@ -175,7 +175,7 @@ module RbPlusPlus
       def build_classes(classes = nil)
         classes ||= @node.classes
         classes.each do |klass|
-          next if klass.ignored?
+          next if klass.ignored? || klass.moved?
           builder = ClassBuilder.new(self, klass)
           builder.build
           builders << builder
@@ -187,7 +187,7 @@ module RbPlusPlus
       #
       # Returns: the name of the wrapper function
       def build_function_wrapper(function)
-        return if function.ignored?
+        return if function.ignored? || function.moved?
         wrapper_func = "wrap_#{function.qualified_name.gsub(/::/, "_")}"
 
         proto_string = ["Rice::Object self"]
