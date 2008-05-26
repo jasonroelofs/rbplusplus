@@ -1,6 +1,6 @@
 TODO
 * Enumerations
-* Recognizing and building to_ruby / from_ruby methods for const type references
+* Moving the to_ruby / from_ruby definitions to a place that all will know about them
 * Working with the defined C++ heirarchy chain
 * (m&m) include
 * (m&m) exclude
@@ -25,6 +25,7 @@ DONE
 * Adding classes to classes (ad infinitum)
 * Look into file naming when dealing with Modules
 * Nested Modules
+* Recognizing and building to_ruby / from_ruby methods for const type references
 
 No longer waiting on rice - just building a wrapper myself now. 
 * Adding global methods (Kernel-level methods)
