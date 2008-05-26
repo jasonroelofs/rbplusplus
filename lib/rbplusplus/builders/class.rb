@@ -45,6 +45,10 @@ module RbPlusPlus
             m = "define_singleton_method"
             name = build_function_wrapper(method)
           end
+          
+          if method.return_type.const?
+            build_const_converter(method.return_type)
+          end
 
           body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"
         end
