@@ -33,5 +33,10 @@ namespace subclass {
     public:
     TemplateSub() : TemplateSuper<int>(0) {}
   };
+  
+  class TemplatePtr : public TemplateSuper<Base*> {
+    public:
+    TemplatePtr() : TemplateSuper<Base*>(new Base()) {}
+  };
 }
 #endif

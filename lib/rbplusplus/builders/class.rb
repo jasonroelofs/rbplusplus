@@ -14,9 +14,18 @@ module RbPlusPlus
         class_name = node.name
 
         #Handles templated super classes
-        typedef_name = node.qualified_name.gsub("::","_").gsub(/[<>]/, "_")
+        typedef_name = node.qualified_name
+        typedef_name.gsub!("::","_")
+        typedef_name.gsub!(/[<>]/, "_")
+        typedef_name.gsub!("*", "Ptr")
         
-        self.rice_variable = "rb_c#{node.name.gsub(/[<>]/, "_")}"
+        #Handles templated super classes passing in complex members
+        var_name = node.name
+        var_name.gsub!("::","_")
+        var_name.gsub!(/[<>]/, "_")
+        var_name.gsub!("*", "Ptr")
+        
+        self.rice_variable = "rb_c#{var_name}"
         self.rice_variable_type = "Rice::Data_Type<#{self.qualified_name} >"
 
         includes << "#include <rice/Class.hpp>"

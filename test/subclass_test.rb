@@ -23,6 +23,9 @@ context "Extension with class hierachies" do
     should.not.raise NameError do
       Sub::TemplateSub.new.zero.should == Sub::TemplateSub.new.custom
     end
+    should.not.raise NameError do
+      Sub::TemplatePtr.new.custom
+    end
   end
 
 end
