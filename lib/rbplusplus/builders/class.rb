@@ -62,6 +62,7 @@ module RbPlusPlus
         # Nested Classes/Structs
         [node.classes, node.structs].flatten.each do |klass|
           next if klass.ignored? || klass.moved?
+          next unless klass.public?
           b = ClassBuilder.new(self, klass)
           b.build
           builders << b

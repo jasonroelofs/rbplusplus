@@ -9,6 +9,11 @@ namespace nested {
           NestedStruct() {}
           inline int one() { return 1; }
       };
+    private:
+      struct PrivateNestedStruct {
+        public:
+          PrivateNestedStruct() {}
+      };
   };
 }
 

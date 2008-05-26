@@ -13,6 +13,10 @@ context "Nested Struct" do
     should.not.raise NameError do
       Klass::NestedStruct.new.one.should == 1
     end
+
+    should.raise NameError do
+      Klass::PrivateNestedStruct.new
+    end
   end
   
 end
