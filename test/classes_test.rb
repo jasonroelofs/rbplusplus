@@ -95,7 +95,6 @@ context "Wrapping Classes within classes" do
       Extension.new "nested" do |e|
         e.sources full_dir("headers/nested_classes.h")
         node = e.namespace "classes"
-        puts node.classes
       end
 
       require 'nested'

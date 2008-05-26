@@ -30,14 +30,14 @@ module RbGCCXML
     def super_classes
       retv = []
       retv << self
-      unless node.attributes['bases'] == ""
+      unless node.attributes['bases'].nil? || node.attributes['bases'] == ""
         node.attributes['bases'].split.each do |cls_id|
           c = XMLParsing.find(:type => "Class", :id => cls_id)
           if c.nil?
             puts "#{self.qualified_name} has base ids #{node.attributes['bases']}, specifically #{cls_id} returning null "
             next
           end
-          c = NodeCache.instance.get(c)
+          c = RbPlusPlus::NodeCache.instance.get(c)
           retv << c unless c.ignored?
         end
       end

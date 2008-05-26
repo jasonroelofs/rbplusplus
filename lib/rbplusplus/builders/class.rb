@@ -59,8 +59,8 @@ module RbPlusPlus
           body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"
         end
 
-        # Nested Classes
-        node.classes.each do |klass|
+        # Nested Classes/Structs
+        [node.classes, node.structs].flatten.each do |klass|
           next if klass.ignored? || klass.moved?
           b = ClassBuilder.new(self, klass)
           b.build
