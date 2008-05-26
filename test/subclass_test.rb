@@ -20,6 +20,9 @@ context "Extension with class hierachies" do
       Sub::Base.new.one.should == Sub::Sub.new.one
       Sub::Base.new.zero.should == Sub::Sub.new.zero
     end
+    should.not.raise NameError do
+      Sub::TemplateSub.new.zero.should == Sub::TemplateSub.new.custom
+    end
   end
 
 end

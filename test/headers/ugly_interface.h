@@ -54,6 +54,13 @@ class NoConstructor {
     NoConstructor() {}
 };
 
+class Inside {
+  public:
+    Inside() {}
+};
+class Outside {
+};
+
 
 namespace __UI {
   namespace BAD_UI {

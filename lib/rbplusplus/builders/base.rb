@@ -65,8 +65,9 @@ module RbPlusPlus
     private
       
       def nested_level(node, level=0)
-        return level if node.super_classes.length == 1
-        node.super_classes[1..-1].each do |sup|
+        return level if node.is_a? RbGCCXML::Namespace
+        return level if node.super_classes.length == 0
+        node.super_classes.each do |sup|
           level = nested_level(sup, level+1)
         end
         return level
@@ -148,21 +149,21 @@ module RbPlusPlus
       # Builders should use to_s to make finishing touches on the generated
       # code before it gets written out to a file.
       def to_s
-      extras = []
-      #Weird trailing } needs to be destroyed!!!
-      if self.body[-1].strip == "}"
-        extras << self.body.delete_at(-1)
-      end
+        extras = []
+        #Weird trailing } needs to be destroyed!!!
+        if self.body.flatten[-1].strip == "}"
+          extras << self.body.delete_at(-1)
+        end
     
-      return [
-        self.includes.flatten.uniq, 
-        "", 
-        self.declarations, 
-        "", 
-        self.body,
-        "", 
-        self.registered_nodes, 
-        extras
+        return [
+          self.includes.flatten.uniq, 
+          "", 
+          self.declarations, 
+          "", 
+          self.body,
+          "", 
+          self.registered_nodes, 
+          extras
         ].flatten.join("\n")
       end
 

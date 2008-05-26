@@ -17,6 +17,21 @@ namespace subclass {
   class Sub : public Base {
     public:
     Sub() {}
-  };  
+  };
+  
+  template<class T>
+  class TemplateSuper : public Super {
+    T val;
+    public: 
+    TemplateSuper(T val) {
+      this->val = val;
+    }
+    inline T custom() { return this->val; }
+  };
+  
+  class TemplateSub : public TemplateSuper<int> {
+    public:
+    TemplateSub() : TemplateSuper<int>(0) {}
+  };
 }
 #endif

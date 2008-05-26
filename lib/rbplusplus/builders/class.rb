@@ -12,9 +12,12 @@ module RbPlusPlus
 
       def build
         class_name = node.name
-        full_name = node.qualified_name
-        self.rice_variable = "rb_c#{class_name}"
-        self.rice_variable_type = "Rice::Data_Type<#{full_name}>"
+
+        #Handles templated super classes
+        typedef_name = node.qualified_name.gsub("::","_").gsub(/[<>]/, "_")
+        
+        self.rice_variable = "rb_c#{node.name.gsub(/[<>]/, "_")}"
+        self.rice_variable_type = "Rice::Data_Type<#{self.qualified_name} >"
 
         includes << "#include <rice/Class.hpp>"
         includes << "#include <rice/Data_Type.hpp>"
@@ -24,13 +27,17 @@ module RbPlusPlus
         add_includes_for node
         add_additional_includes
         
-        supers = node.super_classes        
-        super_names = supers.collect { |s| s.qualified_name }.join(",")
+        
+        self.declarations.insert(0,"typedef #{node.qualified_name} #{typedef_name};")
+        
+        supers = node.super_classes.collect { |s| s.qualified_name }
+        
+        class_names = [typedef_name, supers].flatten.join(",")
         
         if !parent.is_a?(ExtensionBuilder)
-          class_defn += "Rice::define_class_under<#{super_names} >(#{parent.rice_variable}, \"#{class_name}\");"
+          class_defn += "Rice::define_class_under<#{class_names} >(#{parent.rice_variable}, \"#{class_name}\");"
         else
-          class_defn += "Rice::define_class<#{super_names} >(\"#{class_name}\");"
+          class_defn += "Rice::define_class<#{class_names} >(\"#{class_name}\");"
         end
 
         body << class_defn
@@ -39,7 +46,7 @@ module RbPlusPlus
         node.constructors.each do |init|
           next if init.ignored?
           next unless init.public?
-          args = [full_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
+          args = [typedef_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
           body << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
 
@@ -47,7 +54,7 @@ module RbPlusPlus
         node.methods.each do |method|
           next if method.ignored? || method.moved?
           next unless method.public?
-          
+         
           m = "define_method"
           name = method.qualified_name
 

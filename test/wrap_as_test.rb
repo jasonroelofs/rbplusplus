@@ -39,6 +39,9 @@ context "Ugly interfaces cleaner" do
         nc = node.classes("NoConstructor")
         nc.constructors.each { |c| c.ignore }
         m.includes nc 
+        
+        m.includes node.classes("Outside")
+        node.classes("Outside").includes node.classes("Inside")
       end
     end
     
@@ -92,6 +95,10 @@ context "Ugly interfaces cleaner" do
     
     should.raise TypeError do
       UI::NoConstructor.new
+    end
+    
+    should.not.raise NoMethodError do
+      UI::Outside::Inside.new
     end
   end
 end

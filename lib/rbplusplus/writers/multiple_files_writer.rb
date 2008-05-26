@@ -23,6 +23,9 @@ module RbPlusPlus
                    else
                      node.name
                    end
+                   
+        #templated classes
+        filename.gsub!(/[<>]/,"_")
 
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 

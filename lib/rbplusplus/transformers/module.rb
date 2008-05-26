@@ -16,6 +16,8 @@ module RbPlusPlus
         reference_function(val)
       elsif is_a?(val, RbGCCXML::Class)
         reference_class(val)
+      elsif is_a?(val, RbGCCXML::Struct)
+        reference_struct(val)
       else
         raise "Cannot use #{self.class}#includes for type '#{val.class}'"
       end
@@ -32,6 +34,12 @@ module RbPlusPlus
       classes << @node.classes if @node
       classes.flatten
     end
+  
+    def structs
+      structs = @structs || []
+      structs << @node.structs if @node
+      structs.flatten
+    end
     
     private
     # Map a function from a different namespace
@@ -46,6 +54,12 @@ module RbPlusPlus
       @classes ||= []
       @classes << NodeReference.new(val)
       val.moved=true
+    end
+    
+    def reference_struct(val)
+      @structs ||= []
+      @structs << NodeReference.new(val)
+      val.moved=true   
     end
         
     def is_a?(val, klass)
