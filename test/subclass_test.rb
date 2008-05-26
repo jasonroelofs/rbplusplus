@@ -6,11 +6,17 @@ context "Extension with class hierachies" do
     Extension.new "subclass" do |e|
       e.sources full_dir("headers/subclass.h")
       node = e.namespace "subclass"
+      e.module("Sub") do |m|
+        node.classes.each do |c|
+          m.includes c
+        end
+      end
     end
 
     require 'subclass'
     should.not.raise NameError do
-      Base.new.one.should == Sub.new.one
+      Sub::Base.new.one.should == Sub::Sub.new.one
+      Sub::Base.new.zero.should == Sub::Sub.new.zero
     end
   end
 

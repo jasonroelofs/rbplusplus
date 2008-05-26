@@ -62,28 +62,34 @@ module RbPlusPlus
         @registered_nodes << [node, register_func]
       end
       
+    private
+      
+      def nested_level(node, level=0)
+        return level if node.super_classes.length == 1
+        node.super_classes[1..-1].each do |sup|
+          level = nested_level(sup, level+1)
+        end
+        return level
+      end
+      
+    public
+      
       # sorts the registered nodes by hierachy, registering the base classes
       # first.
       #
       # this is necessary for Rice to know about inheritance
       def registered_nodes
         #sort by hierachy
-        @registered_nodes.sort! do |blob, blob2|
-          build = blob[0]
-          build2 = blob2[0]
-          supers = build.node.super_classes.collect { |c| c.qualified_name}
-          supers2 = build2.node.super_classes.collect { |c| c.qualified_name}
-          if supers.include? build2.node.qualified_name
-            1
-          elsif supers2.include? build.node.qualified_name
-            -1
-          else
+        nodes = @registered_nodes.sort_by do |build, func|
+          if build.node.nil?
             0
+          else  
+            nested_level(build.node)
           end
         end
         
         #collect the sorted members
-        @registered_nodes.collect do |node, func|
+        nodes.collect do |node, func|
           func
         end
       end
@@ -142,8 +148,22 @@ module RbPlusPlus
       # Builders should use to_s to make finishing touches on the generated
       # code before it gets written out to a file.
       def to_s
-        [self.includes.flatten.uniq, "", self.declarations, "", self.body, 
-        self.registered_nodes].flatten.join("\n")
+      extras = []
+      #Weird trailing } needs to be destroyed!!!
+      if self.body[-1].strip == "}"
+        extras << self.body.delete_at(-1)
+      end
+    
+      return [
+        self.includes.flatten.uniq, 
+        "", 
+        self.declarations, 
+        "", 
+        self.body,
+        "", 
+        self.registered_nodes, 
+        extras
+        ].flatten.join("\n")
       end
 
       # Get the full qualified name of the related gccxml node
