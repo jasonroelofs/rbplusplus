@@ -25,7 +25,7 @@ module RbPlusPlus
                    end
                    
         #templated classes
-        filename.gsub!(/[<>]/,"_")
+        filename.gsub!(/[ ,<>]/,"_")
         #templates to pointers
         filename.gsub!("*","Ptr")
 

@@ -16,13 +16,13 @@ module RbPlusPlus
         #Handles templated super classes
         typedef_name = node.qualified_name
         typedef_name.gsub!("::","_")
-        typedef_name.gsub!(/[<>]/, "_")
+        typedef_name.gsub!(/[ ,<>]/, "_")
         typedef_name.gsub!("*", "Ptr")
         
         #Handles templated super classes passing in complex members
         var_name = node.name
         var_name.gsub!("::","_")
-        var_name.gsub!(/[<>]/, "_")
+        var_name.gsub!(/[ ,<>]/, "_")
         var_name.gsub!("*", "Ptr")
         
         self.rice_variable = "rb_c#{var_name}"
