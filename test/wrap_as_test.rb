@@ -28,6 +28,11 @@ context "Ugly interfaces cleaner" do
         vector = node.classes("C_UIVector").wrap_as("Vector")
         vector.methods("x_").wrap_as("x")
         vector.methods("set_x").wrap_as("x=")
+        
+        # This is ignored because the C function Vector_y is not defined
+        vector.methods("y_").calls("Vector_y").ignore
+        vector.methods("y_").qualified_name.should == "Vector_y"
+        
         m.includes vector
         
         #mapping stray functions to singleton methods

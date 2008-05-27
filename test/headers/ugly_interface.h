@@ -47,6 +47,9 @@ class C_UIVector {
     static int one() {
       return 1;
     }
+    int y_() {
+      return 0;
+    }
 };
 
 class NoConstructor {
