@@ -4,11 +4,12 @@ module RbPlusPlus
     include Singleton
     # Retrieves a node from the cache based on the node's qualified name
     def get(node)
+      demangled = node.attributes['demangled']
       @@nodes ||= {}
-      if @@nodes[node.qualified_name].nil?
-        @@nodes[node.qualified_name] = node
+      if @@nodes[demangled].nil?
+        @@nodes[demangled] = node
       end
-      return @@nodes[node.qualified_name]
+      return @@nodes[demangled]
     end
     
     # Clears out the cache
