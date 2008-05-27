@@ -47,7 +47,7 @@ module RbPlusPlus
           end
           
           if method.return_type.const?
-            build_const_converter(method.return_type)
+            TypesManager.build_const_converter(method.return_type)
           end
 
           body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"

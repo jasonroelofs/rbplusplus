@@ -6,7 +6,6 @@ context "Properly build known required to_ruby and from_ruby methods" do
     Extension.new "to_from_ruby" do |e|
       e.sources full_dir("headers/to_from_ruby.h")
       e.namespace "to_from_ruby"
-      e.writer_mode :single
     end
 
     require 'to_from_ruby'
