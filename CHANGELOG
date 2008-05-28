@@ -11,7 +11,10 @@
 
 === rb++
 
-* When printing out types, properly prints out a fully qualified type name (e.g. std::string instead of just string)
+* When printing out types, properly prints out a fully qualified type name (e.g. std::string instead of just string).
+* Generates to_ruby definitions for const return types.
+* Better placement of generated code when dealing with multiple files. 
+* Able to now specify other C/C++ source files to add to the compile step.
 
 == 0.1.1
 

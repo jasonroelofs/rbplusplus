@@ -4,7 +4,9 @@ context "Properly build known required to_ruby and from_ruby methods" do
 
   specify "should build for const & types as needed" do
     Extension.new "to_from_ruby" do |e|
-      e.sources full_dir("headers/to_from_ruby.h")
+      e.sources full_dir("headers/to_from_ruby.h"),
+        :include_paths => full_dir("headers"),
+        :include_source_files => full_dir("headers/to_from_ruby_source.cpp")
       e.namespace "to_from_ruby"
     end
 

@@ -45,20 +45,11 @@ module RbPlusPlus
     # The list of modules to create
     attr_accessor :modules
 
-    # List of extra include directives
-    attr_accessor :includes
-
-    # List of directories for library searching
-    attr_accessor :lib_paths
-
-    # List of libraries to link
-    attr_accessor :libraries
-
-    # List of extra CXXFLAGS that might need to be added to compile lines
-    attr_accessor :cxxflags
-
-    # List of extra LDFLAGS that might need to be added to compile lines
-    attr_accessor :ldflags
+    # Various options given by the user to help with
+    # parsing, linking, compiling, etc.
+    #
+    # See #sources for a list of the possible options 
+    attr_accessor :options
 
     # Create a new Ruby extension with a given name. This name will be
     # the module built into the extension. 
@@ -67,11 +58,17 @@ module RbPlusPlus
       @name = name
       @modules = []
       @writer_mode = :multiple
-      @includes = []
-      @lib_paths = []
-      @libraries = []
-      @cxxflags = []
-      @ldflags = []
+
+      @options = {
+        :include_paths => [],
+        :library_paths => [],
+        :libraries => [],
+        :cxxflags => [],
+        :ldflags => [],
+        :include_source_files => []
+      }
+
+
       @node = nil
 
       if block
@@ -94,29 +91,34 @@ module RbPlusPlus
     # * <tt>:libraries</tt> - An array or string of full paths to be added as -l flags
     # * <tt>:cxxflags</tt> - An array or string of flags to be added to command line for parsing / compiling
     # * <tt>:ldflags</tt> - An array or string of flags to be added to command line for linking
+    # * <tt>:include_source_files</tt> - For when there are other C/C++ source files to be compiled into the extension
     def sources(dirs, options = {})
       parser_options = {}
 
       if (paths = options.delete(:include_paths))
-        @includes << paths
-        parser_options[:includes] = @includes
+        @options[:include_paths] << paths
+        parser_options[:includes] = paths
       end
 
       if (lib_paths = options.delete(:library_paths))
-        @lib_paths << lib_paths 
+        @options[:library_paths] << lib_paths 
       end
 
       if (libs = options.delete(:libraries))
-        @libraries << libs
+        @options[:libraries] << libs
       end
 
       if (flags = options.delete(:cxxflags))
-        @cxxflags << flags
-        parser_options[:cxxflags] = @cxxflags
+        @options[:cxxflags] << flags
+        parser_options[:cxxflags] = flags
       end
 
       if (flags = options.delete(:ldflags))
-        @ldflags << flags
+        @options[:ldflags] << flags
+      end
+
+      if (files = options.delete(:include_source_files))
+        @options[:include_source_files] << files
       end
 
       @parser = RbGCCXML.parse(dirs, parser_options)
@@ -161,6 +163,7 @@ module RbPlusPlus
     # #build must be called before this step or nothing will be written out
     def write
       prepare_working_dir
+      process_other_source_files
       
       # Create the code
       writer_class = @writer_mode == :multiple ? Writers::MultipleFilesWriter : Writers::SingleFileWriter
@@ -168,11 +171,7 @@ module RbPlusPlus
 
       # Create the extconf.rb
       extconf = Writers::ExtensionWriter.new(@builder, @working_dir)
-      extconf.includes = @includes
-      extconf.library_paths = @lib_paths
-      extconf.libraries = @libraries
-      extconf.cxxflags = @cxxflags
-      extconf.ldflags = @ldflags
+      extconf.options = @options
       extconf.write
     end
 
@@ -194,6 +193,15 @@ module RbPlusPlus
     def prepare_working_dir
       FileUtils.mkdir_p @working_dir unless File.directory?(@working_dir)
       FileUtils.rm_rf Dir["#{@working_dir}/*"]
+    end
+
+    # Make sure that any files or globs of files in :include_source_files are copied into the working
+    # directory before compilation
+    def process_other_source_files
+      files = @options[:include_source_files].flatten
+      files.each do |f|
+        FileUtils.cp Dir[f], @working_dir
+      end
     end
 
     # Cool little eval / binding hack, from need.rb

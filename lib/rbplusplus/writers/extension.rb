@@ -6,31 +6,17 @@ module RbPlusPlus
     # file with the appropriate options.
     class ExtensionWriter < Base
 
-      # List of -I directives
-      attr_accessor :includes
-
-      # List of -L directives
-      attr_accessor :library_paths
-
-      # List of -l directives
-      attr_accessor :libraries
-
-      # Extra CXXFLAGS
-      attr_accessor :cxxflags
-
-      # Extra LDFLAGS
-      attr_accessor :ldflags
+      # Options given from the extension
+      attr_accessor :options
 
       def write
         extconf = File.join(working_dir, "extconf.rb")
 
-        @includes ||= []
-
-        inc_str = @includes.flatten.uniq.map {|i| "-I#{i}"}.join(" ")
-        inc_str += " " + @cxxflags.flatten.join(" ")
-        lib_path_str = @library_paths.flatten.uniq.map {|i| "-L#{i}"}.join(" ")
-        lib_str = @libraries.flatten.uniq.map {|i| "-l#{i}"}.join(" ")
-        lib_str += " " + @ldflags.flatten.join(" ")
+        inc_str = @options[:include_paths].flatten.uniq.map {|i| "-I#{i}"}.join(" ")
+        inc_str += " " + @options[:cxxflags].flatten.join(" ")
+        lib_path_str = @options[:library_paths].flatten.uniq.map {|i| "-L#{i}"}.join(" ")
+        lib_str = @options[:libraries].flatten.uniq.map {|i| "-l#{i}"}.join(" ")
+        lib_str += " " + @options[:ldflags].flatten.join(" ")
 
         File.open(extconf, "w+") do |file|
           file.puts "require \"rubygems\""
