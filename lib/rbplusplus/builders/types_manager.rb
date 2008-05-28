@@ -37,6 +37,9 @@ module RbPlusPlus
       def build_const_converter(type)
         full_name = type.base_type.qualified_name
 
+        # Don't need to deal with fundamental types
+        return if type.base_type.is_a?(RbGCCXML::FundamentalType)
+
         # Only wrap once
         # TODO cleaner way of doing this
         return if @consts_wrapped.include?(full_name)
