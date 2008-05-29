@@ -131,7 +131,8 @@ context "Compiler settings" do
     should.not.raise do
       e = Extension.new "external" 
       e.working_dir = full_dir("generated")
-      e.sources full_dir("headers/external_mapping.h"), :includes => full_dir("headers/*rice.h")
+      e.sources full_dir("headers/external_mapping.h"), 
+        :includes => full_dir("headers/*rice.h")
       e.build
       e.write
 

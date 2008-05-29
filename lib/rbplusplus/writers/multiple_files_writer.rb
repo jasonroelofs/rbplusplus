@@ -19,7 +19,7 @@ module RbPlusPlus
         end
 
         filename = if node.parent
-                     node.qualified_name.gsub(/::/, "_")
+                     "_"+node.qualified_name.gsub(/::/, "_")
                    else
                      node.name
                    end
