@@ -21,6 +21,7 @@ module RbPlusPlus
     autoload :ClassBuilder, "rbplusplus/builders/class"
     autoload :ExtensionBuilder, "rbplusplus/builders/extension"
     autoload :ModuleBuilder, "rbplusplus/builders/module"
+    autoload :EnumerationBuilder, "rbplusplus/builders/enumeration"
     autoload :TypesManager, "rbplusplus/builders/types_manager"
   end
 

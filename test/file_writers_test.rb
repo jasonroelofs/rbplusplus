@@ -19,7 +19,7 @@ context "Multiple file writer (default)" do
 
   specify "should properly split up code into multiple files" do
     files = Dir["#{@working_dir}/*"]
-    files.size.should == 8
+    files.size.should == 6
 
     %w(
       extconf.rb

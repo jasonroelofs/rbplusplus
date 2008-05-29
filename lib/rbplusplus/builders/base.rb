@@ -81,6 +81,15 @@ module RbPlusPlus
         end
       end
 
+      # Find and wrap up all enumerations
+      def build_enumerations
+        @node.enumerations.each do |enum|
+          builder = EnumerationBuilder.new(self, enum)
+          builder.build
+          builders << builder
+        end
+      end
+
       # Compatibility with Rice 1.0.1's explicit self requirement, build a quick
       # wrapper that includes a self and discards it, forwarding the call as needed.
       #

@@ -27,6 +27,7 @@ module RbPlusPlus
             body << "\tdefine_global_function(\"#{Inflector.underscore(func.name)}\", &#{wrapper_name});"
           end
 
+          build_enumerations
           build_classes
         end
 

@@ -5,12 +5,16 @@ module RbPlusPlus
     class MultipleFilesWriter < Base
 
       def write
+        @to_from_include = ""
         write_to_from_ruby
         _write_node(builder)
       end
 
       # Write out files that include the auto-generated to_/from_ruby constructs.
       def write_to_from_ruby
+        # Ignore this if there's nothing to write out
+        return if Builders::TypesManager.body.length == 0
+
         hpp_file = File.join(working_dir, "_to_from_ruby.rb.hpp")
         cpp_file = File.join(working_dir, "_to_from_ruby.rb.cpp")
 

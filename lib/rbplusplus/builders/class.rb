@@ -54,11 +54,10 @@ module RbPlusPlus
         end
 
         # Nested Classes
-        node.classes.each do |klass|
-          b = ClassBuilder.new(self, klass)
-          b.build
-          builders << b
-        end
+        build_classes
+
+        # Enumerations
+        build_enumerations
       end
 
     end
