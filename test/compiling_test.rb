@@ -126,7 +126,7 @@ context "Compiler settings" do
       e.write
     end
   end
-  
+
   specify "should be able to add additional headers as needed" do
     should.not.raise do
       e = Extension.new "external" 
@@ -140,6 +140,20 @@ context "Compiler settings" do
       contents = File.read(file)
       contents.should.match(%r(headers/external_mapping_rice.h))
     end
-    
+  end
+
+  specify "can specify other source files to be compiled into the extension" do
+    Extension.new "source_files" do |e|
+      e.sources full_dir("headers/to_from_ruby.h"),
+        :include_paths => full_dir("headers"),
+        :include_source_files => full_dir("headers/to_from_ruby_source.cpp")
+      e.namespace "to_from_ruby"
+    end
+
+    require 'source_files'
+
+    # Don't know if there's any way to catch this nicely. A failure here
+    # is a symbol lookup failure and death to the Ruby VM
+    needs_to_ruby(3).value.should == 3
   end
 end

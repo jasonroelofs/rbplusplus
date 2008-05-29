@@ -183,23 +183,6 @@ module RbPlusPlus
         end
       end
 
-      # Rice doesn't automatically handle all to_ / from_ruby conversions for a given type.
-      # A common construct is the +const Type&+ variable, which we need to manually handle.
-      def build_const_converter(type)
-        full_name = type.base_type.qualified_name
-        @@const_wrapped ||= []
-
-        # Only wrap once
-        # TODO cleaner way of doing this
-        return if @@const_wrapped.include?(full_name)
-
-        @@const_wrapped << full_name
-        declarations << "template<>"
-        declarations << "Rice::Object to_ruby<#{full_name}>(#{full_name} const & a) {"
-        declarations << "\treturn Rice::Data_Object<#{full_name}>((#{full_name} *)&a, Rice::Data_Type<#{full_name}>::klass(), 0, 0);"
-        declarations << "}"
-      end
-
       # Compatibility with Rice 1.0.1's explicit self requirement, build a quick
       # wrapper that includes a self and discards it, forwarding the call as needed.
       #

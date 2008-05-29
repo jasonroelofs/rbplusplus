@@ -6,6 +6,7 @@ require 'rbgccxml'
 
 require 'inflector'
 require 'fileutils'
+require 'singleton'
 require 'rbplusplus/rbplusplus'
 
 require 'fileutils'
@@ -22,6 +23,7 @@ module RbPlusPlus
     autoload :ClassBuilder, "rbplusplus/builders/class"
     autoload :ExtensionBuilder, "rbplusplus/builders/extension"
     autoload :ModuleBuilder, "rbplusplus/builders/module"
+    autoload :TypesManager, "rbplusplus/builders/types_manager"
   end
 
   module Writers

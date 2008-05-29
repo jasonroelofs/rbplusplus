@@ -5,7 +5,35 @@ module RbPlusPlus
     class MultipleFilesWriter < Base
 
       def write
+        write_to_from_ruby
         _write_node(builder)
+      end
+
+      # Write out files that include the auto-generated to_/from_ruby constructs.
+      def write_to_from_ruby
+        hpp_file = File.join(working_dir, "_to_from_ruby.rb.hpp")
+        cpp_file = File.join(working_dir, "_to_from_ruby.rb.cpp")
+
+        @to_from_include = "#include \"#{hpp_file}\""
+
+        include_guard = "__RICE_GENERATED_TO_FROM_RUBY_HPP__"
+
+        File.open(hpp_file, "w+") do |f|
+          f.puts "#ifndef #{include_guard}" 
+          f.puts "#define #{include_guard}" 
+          f.puts ""
+          f.puts Builders::TypesManager.includes.uniq.join("\n")
+          f.puts ""
+          f.puts Builders::TypesManager.prototypes.join("\n")
+          f.puts ""
+          f.puts "#endif // #{include_guard}" 
+        end
+
+        File.open(cpp_file, "w+") do |f|
+          f.puts @to_from_include
+          f.puts ""
+          f.puts Builders::TypesManager.body.join("\n");
+        end
       end
 
       # How this works:
@@ -65,6 +93,8 @@ module RbPlusPlus
           File.open(hpp_file, "w+") do |hpp|
             hpp.puts "#ifndef #{include_guard}"
             hpp.puts "#define #{include_guard}"
+            hpp.puts ""
+            hpp.puts @to_from_include
             hpp.puts ""
             hpp.puts "void #{register_func}(#{register_func_prototype});"
             hpp.puts "#endif"

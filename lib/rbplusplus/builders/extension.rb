@@ -24,7 +24,7 @@ module RbPlusPlus
             wrapper_name = build_function_wrapper(func)
 
             if func.return_type.const?
-              build_const_converter(func.return_type)
+              TypesManager.build_const_converter(func.return_type)
             end
 
             body << "\tdefine_global_function(\"#{Inflector.underscore(func.name)}\", &#{wrapper_name});"
