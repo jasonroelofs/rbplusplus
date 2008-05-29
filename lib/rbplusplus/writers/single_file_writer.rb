@@ -7,6 +7,11 @@ module RbPlusPlus
       def write
         process_code(builder)
 
+        if Builders::TypesManager.body.length > 0
+          # Handle to_from_ruby constructions
+          builder.declarations << Builders::TypesManager.body
+        end
+
         filename = builder.name
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 
