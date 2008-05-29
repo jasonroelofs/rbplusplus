@@ -1,6 +1,5 @@
 TODO
-* Enumerations
-* Moving the to_ruby / from_ruby definitions to a place that all will know about them
+* Proper TypesManager dealings with single_file writer mode
 * Working with the defined C++ heirarchy chain
 * (m&m) include
 * (m&m) exclude
@@ -26,6 +25,8 @@ DONE
 * Look into file naming when dealing with Modules
 * Nested Modules
 * Recognizing and building to_ruby / from_ruby methods for const type references
+* Moving the to_ruby / from_ruby definitions to a place that all will know about them
+* Enumerations
 
 No longer waiting on rice - just building a wrapper myself now. 
 * Adding global methods (Kernel-level methods)
