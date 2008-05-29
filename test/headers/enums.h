@@ -14,6 +14,13 @@ namespace enums {
     VALUE3
   };
 
+  namespace inner {
+    enum InnerEnum {
+      INNER_1,
+      INNER_2
+    };
+  }
+
   std::string whatTestEnum(TestEnum e) {
     std::string ret = "We gots enum " + e;
     return ret;
