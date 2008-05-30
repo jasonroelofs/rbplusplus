@@ -65,9 +65,9 @@ module RbPlusPlus
         :libraries => [],
         :cxxflags => [],
         :ldflags => [],
-        :include_source_files => []
+        :include_source_files => [],
+        :includes => []
       }
-
 
       @node = nil
 
@@ -91,6 +91,8 @@ module RbPlusPlus
     # * <tt>:libraries</tt> - An array or string of full paths to be added as -l flags
     # * <tt>:cxxflags</tt> - An array or string of flags to be added to command line for parsing / compiling
     # * <tt>:ldflags</tt> - An array or string of flags to be added to command line for linking
+    # * <tt>:includes</tt> - An array of .h files to include at the beginning of each .rb.cpp file generated, 
+    #   specified as a glob.
     # * <tt>:include_source_files</tt> - For when there are other C/C++ source files to be compiled into the extension
     def sources(dirs, options = {})
       parser_options = {}
@@ -120,7 +122,17 @@ module RbPlusPlus
       if (files = options.delete(:include_source_files))
         @options[:include_source_files] << files
       end
+      
+      if (flags = options.delete(:includes))
+        includes = Dir.glob(flags)
+        if(includes.length == 0)
+          puts "Warning: There were no matches for includes #{flags.inspect}"
+        else
+          @options[:includes] += [*includes]
+        end
+      end
 
+      @sources = Dir.glob dirs
       @parser = RbGCCXML.parse(dirs, parser_options)
     end
 
@@ -148,13 +160,15 @@ module RbPlusPlus
       raise "Unknown writer mode #{mode}" unless [:multiple, :single].include?(mode)
       @writer_mode = mode
     end
-
+    
     # Start the code generation process. 
     def build
       raise ConfigurationError.new("Must specify working directory") unless @working_dir
       raise ConfigurationError.new("Must specify which sources to wrap") unless @parser
 
       @builder = Builders::ExtensionBuilder.new(@name, @node || @parser)
+      Builders::Base.additional_includes  = @options[:includes]
+      Builders::Base.sources              = @sources
       @builder.modules = @modules
       @builder.build
     end

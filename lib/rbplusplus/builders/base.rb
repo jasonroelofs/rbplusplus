@@ -54,6 +54,91 @@ module RbPlusPlus
         @includes = []
         @declarations = []
         @body = []
+        @registered_nodes = []
+      end
+      
+      # adds a register function to the Init or register of this node
+      def register_node(node, register_func)
+        @registered_nodes << [node, register_func]
+      end
+      
+    private
+      
+      def nested_level(node, level=0)
+        return level if node.is_a? RbGCCXML::Namespace
+        return level if node.super_classes.length == 0
+        node.super_classes.each do |sup|
+          level = nested_level(sup, level+1)
+        end
+        return level
+      end
+      
+    public
+      
+      # sorts the registered nodes by hierachy, registering the base classes
+      # first.
+      #
+      # this is necessary for Rice to know about inheritance
+      def registered_nodes
+        #sort by hierachy
+        nodes = @registered_nodes.sort_by do |build, func|
+          if build.node.nil?
+            0
+          else  
+            nested_level(build.node)
+          end
+        end
+        
+        #collect the sorted members
+        nodes.collect do |node, func|
+          func
+        end
+      end
+      
+      # The name of the header file to include
+      # This is the file default, so long as it matches one of the export files
+      # If not this returns all exported files.
+      #
+      # This was added to workaround badly declared namespaces
+      def header_files(node)
+        file = node.file_name(false)
+        return [file] if self.class.sources.include?(file)
+        self.class.sources
+      end
+      
+      # Adds the necessary includes in order to compile the specified node
+      def add_includes_for(node)
+        header_files(node).each do |header|
+          includes << "#include \"#{header}\""
+        end
+      end
+      
+      # Include any user specified include files
+      def add_additional_includes
+        self.class.additional_includes.each do |inc|
+          includes << "#include \"#{inc}\""
+        end
+      end
+      
+      # Set a list of user specified include files
+      def self.additional_includes=(addl)
+        @@additional_includes = addl
+      end
+      
+      # Get an array of user specified include files
+      def self.additional_includes
+        @@additional_includes || []
+      end
+      
+      # A list of all the source files.  This is used in order to prevent files 
+      # that are not in the list from being included and mucking things up
+      def self.sources=(sources)
+        @@sources = sources
+      end
+      
+      # Retrieves a list of user specified source files
+      def self.sources
+        @@sources || []
       end
 
       # All builders must implement this method
@@ -64,7 +149,22 @@ module RbPlusPlus
       # Builders should use to_s to make finishing touches on the generated
       # code before it gets written out to a file.
       def to_s
-        [self.includes.flatten.uniq, "", self.declarations, "", self.body].flatten.join("\n")
+        extras = []
+        #Weird trailing } needs to be destroyed!!!
+        if self.body.flatten[-1].strip == "}"
+          extras << self.body.delete_at(-1)
+        end
+    
+        return [
+          self.includes.flatten.uniq, 
+          "", 
+          self.declarations, 
+          "", 
+          self.body,
+          "", 
+          self.registered_nodes, 
+          extras
+        ].flatten.join("\n")
       end
 
       # Get the full qualified name of the related gccxml node
@@ -73,8 +173,11 @@ module RbPlusPlus
       end
 
       # Register all classes
-      def build_classes
-        @node.classes.each do |klass|
+      def build_classes(classes = nil)
+        classes ||= [@node.classes, @node.structs].flatten
+        classes.each do |klass|
+          next if klass.ignored? || klass.moved?
+          next unless klass.public?
           builder = ClassBuilder.new(self, klass)
           builder.build
           builders << builder
@@ -95,11 +198,11 @@ module RbPlusPlus
       #
       # Returns: the name of the wrapper function
       def build_function_wrapper(function)
+        return if function.ignored? || function.moved?
         wrapper_func = "wrap_#{function.qualified_name.gsub(/::/, "_")}"
 
         proto_string = ["Rice::Object self"]
         call_string = []
-
         function.arguments.map{|arg| [arg.cpp_type.to_s(true), arg.name]}.each do |parts|
           type = parts[0]
           name = parts[1]

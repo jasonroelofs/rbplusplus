@@ -12,32 +12,58 @@ module RbPlusPlus
 
       def build
         class_name = node.name
-        full_name = node.qualified_name
-        self.rice_variable = "rb_c#{class_name}"
-        self.rice_variable_type = "Rice::Data_Type<#{full_name}>"
+
+        #Handles templated super classes
+        typedef_name = node.qualified_name
+        typedef_name.gsub!("::","_")
+        typedef_name.gsub!(/[ ,<>]/, "_")
+        typedef_name.gsub!("*", "Ptr")
+        
+        #Handles templated super classes passing in complex members
+        var_name = node.name
+        var_name.gsub!("::","_")
+        var_name.gsub!(/[ ,<>]/, "_")
+        var_name.gsub!("*", "Ptr")
+        
+        self.rice_variable = "rb_c#{var_name}"
+        self.rice_variable_type = "Rice::Data_Type<#{self.qualified_name} >"
 
         includes << "#include <rice/Class.hpp>"
         includes << "#include <rice/Data_Type.hpp>"
-        includes << "#include <rice/Constructor.hpp>"
-        includes << "#include \"#{node.file_name(false)}\""
-
+        includes << "#include <rice/Constructor.hpp>"  
+        
         class_defn = "\t#{rice_variable_type} #{rice_variable} = "
+        add_includes_for node
+        add_additional_includes
+        
+        
+        self.declarations.insert(0,"typedef #{node.qualified_name} #{typedef_name};")
+        
+        supers = node.super_classes.collect { |s| s.qualified_name }
+        
+        class_names = [typedef_name, supers].flatten.join(",")
+        
         if !parent.is_a?(ExtensionBuilder)
-          class_defn += "Rice::define_class_under<#{full_name}>(#{parent.rice_variable}, \"#{class_name}\");"
+          class_defn += "Rice::define_class_under<#{class_names} >(#{parent.rice_variable}, \"#{class_name}\");"
         else
-          class_defn += "Rice::define_class<#{full_name}>(\"#{class_name}\");"
+          class_defn += "Rice::define_class<#{class_names} >(\"#{class_name}\");"
         end
 
         body << class_defn
 
         # Constructors
         node.constructors.each do |init|
-          args = [full_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
+          next if init.ignored?
+          next unless init.public?
+          args = [typedef_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
           body << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
 
         # Methods
         node.methods.each do |method|
+          next if method.ignored? || method.moved?
+          next unless method.public?
+         
           m = "define_method"
           name = method.qualified_name
 

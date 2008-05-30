@@ -11,13 +11,16 @@ module RbPlusPlus
       def build
         includes << "#include <rice/global_function.hpp>"
 
+        add_additional_includes
+
         body << "extern \"C\""
         body << "void Init_#{@name}() {"
 
         # Explicitly ignore anything from the :: namespace
         if @node.name != "::"
           @node.functions.each do |func|
-            includes << "#include \"#{func.file_name(false)}\""
+            next if func.ignored? || func.moved?
+            add_includes_for func 
             wrapper_name = build_function_wrapper(func)
 
             if func.return_type.const?
@@ -44,9 +47,9 @@ module RbPlusPlus
 
       # Finish up the required code before doing final output
       def to_s
-        body << "}"
-
-        super
+        includes << "using namespace Rice;"
+        
+        super + "\n}"
       end
     end
   end

@@ -18,6 +18,8 @@ module RbPlusPlus
         self.rice_variable_type = "Rice::Module"
 
         includes << "#include <rice/Module.hpp>"
+        
+        add_additional_includes
 
         mod_defn = "\t#{rice_variable_type} #{rice_variable} = "
         if !parent.is_a?(ExtensionBuilder)
@@ -30,10 +32,12 @@ module RbPlusPlus
 
         # If a namespace has been given to this module, find and wrap the appropriate code
         if self.node
-          build_enumerations
-          build_functions
-          build_classes
+          build_enumerations 
         end
+
+        build_functions unless @module.functions.empty?
+        build_classes(@module.classes) unless @module.classes.empty?
+   
 
         # Build each inner module
         @module.modules.each do |mod|
@@ -45,8 +49,9 @@ module RbPlusPlus
 
       # Process functions to be added to this module
       def build_functions
-        self.node.functions.each do |func|
-          includes << "#include \"#{func.file_name(false)}\""
+        @module.functions.each do |func|
+          next if func.ignored? || func.moved? # fine grained function filtering
+          add_includes_for func
 
           func_name = Inflector.underscore(func.name)
           wrapped_name = build_function_wrapper(func)

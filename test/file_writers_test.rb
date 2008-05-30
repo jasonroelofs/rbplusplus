@@ -23,10 +23,10 @@ context "Multiple file writer (default)" do
 
     %w(
       extconf.rb
-      Mod.rb.cpp
-      Mod.rb.hpp
-      classes_Adder.rb.cpp
-      classes_Adder.rb.hpp
+      _Mod.rb.cpp
+      _Mod.rb.hpp
+      _classes_Adder.rb.cpp
+      _classes_Adder.rb.hpp
       adder.rb.cpp
     ).each do |wants|
       assert_not_nil files.find {|got| File.basename(got) == wants }, "Didn't find #{wants}"

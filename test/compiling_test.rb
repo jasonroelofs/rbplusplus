@@ -127,6 +127,21 @@ context "Compiler settings" do
     end
   end
 
+  specify "should be able to add additional headers as needed" do
+    should.not.raise do
+      e = Extension.new "external" 
+      e.working_dir = full_dir("generated")
+      e.sources full_dir("headers/external_mapping.h"), 
+        :includes => full_dir("headers/*rice.h")
+      e.build
+      e.write
+
+      file = full_dir("generated/external.rb.cpp")
+      contents = File.read(file)
+      contents.should.match(%r(headers/external_mapping_rice.h))
+    end
+  end
+
   specify "can specify other source files to be compiled into the extension" do
     Extension.new "source_files" do |e|
       e.sources full_dir("headers/to_from_ruby.h"),
