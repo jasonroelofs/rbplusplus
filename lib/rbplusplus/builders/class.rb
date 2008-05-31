@@ -60,23 +60,38 @@ module RbPlusPlus
         end
 
         # Methods
+        methods_hash = {}
         node.methods.each do |method|
           next if method.ignored? || method.moved?
           next unless method.public?
-         
-          m = "define_method"
-          name = method.qualified_name
+  
+          methods_hash[method.name] ||= []
+          methods_hash[method.name] << method
+        end
+        
+        methods_hash.each do |key, methods|
+          if methods.length == 1
+            method = methods[0]
+            m = "define_method"
+            name = method.qualified_name
 
-          if method.static?
-            m = "define_singleton_method"
-            name = build_function_wrapper(method)
-          end
-          
-          if method.return_type.const?
-            TypesManager.build_const_converter(method.return_type)
-          end
+            if method.static?
+              m = "define_singleton_method"
+              name = build_function_wrapper(method)
+            end
+            
+            if method.return_type.const?
+              TypesManager.build_const_converter(method.return_type)
+            end
 
-          body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"
+            body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
+          else
+            methods.each_with_index do |method, i|
+              name = build_method_wrapper(node, method, i)
+              m = "define_method"
+              body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
+            end
+          end
         end
 
         # Nested Classes
