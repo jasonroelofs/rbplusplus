@@ -85,8 +85,8 @@ module RbPlusPlus
           # * Add a call to the register method
           node.parent.includes << hpp_include
 
-          # Bypass the boilerplate code.
-          node.parent.body.insert(2, "#{register_func}(#{register_func_arg});")
+          # Register for proper flattening of the inheritance tree
+          node.parent.register_node(node, "#{register_func}(#{register_func_arg});")
 
           # Modifications to this current node's code:
           # 
