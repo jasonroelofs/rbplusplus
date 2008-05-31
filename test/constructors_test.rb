@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/test_helper'
 
 context "Extension with constructors out the whazoo" do
 
-  xspecify "should make constructors available" do
+  specify "should make constructors available" do
     Extension.new "constructors" do |e|
       e.sources full_dir("headers/constructors.h")
       node = e.namespace "constructors"
