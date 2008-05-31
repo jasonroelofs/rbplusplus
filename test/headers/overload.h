@@ -20,10 +20,6 @@ namespace overload {
     }
     void nothing() {}
     void nothing(int x) {}
-    
-    Mathy *self() { return this; }
-    Mathy *self(Mathy *in) { return this; }
-    
   };
 }
 #endif

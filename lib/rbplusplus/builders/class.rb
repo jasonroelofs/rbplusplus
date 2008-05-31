@@ -89,7 +89,9 @@ module RbPlusPlus
             methods.each_with_index do |method, i|
               name = build_method_wrapper(node, method, i)
               m = "define_method"
-              body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
+              method_name = "#{Inflector.underscore(method.name)}"
+              method_name += "_#{i}" unless method.renamed?
+              body << "\t#{rice_variable}.#{m}(\"#{method_name}\", &#{name});"  
             end
           end
         end

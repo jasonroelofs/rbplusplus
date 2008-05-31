@@ -24,6 +24,10 @@ module RbGCCXML
     def moved?
       @moved || false
     end
+    
+    def renamed?
+      (@renamed.nil? ? false : true)
+    end
 
 
     alias_method :rbgccxml_namespaces, :namespaces
@@ -45,7 +49,13 @@ module RbGCCXML
       nodes = rbgccxml_functions(*args)
       return cache(nodes)
     end
-    
+ 
+    alias_method :rbgccxml_methods, :functions
+    def methods(*args)
+      nodes = rbgccxml_methods(*args)
+      return cache(nodes)
+    end   
+ 
     alias_method :rbgccxml_name, :name	
     def name
       @renamed || rbgccxml_name

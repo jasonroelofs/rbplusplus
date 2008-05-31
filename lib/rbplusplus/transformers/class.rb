@@ -23,9 +23,9 @@ module RbGCCXML
       val.moved=true 
     end
     
-    alias_method :rbgccxml_methods, :methods
+    alias_method :node_methods, :methods
     def methods(*args)
-      nodes = rbgccxml_methods(*args)
+      nodes = node_methods(*args)
       methods = @methods || QueryResult.new
       methods << cache(nodes)
       methods.flatten!
