@@ -17,6 +17,8 @@ module RbPlusPlus
         self.rice_variable = "rb_e#{enum_name}"
         self.rice_variable_type = "Rice::Enum<#{full_name}>"
         
+        add_additional_includes
+        
         defn = "\t#{rice_variable_type} #{rice_variable} = "
         
         second_arg = ""
@@ -29,7 +31,7 @@ module RbPlusPlus
         body << defn
 
         node.values.each do |v|
-          body << "\t#{rice_variable}.define_value(\"#{v.name}\", #{v.to_s(true)});"
+          body << "\t#{rice_variable}.define_value(\"#{v.name}\", #{node.parent.qualified_name}::#{v.to_s(true)});"
         end
       end
 

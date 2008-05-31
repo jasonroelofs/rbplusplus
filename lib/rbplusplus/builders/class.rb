@@ -33,8 +33,8 @@ module RbPlusPlus
         includes << "#include <rice/Constructor.hpp>"  
         
         class_defn = "\t#{rice_variable_type} #{rice_variable} = "
-        add_includes_for node
         add_additional_includes
+        add_includes_for node
         
         
         self.declarations.insert(0,"typedef #{node.qualified_name} #{typedef_name};")
