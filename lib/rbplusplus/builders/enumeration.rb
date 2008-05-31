@@ -31,7 +31,7 @@ module RbPlusPlus
         body << defn
 
         node.values.each do |v|
-          body << "\t#{rice_variable}.define_value(\"#{v.name}\", #{node.parent.qualified_name}::#{v.to_s(true)});"
+          body << "\t#{rice_variable}.define_value(\"#{v.name}\", #{v.to_s(true)});"
         end
       end
 
