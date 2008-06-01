@@ -10,6 +10,7 @@ context "Extension with constructors out the whazoo" do
     end
 
     require 'constructors'
+
     should.not.raise NameError do
 #   Constructor overloading not yet supported
 #     s = StringHolder.new

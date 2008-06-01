@@ -11,13 +11,12 @@ module RbPlusPlus
       end
 
       def build
-        class_name = node.name
 
         #Handles templated super classes
-        typedef_name = node.qualified_name
-        typedef_name.gsub!("::","_")
-        typedef_name.gsub!(/[ ,<>]/, "_")
-        typedef_name.gsub!("*", "Ptr")
+        @typedef_name = node.qualified_name
+        @typedef_name.gsub!("::","_")
+        @typedef_name.gsub!(/[ ,<>]/, "_")
+        @typedef_name.gsub!("*", "Ptr")
         
         #Handles templated super classes passing in complex members
         var_name = node.name
@@ -32,33 +31,44 @@ module RbPlusPlus
         includes << "#include <rice/Data_Type.hpp>"
         includes << "#include <rice/Constructor.hpp>"  
         
-        class_defn = "\t#{rice_variable_type} #{rice_variable} = "
         add_additional_includes
         add_includes_for node
         
+        self.declarations.insert(0,"typedef #{node.qualified_name} #{@typedef_name};")
         
-        self.declarations.insert(0,"typedef #{node.qualified_name} #{typedef_name};")
+        @body << class_definition
         
-        supers = node.super_classes.collect { |s| s.qualified_name }
+        @body += constructors
         
-        class_names = [typedef_name, supers].flatten.join(",")
-        
-        if !parent.is_a?(ExtensionBuilder)
-          class_defn += "Rice::define_class_under<#{class_names} >(#{parent.rice_variable}, \"#{class_name}\");"
-        else
-          class_defn += "Rice::define_class<#{class_names} >(\"#{class_name}\");"
+        @body += methods
+
+        # Nested Classes
+        build_classes
+
+        # Enumerations
+        build_enumerations
+      end
+
+      # Build the constructors, and return an array of rice code
+      def constructors
+        result = []
+        # There are no constructors on purely virtual classes.
+        node.methods.each do |method|
+          return [] if method.purely_virtual?
         end
-
-        body << class_defn
-
         # Constructors
         node.constructors.each do |init|
           next if init.ignored?
           next unless init.public?
-          args = [typedef_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
-          body << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
+          args = [@typedef_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
+          result << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
-
+        result
+      end
+      
+      # Build the methods, and return an array of rice code
+      def methods
+        result = []
         # Methods
         methods_hash = {}
         node.methods.each do |method|
@@ -84,25 +94,36 @@ module RbPlusPlus
               TypesManager.build_const_converter(method.return_type)
             end
 
-            body << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
+            result << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
           else
             methods.each_with_index do |method, i|
               name = build_method_wrapper(node, method, i)
               m = "define_method"
               method_name = "#{Inflector.underscore(method.name)}"
               method_name += "_#{i}" unless method.renamed?
-              body << "\t#{rice_variable}.#{m}(\"#{method_name}\", &#{name});"  
+              result << "\t#{rice_variable}.#{m}(\"#{method_name}\", &#{name});"  
             end
           end
         end
-
-        # Nested Classes
-        build_classes
-
-        # Enumerations
-        build_enumerations
+        result
       end
-
+      
+      # Return a rice string representing Rice's class definition.
+      def class_definition        
+        class_defn = "\t#{rice_variable_type} #{rice_variable} = "
+        
+        class_name = node.name
+        supers = node.super_classes.collect { |s| s.qualified_name }
+        class_names = [@typedef_name, supers].flatten.join(",")
+        
+        if !parent.is_a?(ExtensionBuilder)
+          class_defn += "Rice::define_class_under<#{class_names} >(#{parent.rice_variable}, \"#{class_name}\");"
+        else
+          class_defn += "Rice::define_class<#{class_names} >(\"#{class_name}\");"
+        end
+        class_defn
+      end
     end
+    
   end
 end
