@@ -49,7 +49,7 @@ context "Correct handling of encapsulated methods" do
     ext_factory = ExtendedFactory.new
     ext = ext_factory.new_instance
     ext.fundamental_type_virtual_method.should == 1
-    ext.user_defined_type_virtual_method.class.should == Extended
+    ext.user_defined_type_virtual_method.class.should == Base
   end
 end
 

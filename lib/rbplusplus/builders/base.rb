@@ -223,6 +223,36 @@ module RbPlusPlus
         wrapper_func
       end
 
+
+
+      # Compatibility with Rice 1.0.1's method overloading issues. Build a quick
+      # wrapper that includes a self, forwarding the call as needed.
+      #
+      # Returns: the name of the wrapper function
+      def build_method_wrapper(cls, method, i)
+        return if method.ignored? || method.moved?
+        wrapper_func = "wrap_#{method.qualified_name.gsub(/::/, "_")}_#{i}"
+        proto_string = ["#{cls.qualified_name} *self"]
+        call_string = []
+        method.arguments.map{|arg| [arg.cpp_type.to_s(true), arg.name]}.each do |parts|
+          type = parts[0]
+          name = parts[1]
+          proto_string << "#{type} #{name}"
+          call_string << "#{name}"
+        end
+        
+        proto_string = proto_string.join(",")
+        call_string = call_string.join(",")
+        return_type = method.return_type.to_s(true)
+        returns = "" if return_type == "void"
+        returns ||= "return"
+        
+        declarations << "#{return_type} #{wrapper_func}(#{proto_string}) {"
+        declarations << "\t#{returns} self->#{method.qualified_name}(#{call_string});"
+        declarations << "}"
+        
+        wrapper_func
+      end
     end
   end
 end
