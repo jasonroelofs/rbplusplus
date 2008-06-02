@@ -65,7 +65,7 @@ module RbPlusPlus
     private
       
       def nested_level(node, level=0)
-        return level if node.is_a? RbGCCXML::Namespace
+        return level if node.is_a?(RbGCCXML::Namespace) || node.is_a?(RbGCCXML::Enumeration)
         return level if node.super_classes.length == 0
         node.super_classes.each do |sup|
           level = nested_level(sup, level+1)
@@ -231,7 +231,7 @@ module RbPlusPlus
       # Returns: the name of the wrapper function
       def build_method_wrapper(cls, method, i)
         return if method.ignored? || method.moved?
-        wrapper_func = "wrap_#{method.qualified_name.gsub(/::/, "_")}_#{i}"
+        wrapper_func = "wrap_#{method.qualified_name.functionize}_#{i}"
         proto_string = ["#{cls.qualified_name} *self"]
         call_string = []
         method.arguments.map{|arg| [arg.cpp_type.to_s(true), arg.name]}.each do |parts|

@@ -35,6 +35,15 @@ module RbPlusPlus
   end
 end
 
+class String #:nodoc:
+  # Functionize attempts to rename a string in a cpp function friendly way.
+  #
+  # vector<float>::x => vector_float__x
+  def functionize
+    gsub("::","_").gsub(/[ ,<>]/, "_").gsub("*", "Ptr")
+  end
+end
+
 require 'rbplusplus/transformers/node_cache'
 require 'rbplusplus/transformers/node'
 require 'rbplusplus/transformers/node_reference'

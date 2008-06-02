@@ -13,10 +13,7 @@ module RbPlusPlus
       def build
 
         #Handles templated super classes
-        @typedef_name = node.qualified_name
-        @typedef_name.gsub!("::","_")
-        @typedef_name.gsub!(/[ ,<>]/, "_")
-        @typedef_name.gsub!("*", "Ptr")
+        @typedef_name = node.qualified_name.functionize
         
         #Handles templated super classes passing in complex members
         var_name = node.name
