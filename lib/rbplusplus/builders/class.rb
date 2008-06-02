@@ -54,6 +54,7 @@ module RbPlusPlus
         result = []
         # There are no constructors on purely virtual classes.
         node.methods.each do |method|
+          next unless method.is_a? RbGCCXML::Method
           return [] if method.purely_virtual?
         end
         # Constructors
