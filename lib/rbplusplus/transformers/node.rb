@@ -1,10 +1,5 @@
 module RbGCCXML
   class Node    
-    # Returns true if this node is a public node
-    def public?
-      return !(attributes["access"] == "private" || attributes["access"] == "protected")
-    end
-
     # Specifies to not export this function
     def ignore
       @ignored = true
