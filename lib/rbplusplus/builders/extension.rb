@@ -23,7 +23,7 @@ module RbPlusPlus
             add_includes_for func 
             wrapper_name = build_function_wrapper(func)
 
-            if func.return_type.const?
+            if func.return_type.const? || func.const?
               TypesManager.build_const_converter(func.return_type)
             end
 

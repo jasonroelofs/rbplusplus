@@ -88,7 +88,7 @@ module RbPlusPlus
               name = build_function_wrapper(method)
             end
             
-            if method.return_type.const?
+            if method.return_type.const? || method.const?
               TypesManager.build_const_converter(method.return_type)
             end
 

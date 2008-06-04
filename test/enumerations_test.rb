@@ -43,8 +43,21 @@ context "Wrapping enumerations" do
     Mod::InnerEnum::INNER_2.to_i.should == 1
   end
 
-  xspecify "should allow use of enumerations as types" do
+  specify "should allow use of enumerations as types" do
+    what_test_enum(TestEnum::VALUE1).should == "We gots enum 0";
 
+    # Types should be adhered to
+    should.raise RuntimeError do
+      what_test_enum(Mod::InnerEnum::INNER_1)
+    end
+
+    t = Tester.new
+    t.get_enum_description(Tester::MyEnum::YOU_LIKE_MONEY_TOO).should == "You like money!"
   end
 
+  specify "should properly build to_ruby converters for const enum return types" do
+    t = Tester.new
+    t.get_an_enum("I like money").should == Tester::MyEnum::I_LIKE_MONEY
+    t.get_an_enum("You like money").should == Tester::MyEnum::YOU_LIKE_MONEY_TOO
+  end
 end

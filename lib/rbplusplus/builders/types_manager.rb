@@ -35,10 +35,12 @@ module RbPlusPlus
       # Rice doesn't automatically handle all to_ / from_ruby conversions for a given type.
       # A common construct is the +const Type&+ variable, which we need to manually handle.
       def build_const_converter(type)
-        full_name = type.base_type.qualified_name
+        type = type.is_a?(RbGCCXML::Type) ? type.base_type : type
 
         # Don't need to deal with fundamental types
-        return if type.base_type.is_a?(RbGCCXML::FundamentalType)
+        return if type.is_a?(RbGCCXML::FundamentalType)
+
+        full_name = type.qualified_name
 
         # Only wrap once
         # TODO cleaner way of doing this
@@ -46,14 +48,21 @@ module RbPlusPlus
 
         @consts_wrapped << full_name
 
+        # Enumerations are handled slightly differently
+        class_type = if type.is_a?(RbGCCXML::Enumeration)
+                       "new #{full_name}(a)"
+                     else
+                       "(#{full_name} *)&a"
+                     end
+
         @includes << "#include <rice/Object.hpp>"
         @includes << "#include <rice/Data_Object.hpp>"
         @includes << "#include <rice/Data_Type.hpp>"
-        @includes << "#include \"#{type.base_type.file_name(false)}\""
+        @includes << "#include \"#{type.file_name(false)}\""
 
         @body << "template<>"
         @body << "Rice::Object to_ruby<#{full_name}>(#{full_name} const & a) {"
-        @body << "\treturn Rice::Data_Object<#{full_name}>((#{full_name} *)&a, Rice::Data_Type<#{full_name}>::klass(), 0, 0);"
+        @body << "\treturn Rice::Data_Object<#{full_name}>(#{class_type}, Rice::Data_Type<#{full_name}>::klass(), 0, 0);"
         @body << "}"
 
         @prototypes << "template<>"

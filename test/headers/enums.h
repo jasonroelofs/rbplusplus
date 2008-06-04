@@ -5,7 +5,8 @@
 #ifndef __ENUMS__H__
 #define __ENUMS__H__
 
-#include <string>
+#include <iostream>
+#include <sstream>
 
 namespace enums {
   enum TestEnum {
@@ -22,12 +23,15 @@ namespace enums {
   }
 
   std::string whatTestEnum(TestEnum e) {
-    std::string ret = "We gots enum " + e;
-    return ret;
+    std::stringstream stream;
+    stream << "We gots enum " << e;
+    return stream.str();
   }
 
   class Tester {
     public:
+      Tester() {}
+
       enum MyEnum {
         I_LIKE_MONEY = 3,
         YOU_LIKE_MONEY_TOO,
@@ -52,6 +56,20 @@ namespace enums {
         }
 
         return ret;
+      }
+
+      MyEnum getAnEnum(std::string message) const {
+        MyEnum e;
+
+        if (message == "I like money") {
+          e = I_LIKE_MONEY;
+        } else if (message == "You like money") {
+          e = YOU_LIKE_MONEY_TOO;
+        } else if (message == "I like you") {
+          e = I_LIKE_YOU;
+        }
+        
+        return e;
       }
   };
 }
