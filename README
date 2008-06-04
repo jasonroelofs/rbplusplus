@@ -153,12 +153,30 @@ a ##namespace call. This defines which C++ code will be wrapped into this module
     # .namespace is not required here
 
     e.module "MyModule" do |m|
-      m.namespace "my_module"
+      # Note: this needs to be a fully qualified namespace. 
+      # E.g. 'mySpace::innerSpace', not just 'innerSpace'
+      m.namespace "my_module"  
     end
   end
 
 This will create an extension with the module +MyModule+ in which all the C++ code under the +my_module+
 namespace will be wrapped.
+
+=== Particularly hairy APIs
+
+It's well known that source code may not follow a very clean format, or even be internally consistent.
+When dealing with such problems; code that just won't adhere to a wrappable format, rb++ opens up a slew
+of manipulation routines for controlling exactly what gets wrapped, where it gets wrapped, and how
+it gets wrapped.
+
+==== Including / Excluding
+
+
+==== Renaming
+
+
+==== Function / Method Conversions
+
 
 == Possible 'Gotchas'
 
@@ -171,10 +189,10 @@ namespace will be wrapped.
 By default, rb++ will write out the extension in multiple files, following the convention of
 
   extension_name.cpp
-  ClassName.rb.hpp
-  ClassName.rb.cpp
-  ModuleName_ClassName.rb.hpp
-  ModuleName_ClassName.rb.cpp
+  _ClassName.rb.hpp
+  _ClassName.rb.cpp
+  _ModuleName_ClassName.rb.hpp
+  _ModuleName_ClassName.rb.cpp
   ...
 
 rb++ can instead write out the extension code in a single file (extension_name.cpp) with Extension.writer_mode
@@ -183,7 +201,7 @@ rb++ can instead write out the extension code in a single file (extension_name.c
     e.writer_mode :single 
   end
     
-=== Compiling options
+=== Compilation options
 
 rb++ takes care of setting up the extension to be properly compiled, but sometimes certain
 compiler options can't be deduced. rb++ has options to specify library paths (-L), libraries (-l),
@@ -192,11 +210,15 @@ directly to the command line. These are options on Extension.sources
 
   Extension.new "extension" do |e|
     e.sources *header_dirs,
-      :library_paths => *paths,    # Adds to -L
-      :libraries => *libs,         # Adds to -l
-      :include_paths => *includes, # Adds to -I
-      :cxxflags => *flags,         # For those flags that don't match the above three
-      :ldflags => *flags,          # For extra linking flags that don't match the above
+      :library_paths => *paths,       # Adds to -L
+      :libraries => *libs,            # Adds to -l
+      :include_paths => *includes,    # Adds to -I
+      :cxxflags => *flags,            # For those flags that don't match the above three
+      :ldflags => *flags,             # For extra linking flags that don't match the above
+      :includes => *files,            # For when there are header files that need to be included into the
+                                      #   compilation but *don't* get parsed out and wrapped
+      :include_source_files => *files # A list of source files that will get copied into working_dir and
+                                      #   compiled with the extension
   end
 
 Any compiler errors and the full build log will be found in rbpp_compile.log.

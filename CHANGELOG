@@ -2,7 +2,7 @@
 
 === rbgccxml
 
-* All GCCXML types implemented. Added ReferenceType, CvQualifiedType, Enumeration / EnumValue.
+* More GCCXML types implemented. Added ReferenceType, CvQualifiedType, Enumeration / EnumValue. 
 * Now caches the current XML parsing. Significant speed boost.
 * Can now search for C++ nodes by either single name or fully qualified name
 

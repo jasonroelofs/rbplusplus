@@ -1,13 +1,22 @@
 TODO
-* Proper TypesManager dealings with single_file writer mode
-* Working with the defined C++ heirarchy chain
-* (m&m) include
-* (m&m) exclude
-* (m&m) rename
-
 * Figure out how to fix the error when running rake test
 * Allowing use of "have_library"
 * Other mkmf functions?
+
+* rbgccxml: Continue working with QueryResult#find, making it as powerful
+and robust as possible.
+
+* Rest of the GCCXML types (as needed):
+  - ArrayType
+  - Converter
+  - Destructor
+  - Field
+  - FunctionType
+  - OperatorFunction
+  - OperatorMethod
+  - OffsetType
+  - Union
+  - Variable
 
 STARTED
 * Adding constructor
@@ -27,6 +36,8 @@ DONE
 * Recognizing and building to_ruby / from_ruby methods for const type references
 * Moving the to_ruby / from_ruby definitions to a place that all will know about them
 * Enumerations
+* Proper TypesManager dealings with single_file writer mode
+* Working with the defined C++ heirarchy chain
 
 No longer waiting on rice - just building a wrapper myself now. 
 * Adding global methods (Kernel-level methods)
