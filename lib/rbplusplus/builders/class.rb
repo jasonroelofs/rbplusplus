@@ -67,7 +67,8 @@ module RbPlusPlus
       # Build the methods, and return an array of rice code
       def methods
         result = []
-        # Methods
+        # Methods are thrown into a hash table so that we can 
+        # determine overloaded methods
         methods_hash = {}
         node.methods.each do |method|
           next if method.ignored? || method.moved?
@@ -78,6 +79,13 @@ module RbPlusPlus
         end
         
         methods_hash.each do |key, methods|
+          #Add any method with a const return type to the typemanager
+          methods.each do |method|  
+            if method.return_type.const? || method.const?
+              TypesManager.build_const_converter(method.return_type)
+            end
+          end
+          #No overloaded methods
           if methods.length == 1
             method = methods[0]
             m = "define_method"
@@ -87,13 +95,13 @@ module RbPlusPlus
               m = "define_singleton_method"
               name = build_function_wrapper(method)
             end
-            
-            if method.return_type.const? || method.const?
-              TypesManager.build_const_converter(method.return_type)
-            end
 
             result << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
           else
+            #Handle overloaded methods
+            #currently we just append an index to them if they have not been renamed
+            #for example getOrigin() and getOrigin(x,y) become
+            #get_origin_0 and get_origin_1
             methods.each_with_index do |method, i|
               name = build_method_wrapper(node, method, i)
               m = "define_method"
