@@ -52,6 +52,10 @@ class C_UIVector {
     }
 };
 
+inline C_UIVector *instance() {
+  return new C_UIVector();
+}
+
 class NoConstructor {
   public:
     NoConstructor() {}

@@ -12,6 +12,9 @@ context "Ugly interfaces cleaner" do
     
       # test the no export option
       node.functions("uiIgnore").ignore
+        
+      # static method wrapping
+      node.functions("instance").wrap_as("create_vector").calls("UI::instance")
           
       e.module "UI" do |m|
         m.module "Math" do |m_math|

@@ -37,6 +37,7 @@ if RUBY_PLATFORM =~ /darwin/
   #   GCC redefines symbols - which the -fno-common prohibits.  In order to keep the -fno-common, we
   #   remove the flat_namespace (we now have two namespaces, which fixes the GCC clash).  Also, we now lookup
   #   symbols in both the namespaces (dynamic_lookup).
+
   $LDSHARED_CXX.gsub!('suppress', 'dynamic_lookup')
   $LDSHARED_CXX.gsub!('-flat_namespace', '')
   
