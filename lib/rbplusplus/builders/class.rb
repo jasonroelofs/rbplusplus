@@ -21,8 +21,6 @@ module RbPlusPlus
         var_name.gsub!(/[ ,<>]/, "_")
         var_name.gsub!("*", "Ptr")
         
-        puts node.qualified_name
-        
         self.rice_variable = "rb_c#{var_name}"
         self.rice_variable_type = "Rice::Data_Type<#{self.qualified_name} >"
 
