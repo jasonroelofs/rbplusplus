@@ -54,7 +54,7 @@ module RbPlusPlus
           add_includes_for func
 
           func_name = Inflector.underscore(func.name)
-          wrapped_name = build_function_wrapper(func)
+          wrapped_name = func.special_qualified_name || build_function_wrapper(func)
           body << "\t#{self.rice_variable}.define_module_function(\"#{func_name}\", &#{wrapped_name});"
         end
       end
