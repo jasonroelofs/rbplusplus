@@ -21,7 +21,7 @@ module RbPlusPlus
           @node.functions.each do |func|
             next if func.ignored? || func.moved?
             add_includes_for func 
-            wrapper_name = build_function_wrapper(func)
+            wrapper_name = func.special_qualified_name || build_function_wrapper(func)
 
             if func.return_type.const? || func.const?
               TypesManager.build_const_converter(func.return_type)

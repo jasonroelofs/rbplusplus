@@ -7,14 +7,15 @@ context "Ugly interfaces cleaner" do
     
     
     Extension.new "ui" do |e|
-      e.sources full_dir("headers/ugly_interface_ns.h")
+      e.sources full_dir("headers/ugly_interface_ns.h"),
+                :includes => full_dir("headers/ugly_helper.h")
       node = e.namespace("UI")
     
       # test the no export option
       node.functions("uiIgnore").ignore
         
       # static method wrapping
-      node.functions("instance").wrap_as("create_vector").calls("UI::instance")
+      node.functions("IlikeVectors").wrap_as("create_vector").calls("newInstanceButBetter")
           
       e.module "UI" do |m|
         m.module "Math" do |m_math|

@@ -52,7 +52,8 @@ class C_UIVector {
     }
 };
 
-inline C_UIVector *instance() {
+
+inline C_UIVector *IlikeVectors(int i) {
   return new C_UIVector();
 }
 

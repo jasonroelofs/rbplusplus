@@ -1,5 +1,7 @@
 module RbGCCXML
   class Function
+    attr_reader :special_qualified_name
+    
     # always true for functions, false for methods
     def static?
       !(@as_method || false)
