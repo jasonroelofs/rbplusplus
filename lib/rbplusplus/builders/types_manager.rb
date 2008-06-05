@@ -61,12 +61,12 @@ module RbPlusPlus
         @includes << "#include \"#{type.file_name(false)}\""
 
         @body << "template<>"
-        @body << "Rice::Object to_ruby<#{full_name}>(#{full_name} const & a) {"
-        @body << "\treturn Rice::Data_Object<#{full_name}>(#{class_type}, Rice::Data_Type<#{full_name}>::klass(), 0, 0);"
+        @body << "Rice::Object to_ruby<#{full_name} >(#{full_name} const & a) {"
+        @body << "\treturn Rice::Data_Object<#{full_name} >(#{class_type}, Rice::Data_Type<#{full_name} >::klass(), 0, 0);"
         @body << "}"
 
         @prototypes << "template<>"
-        @prototypes << "Rice::Object to_ruby<#{full_name}>(#{full_name} const & a);"
+        @prototypes << "Rice::Object to_ruby<#{full_name} >(#{full_name} const & a);"
       end
 
     end

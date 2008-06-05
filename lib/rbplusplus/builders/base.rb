@@ -197,9 +197,9 @@ module RbPlusPlus
       # wrapper that includes a self and discards it, forwarding the call as needed.
       #
       # Returns: the name of the wrapper function
-      def build_function_wrapper(function)
+      def build_function_wrapper(function, append="")
         return if function.ignored? || function.moved?
-        wrapper_func = "wrap_#{function.qualified_name.gsub(/::/, "_")}"
+        wrapper_func = "wrap_#{function.qualified_name.gsub(/::/, "_")}#{append}"
 
         proto_string = ["Rice::Object self"]
         call_string = []

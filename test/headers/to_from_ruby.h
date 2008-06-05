@@ -31,7 +31,40 @@ namespace to_from_ruby {
         type->myValue = value;
         return *type;
       }
+      
+      const WrappedClass &overload() {
+        return *this;
+      }
+    
+      const WrappedClass &overload(int arg) {
+        return *this;
+      }
   };
+  
+  /* template tests */
+  
+  template<class T>
+  class TemplateClass {
+    T val;
+    public:
+      TemplateClass(T val) {
+        this->val = val;
+      }
+      const T &overload() {
+        return this->val;
+      }
+      const T &overload(int arg) {
+        return this->val;
+      }
+  };
+  
+  inline const TemplateClass<int> &getTemplate() {
+    return *(new TemplateClass<int>(1));
+  }
+  
+  inline const TemplateClass<int> &getTemplate(int overload) {
+    return *(new TemplateClass<int>(overload));
+  }
 }
 
 #endif 
