@@ -20,6 +20,9 @@ namespace overload {
     }
     void nothing() {}
     void nothing(int x) {}
+    
+    const Mathy &self() const { return *this; }
+    Mathy &self() { return *this; }
   };
 }
 #endif

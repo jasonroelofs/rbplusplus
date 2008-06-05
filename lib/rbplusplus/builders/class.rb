@@ -21,6 +21,8 @@ module RbPlusPlus
         var_name.gsub!(/[ ,<>]/, "_")
         var_name.gsub!("*", "Ptr")
         
+        puts node.qualified_name
+        
         self.rice_variable = "rb_c#{var_name}"
         self.rice_variable_type = "Rice::Data_Type<#{self.qualified_name} >"
 
@@ -71,16 +73,16 @@ module RbPlusPlus
         # determine overloaded methods
         methods_hash = {}
         node.methods.each do |method|
-          next if method.ignored? || method.moved?
           next unless method.public?
   
-          methods_hash[method.name] ||= []
-          methods_hash[method.name] << method
+          methods_hash[method.qualified_name] ||= []
+          methods_hash[method.qualified_name] << method
         end
         
         methods_hash.each do |key, methods|
           #Add any method with a const return type to the typemanager
-          methods.each do |method|  
+          methods.each do |method|
+            next if method.ignored? || method.moved?
             if method.return_type.const? || method.const?
               TypesManager.build_const_converter(method.return_type)
             end
@@ -88,6 +90,7 @@ module RbPlusPlus
           #No overloaded methods
           if methods.length == 1
             method = methods[0]
+            next if method.ignored? || method.moved?
             m = "define_method"
             name = method.qualified_name
 
@@ -103,6 +106,7 @@ module RbPlusPlus
             #for example getOrigin() and getOrigin(x,y) become
             #get_origin_0 and get_origin_1
             methods.each_with_index do |method, i|
+              next if method.ignored? || method.moved?
               name = build_method_wrapper(node, method, i)
               m = "define_method"
               method_name = "#{Inflector.underscore(method.name)}"

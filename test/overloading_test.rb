@@ -28,6 +28,7 @@ context "Extension with overloaded methods" do
     should.not.raise NameError do
       math.nothing_0
       math.nothing_1(1)
+      math.self_0.class.should == math.self_1.class
     end
 
   end
