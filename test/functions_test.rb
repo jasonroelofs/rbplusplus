@@ -21,6 +21,18 @@ context "Extension with globally available functions" do
     should.not.raise NameError do
       test3(2, 4.2).should == 2
     end
+    
+    should.raise NameError do
+      void_star
+    end
+    
+    should.raise NoMethodError do
+      takes_void_star(nil)
+    end
+    
+    should.raise NameError do
+      typedefed_void_star
+    end
   end
 
 end

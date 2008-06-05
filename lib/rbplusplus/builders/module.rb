@@ -37,7 +37,6 @@ module RbPlusPlus
 
         build_functions unless @module.functions.empty?
         build_classes(@module.classes) unless @module.classes.empty?
-   
 
         # Build each inner module
         @module.modules.each do |mod|
