@@ -32,6 +32,22 @@ module RbPlusPlus
         @includes = []
       end
 
+      # Some libraries have really bad namespace declarations
+      # so we allow for 2 methods of including files
+      # 1.  trace the class definition to the parent file
+      # 2.  explicitly declare which files to include in every generated source
+      #
+      def add_include_for(type)
+        file = type.file_name(false)
+        if Base.sources.include? file
+          @includes << "#include \"#{file}\""
+        else
+          Base.sources.each do |header|
+            @includes << "#include \"#{header}\""
+          end
+        end  
+      end
+      
       # Rice doesn't automatically handle all to_ / from_ruby conversions for a given type.
       # A common construct is the +const Type&+ variable, which we need to manually handle.
       def build_const_converter(type)
@@ -58,7 +74,7 @@ module RbPlusPlus
         @includes << "#include <rice/Object.hpp>"
         @includes << "#include <rice/Data_Object.hpp>"
         @includes << "#include <rice/Data_Type.hpp>"
-        @includes << "#include \"#{type.file_name(false)}\""
+        add_include_for type
 
         @body << "template<>"
         @body << "Rice::Object to_ruby<#{full_name} >(#{full_name} const & a) {"
