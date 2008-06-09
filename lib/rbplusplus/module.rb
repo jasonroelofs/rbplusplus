@@ -43,7 +43,7 @@ module RbPlusPlus
     # Specify a C++ namespace from which the contained code will
     # be wrapped and exposed to Ruby under this Module.
     def namespace(name)
-      @node = @parser.namespaces(name)
+      @node = @parser.namespaces.find(:all, :name => name)
     end
 
     # Register another module to be defined inside of

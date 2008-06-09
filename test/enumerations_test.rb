@@ -12,7 +12,7 @@ context "Wrapping enumerations" do
         e.writer_mode :single
 
         e.module "Mod" do |m|
-          m.namespace "enums::inner"
+          m.namespace "inner"
         end
       end
 
