@@ -169,16 +169,104 @@ When dealing with such problems; code that just won't adhere to a wrappable form
 of manipulation routines for controlling exactly what gets wrapped, where it gets wrapped, and how
 it gets wrapped.
 
-==== Including / Excluding
+==== Excluding / Ignoring
 
+Often times you will want to ignore a method on an object, a whole class, or a whole namespace even.  This
+can be useful if the function you wish to ignore takes a 'void *' as an argument, or for a variety of other
+reasons.
+You can tell rb++ which namespaces/classes/methods to ignore very easily.  Here is an example
+
+  Extension.new "extension" do |e|
+    e.sources ...
+    node = e.namespace "Physics"
+    node.classes("Callback").ignore
+    node.classes("Shape").methods("registerCallback").ignore
+  end
+
+You can also ignore a whole query result with the same notation.
+
+==== Including
+
+If a C++ library has a certain class in an undesired namespace, or a certain function with undesired visibility
+you can easily fix this by using the declarative 'include'.
+
+  Extension.new "extension" do |e|
+    e.sources ...
+    node = e.namespace "PhysicsMath"
+    
+    e.module "Physics" do |m|
+      m.module "Math" do |math|
+        #moves each class to Physics::Math
+        node.classes.each do |c|
+          math.include c
+        end
+      end
+    end
+    
+  end
+
+Note that when you include something in a module it is moved from it's original location.  In the example above
+the classes will only exist in Physics::Math and not PhysicsMath
 
 ==== Renaming
 
+Sometimes C++ libraries implement certain architectures that are nice to have in C++, but are terrible in Ruby.  For
+example, many older libraries in C++ start name their classes with a "C#{class}".
+
+In order to rectify this you can do the following:
+  Extension.new "extension" do |e|
+    e.sources ...
+    node = e.namespace "Physics"
+    node.classes("CShape").wrap_as("Shape")
+    node.classes("CShape").methods("hasCollided").wrap_as("collided?")
+  end
 
 ==== Function / Method Conversions
 
-
 == Possible 'Gotchas'
+
+=== Constructor overloading
+
+A current limitation in rice currently does not allow for more than one constructor to be exported.  This 
+will not be a limitation in future versions of rice, but for the time being in order to select the correct 
+constructor do the following:
+  node.classes("MyClass").constructors[0].ignore
+
+Do this for all the constructors that are not the constructor that you wish to use.
+
+=== Method overloading
+
+Method overloading is supported, but not by rice.  Therefore all overloaded methods are wrapped in the order
+that they are presented to gccxml.  For example:
+  class System {
+    public:
+    System() {}
+    inline void puts(std::string s) { std::cout << s << std::endl; }
+    inline void puts() { puts(""); }
+  };
+
+can be used by default in rb++ like so:
+  s = System.new
+  s.puts_0("Hello world")
+  s.puts_1
+
+You can, however, rename them as you see fit if you tell rb++ how, for example:
+  puts_methods = node.classes("System").methods("puts")  #Gives 2 puts methods back
+  puts_methods[0].wrap_as("puts")  
+
+After doing this you can use the methods as follows:
+  s = System.new
+  s.puts("Hello World")
+  s.puts_1
+
+=== Methods with optional arguments
+
+There are not any optional arguments in rice.  Right now they are all required.  For example:
+  int times(int a=0, int b=0) { return a*b; }
+
+can only be invokes with 2 arguments.  If you are having problems with this, please consult the rb++ forum.
+
+=== Additional tricks
 
 * Method / function names are underscored by default. So <tt>YourClass::doSomething</tt> becomes <tt>YourClass#do_something</tt>
 
