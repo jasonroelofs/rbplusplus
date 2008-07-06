@@ -16,4 +16,7 @@ namespace to_from_ruby {
     return *type;
   };
 
+  void usingConstString(const std::string& in) {
+
+  }
 }

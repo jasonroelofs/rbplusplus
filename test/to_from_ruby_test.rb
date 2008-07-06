@@ -21,5 +21,4 @@ context "Properly build known required to_ruby and from_ruby methods" do
     
     get_template_0(1).overload_0.should == get_template_1.overload_1(1)
   end
-
 end

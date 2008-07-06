@@ -62,6 +62,9 @@ module RbPlusPlus
         # TODO cleaner way of doing this
         return if @consts_wrapped.include?(full_name)
 
+        # Some types are already handled by Rice, ignore such types
+        return if full_name =~ /std::string/
+
         @consts_wrapped << full_name
 
         # Enumerations are handled slightly differently

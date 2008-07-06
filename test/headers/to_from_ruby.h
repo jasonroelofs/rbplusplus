@@ -1,6 +1,8 @@
 #ifndef __TO_FROM_RUBY_H__
 #define __TO_FROM_RUBY_H__
 
+#include <string>
+
 namespace to_from_ruby {
   
   // Const methods that return references need an explicit to_ruby
@@ -40,6 +42,12 @@ namespace to_from_ruby {
         return *this;
       }
   };
+
+  /**
+   * Some types, Rice already wraps for us. Make sure this doesn't cause
+   * a compiler error
+   */
+  void usingConstString(const std::string& in);
   
   /* template tests */
   
