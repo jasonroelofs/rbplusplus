@@ -82,18 +82,17 @@ module RbPlusPlus
 
     # Define where we can find the header files to parse
     # Can give an array of directories, a glob, or just a string.
-    # All file names should be full paths, not partial.
+    # All file names should be full paths, not relative.
     #
-    # Options can be the following:
+    # Options can be any or all of the following:
     #
-    # * <tt>:include_paths</tt> - An array or string of full paths to be added as -I flags
-    # * <tt>:library_paths</tt> - An array or string of full paths to be added as -L flags
-    # * <tt>:libraries</tt> - An array or string of full paths to be added as -l flags
-    # * <tt>:cxxflags</tt> - An array or string of flags to be added to command line for parsing / compiling
-    # * <tt>:ldflags</tt> - An array or string of flags to be added to command line for linking
-    # * <tt>:includes</tt> - An array of .h files to include at the beginning of each .rb.cpp file generated, 
-    #   specified as a glob.
-    # * <tt>:include_source_files</tt> - For when there are other C/C++ source files to be compiled into the extension
+    # * <tt>:include_paths</tt> - Path(s) to be added as -I flags
+    # * <tt>:library_paths</tt> - Path(s) to be added as -L flags
+    # * <tt>:libraries</tt> - Path(s) to be added as -l flags
+    # * <tt>:cxxflags</tt> - Flag(s) to be added to command line for parsing / compiling
+    # * <tt>:ldflags</tt> - Flag(s) to be added to command line for linking
+    # * <tt>:includes</tt> -  Header file(s) to include at the beginning of each .rb.cpp file generated.
+    # * <tt>:include_source_files</tt> - C++ source files that need to be compiled into the extension but not wrapped.
     def sources(dirs, options = {})
       parser_options = {}
 
@@ -140,12 +139,18 @@ module RbPlusPlus
     # Specifing a namespace on the Extension itself will mark functions,
     # class, enums, etc to be globally available to Ruby (aka not in it's own
     # module)
+    #
+    # For now, to get access to the underlying RbGCCXML query system, save the
+    # return value of this method:
+    #
+    #   node = namespace "lib::to_wrap"
+    #
     def namespace(name)
       @node = @parser.namespaces(name)
     end
 
     # Mark that this extension needs to create a Ruby module of
-    # a give name. Like Extension, this can be used with or without
+    # a give name. Like Extension.new, this can be used with or without
     # a block.
     def module(name, &block)
       m = RbModule.new(name, @parser, &block)

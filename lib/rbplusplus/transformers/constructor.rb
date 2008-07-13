@@ -1,4 +1,4 @@
 module RbGCCXML
-  class Constructor
+  class Constructor #:nodoc:
   end
 end

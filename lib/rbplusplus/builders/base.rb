@@ -75,7 +75,7 @@ module RbPlusPlus
       
     public
       
-      # sorts the registered nodes by hierachy, registering the base classes
+      # Sorts the registered nodes by hierachy, registering the base classes
       # first.
       #
       # this is necessary for Rice to know about inheritance
@@ -222,8 +222,6 @@ module RbPlusPlus
 
         wrapper_func
       end
-
-
 
       # Compatibility with Rice 1.0.1's method overloading issues. Build a quick
       # wrapper that includes a self, forwarding the call as needed.

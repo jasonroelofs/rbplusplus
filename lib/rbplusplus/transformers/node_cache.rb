@@ -1,6 +1,5 @@
 module RbPlusPlus
-  # This class controls node persistence.
-  class NodeCache
+  class NodeCache #:nodoc:
     include Singleton
     # Retrieves a node from the cache based on the node's qualified name
     def get(node)

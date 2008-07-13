@@ -6,11 +6,16 @@ module RbGCCXML
     # also supports instance level methods
     #
     # ex. 
-    #    math_class.includes node.namespaces("Math").functions("mod")
+    #
+    #   math_class.includes node.namespaces("Math").functions("mod")
+    #
     # or for a instance method:
-    #    math_class.includes node.namespaces("Math").functions("mod").as_method
+    #
+    #   math_class.includes node.namespaces("Math").functions("mod").as_method
+    #
     # or for nesting a class/struct:
-    #    math_class.includes node.namespaces("Math").classes("Degree")
+    #
+    #   math_class.includes node.namespaces("Math").classes("Degree")
     #
     def includes(val)
       if (val.is_a?(RbGCCXML::Struct) || val.is_a?(RbGCCXML::Class))
@@ -24,7 +29,7 @@ module RbGCCXML
     end
     
     alias_method :node_methods, :methods
-    def methods(*args)
+    def methods(*args) #:nodoc:
       nodes = node_methods(*args)
       methods = @methods || QueryResult.new
       methods << cache(nodes)
@@ -34,12 +39,11 @@ module RbGCCXML
     end
 
     alias_method :node_classes, :classes
-    def classes(*args)
+    def classes(*args) #:nodoc:
       [@classes || [], node_classes].flatten
     end
       
-    
-    # returns a list of superclasses of this node, including the nodes class
+    # returns a list of superclasses of this node, including the node's class
     def super_classes
       retv = []
       unless node.attributes['bases'].nil? || node.attributes['bases'] == ""

@@ -1,6 +1,5 @@
 module RbPlusPlus
-  # A delegate to the Node.  Used in including nodes in modules and classes
-  class NodeReference
+  class NodeReference #:nodoc:
     # Takes the delegate object as input
     def initialize(from)
       @delegate = from

@@ -1,65 +1,63 @@
 module RbGCCXML
   class Node    
-    # Specifies to not export this function
+    # Specifies to not export this node
     def ignore
       @ignored = true
     end
     
-    # Returns true if this object is ignored in exporting
+    # Returns true if this node is ignored in exporting
     def ignored?
       @ignored || false
     end
 
-    # Specifies that this function has been included somewhere else
+    # Specifies that this node has been included somewhere else
     def moved=(val)
       @moved = val
     end
     
-    # Returns true if the object has been moved
+    # Change what the name of this node will be when wrapped into Ruby
+    def wrap_as(name)
+      @renamed = name
+      self
+    end
+    
+    # Returns true if the node has been moved
     def moved?
       @moved || false
     end
     
+    # Has this node been renamed
     def renamed?
       (@renamed.nil? ? false : true)
     end
 
-
     alias_method :rbgccxml_namespaces, :namespaces
-    def namespaces(*args)
+    def namespaces(*args) #:nodoc:
       nodes = rbgccxml_namespaces(*args)
       return cache(nodes)
     end
     
-    
     alias_method :rbgccxml_classes, :classes
-    def classes(*args)
+    def classes(*args) #:nodoc:
       nodes = rbgccxml_classes(*args)
       return cache(nodes)
     end
     
-    
     alias_method :rbgccxml_functions, :functions
-    def functions(*args)
+    def functions(*args) #:nodoc:
       nodes = rbgccxml_functions(*args)
       return cache(nodes)
     end
  
     alias_method :rbgccxml_methods, :functions
-    def methods(*args)
+    def methods(*args) #:nodoc:
       nodes = rbgccxml_methods(*args)
       return cache(nodes)
     end   
  
     alias_method :rbgccxml_name, :name	
-    def name
+    def name #:nodoc:
       @renamed || rbgccxml_name
-    end
-    
-    # Renames the ruby name of this node
-    def wrap_as(name)
-      @renamed = name
-      self
     end
     
     private

@@ -44,6 +44,7 @@ class String #:nodoc:
   end
 end
 
+require 'rbplusplus/transformers/rbgccxml'
 require 'rbplusplus/transformers/node_cache'
 require 'rbplusplus/transformers/node'
 require 'rbplusplus/transformers/node_reference'

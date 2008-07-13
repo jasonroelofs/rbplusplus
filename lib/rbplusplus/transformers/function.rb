@@ -20,7 +20,7 @@ module RbGCCXML
     end
     
     alias_method :method_qualified_name, :qualified_name
-    def qualified_name
+    def qualified_name #:nodoc:
       @special_qualified_name || method_qualified_name
     end
   end
