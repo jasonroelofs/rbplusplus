@@ -35,12 +35,14 @@ desc "Update the website"
 task :upload_web => :rdoc  do |t|
   unless File.directory?("publish")
     mkdir "publish"
-    mkdir "publish/rbplusplus"
   end
-  sh "cp -r website publish/"
+  cd "website" do
+    sh "webgen"
+  end
+  sh "cp -r website/out/* publish/"
   sh "cp -r html/* publish/rbplusplus/"
-	Rake::SshDirPublisher.new("#{RUBYFORGE_USERNAME}@rubyforge.org", PROJECT_WEB_PATH, "publish").upload
-  rm_rf "publish"
+#	Rake::SshDirPublisher.new("#{RUBYFORGE_USERNAME}@rubyforge.org", PROJECT_WEB_PATH, "publish").upload
+#  rm_rf "publish"
 end
 
 spec = Gem::Specification.new do |s|

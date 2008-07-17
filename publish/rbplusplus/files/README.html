@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>File: README</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+
+    <script language="JavaScript" type="text/javascript">
+    // <![CDATA[
+
+        function toggleSource( id )
+        {
+          var elem
+          var link
+
+          if( document.getElementById )
+          {
+            elem = document.getElementById( id )
+            link = document.getElementById( "l_" + id )
+          }
+          else if ( document.all )
+          {
+            elem = eval( "document.all." + id )
+            link = eval( "document.all.l_" + id )
+          }
+          else
+            return false;
+
+          if( elem.style.display == "block" )
+          {
+            elem.style.display = "none"
+            link.innerHTML = "show source"
+          }
+          else
+          {
+            elem.style.display = "block"
+            link.innerHTML = "hide source"
+          }
+        }
+
+        function openCode( url )
+        {
+          window.open( url, "SOURCE_CODE", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=480,width=750" ).focus();
+        }
+      // ]]>
+    </script>
+  </head>
+
+  <body>
+  <table border='0' cellpadding='0' cellspacing='0' width="100%" class='banner'>
+  <tr><td>
+    <table width="100%" border='0' cellpadding='0' cellspacing='0'><tr>
+      <td class="file-title" colspan="2"><span class="file-title-prefix">File</span><br />README</td>
+      <td align="right">
+        <table border='0' cellspacing="0" cellpadding="2">
+          <tr>
+            <td>Path:</td>
+            <td>README
+            </td>
+          </tr>
+          <tr>
+            <td>Modified:</td>
+            <td>Sun Jul 13 18:11:30 -0400 2008</td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+  </td></tr>
+</table><br />
+ <!-- banner header -->
+
+  <div id="bodyContent">
+      <div id="content">
+
+  <div class="description"><h2>What is rb++?</h2>
+<p>
+Rb++ makes it almost trivially easy to create Ruby extensions for any C or
+C++ library / code. In the simplest of cases, there is no need to ever
+touch C, everything is done in a very simple and clean Ruby API.
+</p>
+<p>
+Note: For those familiar with py++, the similarities are minimal. Outside
+of the purpose of both libraries, rb++ was built from scratch to provide a
+Ruby-esque query and wrapping API instead of being a port. However, many
+thanks to Roman for his work, the major inspiration for this library.
+</p>
+<h2>Requirements</h2>
+<ul>
+<li>rbgccxml
+
+</li>
+<li>rice (<a href="http://rice.rubyforge.org">rice.rubyforge.org</a>)
+
+</li>
+</ul>
+<h2>Installation</h2>
+<p>
+Rice builds and installs on any *nix system, including Mac OS X and Cygwin.
+Rice, and therefor rb++ will not work on Windows outside of Cygwin.
+</p>
+<p>
+Everything is installed with a simple line:
+</p>
+<pre>
+  gem install rbplusplus
+</pre>
+<h2>The Project</h2>
+<p>
+For bug reports, patch submissions, project annoucements and downloads,
+visit rb++&#8217;s rubyforge project page at:
+</p>
+<p>
+<a
+href="http://www.rubyforge.org/projects/rbplusplus">www.rubyforge.org/projects/rbplusplus</a>
+</p>
+<p>
+Feel free to post help request, hints, or general ideas on the forums.
+</p>
+<p>
+Rb++&#8217;s source is in a git repository hosted on github:
+</p>
+<p>
+Project page:
+</p>
+<p>
+<a
+href="http://github.com/jameskilton/rbgplusplus/tree/master">github.com/jameskilton/rbgplusplus/tree/master</a>
+</p>
+<p>
+Clone with:
+</p>
+<pre>
+  git clone git://github.com/jameskilton/rbplusplus.git
+</pre>
+<h2>Getting Started</h2>
+<p>
+All rb++ projects start off with the Extension class:
+</p>
+<pre>
+  require 'rbplusplus'
+  include RbPlusPlus
+
+  Extension.new &quot;extension_name&quot;
+</pre>
+<p>
+The one requirement on the C++ code for rb++ to easily handle it, is that
+the code that&#8216;s to be wrapped is in its own namespace. If the code to
+be wrapped is in the global namespace, then you should build a seperate
+header file that includes all the files to be wrapped inside of a
+namespace:
+</p>
+<pre>
+  namespace to_wrap {
+    #include &quot;file1.h&quot;
+    #include &quot;file2.h&quot;
+    #include &quot;file3.h&quot;
+    ...
+  }
+</pre>
+<p>
+Extension has two ways of being used: block syntax for simple projects and
+immediate syntax for more control over the whole process.
+</p>
+<h3>Block Mode</h3>
+<p>
+For basic reading and wrapping needs, the block syntax makes rb++ very easy
+to write and read
+</p>
+<pre>
+  Extension.new &quot;extension&quot; do |e|
+    ...
+  end
+</pre>
+<h3>Immediate Mode</h3>
+<p>
+For those that want more fine-grained control over the parsing / building /
+writing / compiling process, immediate syntax is also available
+</p>
+<pre>
+  e = Extension.new &quot;extension&quot;
+  ...
+  e.build    # =&gt; Generates the C++ code
+  e.write    # =&gt; Writes out to files
+  e.compile  # =&gt; Compiles into an extension
+</pre>
+<p>
+Please note the #build #write and #compile methods. These are required for
+an extension to be built. These calls are made automatically in Block Mode.
+See the <a
+href="../classes/RbPlusPlus/Extension.html">RbPlusPlus::Extension</a> class
+for more details.
+</p>
+<h2>Basic Usage</h2>
+<p>
+For the most basic usage, where there are C++ header files to wrap and
+it&#8216;s simple enough to not need extra processing, there are only two
+required calls: Extension.sources and Extension.namespace.
+Extension.sources has a few ways to be called (and is much the same as
+RbGCCXML.parse):
+</p>
+<pre>
+  # A single header file
+  Extension.new &quot;extension&quot; do |e|
+    e.sources &quot;/path/to/header.h&quot;
+  end
+
+  # An array of header files
+  Extension.new &quot;extension&quot; do |e|
+    e.sources [&quot;/path/to/header.h&quot;, &quot;/path/there.h&quot;]
+  end
+
+  # A glob
+  Extension.new &quot;extension&quot; do |e|
+    e.sources &quot;/path/to/*.h&quot;
+  end
+
+  # An array of globs
+  Extension.new &quot;extension&quot; do |e|
+    e.sources [&quot;/path/to/*.h&quot;, &quot;/elsewhere/*.hpp&quot;]
+  end
+</pre>
+<p>
+One special method that&#8216;s also required in the Immediate Mode is
+Extension#working_dir=. This specifies where rb++ will put the generated
+code. In Block Mode, the default is to put the code in
+<em>FILE</em>/generated, but as rb++ cannot ascertain the <em>FILE</em>
+information without a block, it will need to be stated explicitly. Use this
+method in Block Mode if the default location does not work.
+</p>
+<pre>
+  e = Extension.new &quot;extension&quot;
+  e.working_dir = &quot;/path/to/generate/files/&quot;
+</pre>
+<p>
+The last required method is Extension#namespace. As mentioned above, all
+extensions are built from code in a given C++ namespace. That namespace
+needs to be specified before Rb++ will start any processing
+</p>
+<pre>
+  # Wrap all code under the 'to_wrap' namespace
+  Extension.new &quot;extension&quot; do |e|
+    e.namespace &quot;to_wrap&quot;
+  end
+</pre>
+<p>
+There is one place where Extension#namespace isn&#8216;t exactly required:
+when you&#8216;ll be wrapping up the C++ code soley in other Ruby modules
+to be contained in the extension.
+</p>
+<p>
+The general rule is this: <b>If you want C++ code wrapped, you must use
+Extension#namespace to specify which code should go where</b>.
+</p>
+<h2>More Detailed Usage</h2>
+<p>
+Because C++ does not easily wrap into Ruby code for many reasons, rb++ is
+much more capable than just the basic usage above. There are many different
+features available to help define and build the wrapper.
+</p>
+<h3>Modules</h3>
+<p>
+An extension can include 0..n modules in which code will be wrapped. Any
+given module needs to be given a #namespace call. This defines which C++
+code will be wrapped into this module.
+</p>
+<pre>
+  Extension.new &quot;extension&quot; do |e|
+    e.sources ...
+    # If there is no global-space code to be wrapped
+    # #namespace is not required here
+
+    e.module &quot;MyModule&quot; do |m|
+      # We want to wrap all code in ::my_module into this ruby module
+      m.namespace &quot;my_module&quot;
+    end
+  end
+</pre>
+<h3>Particularly hairy APIs</h3>
+<p>
+It&#8216;s well known that source code may not follow a very clean format,
+or even be internally consistent. When dealing with such problems &#8212;
+code that just won&#8216;t adhere to a wrappable format &#8212; rb++ opens
+up a slew of manipulation routines for controlling exactly what gets
+wrapped, where it gets wrapped, and how it gets wrapped.
+</p>
+<h4>Excluding / Ignoring</h4>
+<p>
+Often times you will want to ignore a method on an object, a whole class,
+or a whole namespace even. This can be useful if the function you wish to
+ignore takes a &#8216;void *&#8217; as an argument, or for a variety of
+other reasons. You can tell rb++ which namespaces/classes/methods to ignore
+very easily:
+</p>
+<pre>
+  Extension.new &quot;extension&quot; do |e|
+    e.sources ...
+    node = e.namespace &quot;Physics&quot;
+    node.classes(&quot;Callback&quot;).ignore                           # Ignore classes named Callback
+    node.classes(&quot;Shape&quot;).methods(&quot;registerCallback&quot;).ignore  # Ignore the method Shape::registerCallback
+  end
+</pre>
+<p>
+You can also ignore a whole query result with the same notation:
+</p>
+<pre>
+  Extension.new &quot;extension&quot; do |e|
+    ...
+    node.methods.find(:all, :name =&gt; &quot;free&quot;).ignore           # Ignores all class methods named 'free'
+    ...
+  end
+</pre>
+<h4>Including</h4>
+<p>
+If a C++ library has a certain class in an undesired namespace, or a
+certain function with undesired visibility you can easily fix this by using
+the declarative &#8216;include&#8217;.
+</p>
+<pre>
+  Extension.new &quot;extension&quot; do |e|
+    e.sources ...
+    node = e.namespace &quot;PhysicsMath&quot;
+
+    e.module &quot;Physics&quot; do |m|
+      m.module &quot;Math&quot; do |math|
+        #moves each class to Physics::Math
+        node.classes.each do |c|
+          math.includes c
+        end
+      end
+    end
+
+  end
+</pre>
+<p>
+Note that when you include something in a module it is moved from
+it&#8216;s original location. In the example above the classes will only
+exist in Physics::Math and not PhysicsMath
+</p>
+<h4>Renaming</h4>
+<p>
+Sometimes C++ libraries implement certain architectures that are nice to
+have in C++, but are terrible in Ruby. For example, many older libraries in
+C++ start name their classes with a &quot;C#{class}&quot;.
+</p>
+<p>
+In order to rectify this you use the wrap_as method to rename the node:
+</p>
+<pre>
+  Extension.new &quot;extension&quot; do |e|
+    e.sources ...
+    node = e.namespace &quot;Physics&quot;
+    node.classes(&quot;CShape&quot;).wrap_as(&quot;Shape&quot;)
+    node.classes(&quot;CShape&quot;).methods(&quot;hasCollided&quot;).wrap_as(&quot;collided?&quot;)
+  end
+</pre>
+<h4>Function / Method Conversions</h4>
+<p>
+C++ APIs can also sometimes put as global functions functionality you want
+contained in a class or module. This kind of wrapping is also trivially
+easy in rb++. Say you have the function:
+</p>
+<pre>
+  inline int mod(int a, int b) {
+    return a%b;
+  }
+</pre>
+<p>
+and you want to add it to your Math class:
+</p>
+<pre>
+  mod = node.functions(&quot;mod&quot;)
+  node.classes(&quot;Math&quot;).includes mod.as_instance_method
+</pre>
+<p>
+Please note the as_instance_method. You now have Math#mod in your extension
+</p>
+<pre>
+  require 'extension'
+
+  Math.new.mod(1, 2)
+</pre>
+<h2>Possible &#8216;Gotchas&#8216;</h2>
+<h3>Constructor overloading</h3>
+<p>
+A current limitation in rice currently does not allow for more than one
+constructor to be exported. This will not be a limitation in future
+versions of Rice, but for now make sure that only one constructor is
+wrapped. This can be done via direct constructor access:
+</p>
+<pre>
+  node.classes(&quot;MyClass&quot;).constructors[0].ignore
+</pre>
+<p>
+or by querying according to the arguments of the constructor(s) you want to
+ignore:
+</p>
+<pre>
+  node.classes(&quot;MyClass&quot;).constructors.find(:arguments =&gt; [nil,  nil]) # ignore constructors with 2 arguments
+</pre>
+<h3>Method overloading</h3>
+<p>
+Method overloading is supported, but not by Rice. Therefore all overloaded
+methods are wrapped in the order that they are presented to gccxml. For
+example:
+</p>
+<pre>
+  class System {
+    public:
+    System() {}
+    inline void puts(std::string s) { std::cout &lt;&lt; s &lt;&lt; std::endl; }
+    inline void puts() { puts(&quot;&quot;); }
+  };
+</pre>
+<p>
+can be used by default in rb++ like so:
+</p>
+<pre>
+  s = System.new
+  s.puts_0(&quot;Hello world&quot;)
+  s.puts_1
+</pre>
+<p>
+You can, however, rename them as you see fit if you tell rb++ how, for
+example:
+</p>
+<pre>
+  puts_methods = node.classes(&quot;System&quot;).methods(&quot;puts&quot;)  # Gives 2 puts methods back
+  puts_methods[0].wrap_as(&quot;puts&quot;)
+</pre>
+<p>
+After doing this you can use the methods as follows:
+</p>
+<pre>
+  s = System.new
+  s.puts(&quot;Hello World&quot;)
+  s.puts_1
+</pre>
+<h3>Methods with optional arguments</h3>
+<p>
+Rice does not currently support default arguments. Right now they are all
+required. For example:
+</p>
+<pre>
+  int times(int a=0, int b=0) {
+    return a*b;
+  }
+</pre>
+<p>
+can only be invoked with 2 arguments. If you are having problems with this,
+please consult the rb++ forum.
+</p>
+<h3>Additional notes</h3>
+<ul>
+<li>Method / function names are underscored by default. So
+<tt>YourClass::doSomething</tt> becomes <tt>YourClass#do_something</tt>
+
+</li>
+</ul>
+<h2>Misc Options</h2>
+<h3>File Writing Options</h3>
+<p>
+By default, rb++ will write out the extension in multiple files, following
+the convention of
+</p>
+<pre>
+  extension_name.cpp
+  _ClassName.rb.hpp
+  _ClassName.rb.cpp
+  _ModuleName_ClassName.rb.hpp
+  _ModuleName_ClassName.rb.cpp
+  ...
+</pre>
+<p>
+This is done to prevent obscenely long compile times, super large code
+files, or uncompilable extensions due to system limitations (e.g. RAM) that
+are common with big SWIG projects.
+</p>
+<p>
+Rb++ can also write out the extension code in a single file
+(extension_name.cpp) with Extension#writer_mode
+</p>
+<pre>
+  Extension.new &quot;extension&quot; do |e|
+    e.writer_mode :single
+  end
+</pre>
+<h3>Compilation options</h3>
+<p>
+rb++ takes care of setting up the extension to be properly compiled, but
+sometimes certain compiler options can&#8216;t be deduced. rb++ has options
+to specify library paths (-L), libraries (-l), and include paths (-I) to
+add to the compilation lines, as well as just adding your own flags
+directly to the command line. These are options on Extension.sources
+</p>
+<pre>
+  Extension.new &quot;extension&quot; do |e|
+    e.sources *header_dirs,
+      :library_paths =&gt; *paths,       # Adds to -L
+      :libraries =&gt; *libs,            # Adds to -l
+      :include_paths =&gt; *includes,    # Adds to -I
+      :cxxflags =&gt; *flags,            # For those flags that don't match the above three
+      :ldflags =&gt; *flags,             # For extra linking flags that don't match the above
+      :includes =&gt; *files,            # For when there are header files that need to be included into the
+                                      #   compilation but *don't* get parsed out and wrapped
+      :include_source_files =&gt; *files # A list of source files that will get copied into working_dir and
+                                      #   compiled with the extension
+  end
+</pre>
+<p>
+Any compiler errors and the full build log will be found in
+rbpp_compile.log.
+</p>
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+  </div>
+
+    </body>
+</html>

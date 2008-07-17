@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Class: RbPlusPlus::RbModule</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+
+    <script language="JavaScript" type="text/javascript">
+    // <![CDATA[
+
+        function toggleSource( id )
+        {
+          var elem
+          var link
+
+          if( document.getElementById )
+          {
+            elem = document.getElementById( id )
+            link = document.getElementById( "l_" + id )
+          }
+          else if ( document.all )
+          {
+            elem = eval( "document.all." + id )
+            link = eval( "document.all.l_" + id )
+          }
+          else
+            return false;
+
+          if( elem.style.display == "block" )
+          {
+            elem.style.display = "none"
+            link.innerHTML = "show source"
+          }
+          else
+          {
+            elem.style.display = "block"
+            link.innerHTML = "hide source"
+          }
+        }
+
+        function openCode( url )
+        {
+          window.open( url, "SOURCE_CODE", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=480,width=750" ).focus();
+        }
+      // ]]>
+    </script>
+  </head>
+
+  <body>
+  <table width="100%" border='0' cellpadding='0' cellspacing='0' class='banner'><tr>
+  <td class="file-title"><span class="file-title-prefix">Class</span><br />RbPlusPlus::RbModule</td>
+  <td align="right">
+    <table cellspacing="0" cellpadding="2">
+      <tr valign="top">
+        <td>In:</td>
+        <td>
+<a href="../../files/lib/rbplusplus/module_rb.html">lib/rbplusplus/module.rb</a>
+<a href="../../files/lib/rbplusplus/transformers/module_rb.html">lib/rbplusplus/transformers/module.rb</a>
+        </td>
+      </tr>
+    <tr>
+      <td>Parent:</td>
+      <td>
+Object
+     </td>
+   </tr>
+         </table>
+        </td>
+        </tr>
+      </table>
+ <!-- banner header -->
+
+  <div id="bodyContent">
+      <div id="content">
+
+  <div class="description"><p>
+Class representation of a ruby Module to be exposed in the extension. A
+Module acts much in the same way as <a href="Extension.html">Extension</a>
+in that it can contain classes, functions, enumerations, etc.
+</p>
+</div>
+
+
+
+  <div class="sectiontitle">Methods</div>
+  <ul>
+  <li><a href="#M000069">includes</a></li>
+  <li><a href="#M000068">module</a></li>
+  <li><a href="#M000067">namespace</a></li>
+  <li><a href="#M000066">new</a></li>
+  </ul>
+
+
+
+
+
+  <div class="sectiontitle">Attributes</div>
+  <table border='0' cellpadding='5'>
+  <tr valign='top'>
+    <td class='attr-rw'>
+[RW]
+    </td>
+    <td class='attr-name'>modules</td>
+    <td class='attr-desc'>
+Modules can be nested
+
+</td>
+  </tr>
+  <tr valign='top'>
+    <td class='attr-rw'>
+[RW]
+    </td>
+    <td class='attr-name'>name</td>
+    <td class='attr-desc'>
+Modules have a name
+
+</td>
+  </tr>
+  <tr valign='top'>
+    <td class='attr-rw'>
+[R]
+    </td>
+    <td class='attr-name'>node</td>
+    <td class='attr-desc'>
+Access to the underlying <a href="../RbGCCXML.html">RbGCCXML</a> parser
+
+</td>
+  </tr>
+  </table>
+
+<div class="sectiontitle">Public Class methods</div>
+<div class="method">
+  <div class="title">
+    <a name="M000066"></a><b>new</b>(name, parser, &amp;block)
+  </div>
+  <div class="description">
+  <p>
+Registers a <a href="RbModule.html#M000066">new</a> <a
+href="RbModule.html#M000068">module</a> definition for this extension. Use
+<a href="Extension.html#M000058">Extension#module</a> or <a
+href="RbModule.html#M000068">RbModule#module</a> instead of creating an
+instance of this class directly
+</p>
+<p>
+The block parameter is optional, you can also grab the reference of the
+Module and work with it as you want:
+</p>
+<pre>
+  module &quot;Name&quot; do |m|
+    ...
+  end
+</pre>
+<p>
+or
+</p>
+<pre>
+  m = module &quot;Name&quot;
+  ...
+</pre>
+<p>
+Unlike <a href="Extension.html#M000055">Extension#new</a>, no special
+processing is done in the block version, it&#8216;s just there for
+convenience.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000066_source')" id="l_M000066_source">show source</a> ]</p>
+  <div id="M000066_source" class="dyn-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rbplusplus/module.rb, line 35</span>
+35:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">name</span>, <span class="ruby-identifier">parser</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+36:       <span class="ruby-ivar">@name</span> = <span class="ruby-identifier">name</span>
+37:       <span class="ruby-ivar">@parser</span> = <span class="ruby-identifier">parser</span>
+38:       <span class="ruby-ivar">@modules</span> = []
+39: 
+40:       <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-keyword kw">self</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">block</span>
+41:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="sectiontitle">Public Instance methods</div>
+<div class="method">
+  <div class="title">
+    <a name="M000069"></a><b>includes</b>(val)
+  </div>
+  <div class="description">
+  <p>
+Helper function for moving pieces of an API into other Ruby locations, eg
+from a Class to a Module, from global functions to a Class, or from Module
+to Module.
+</p>
+<p>
+Module may include Functions
+</p>
+<pre>
+  e.module &quot;System&quot; do |m|
+    m.includes node.functions(&quot;print&quot;).wrap_as(&quot;puts&quot;) # Moves the ::print function into the System module
+
+    m.include node.classes(&quot;Vector3&quot;) # Explicitly put Vector3 class in the System module
+  end
+</pre>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000069_source')" id="l_M000069_source">show source</a> ]</p>
+  <div id="M000069_source" class="dyn-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rbplusplus/transformers/module.rb, line 13</span>
+13:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">includes</span>(<span class="ruby-identifier">val</span>)
+14:       <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">is_a?</span>(<span class="ruby-identifier">val</span>, <span class="ruby-constant">RbGCCXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Function</span>)
+15:         <span class="ruby-identifier">reference_function</span>(<span class="ruby-identifier">val</span>)
+16:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">is_a?</span>(<span class="ruby-identifier">val</span>, <span class="ruby-constant">RbGCCXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Class</span>)
+17:         <span class="ruby-identifier">reference_class</span>(<span class="ruby-identifier">val</span>)
+18:       <span class="ruby-keyword kw">elsif</span> <span class="ruby-identifier">is_a?</span>(<span class="ruby-identifier">val</span>, <span class="ruby-constant">RbGCCXML</span><span class="ruby-operator">::</span><span class="ruby-constant">Struct</span>)
+19:         <span class="ruby-identifier">reference_struct</span>(<span class="ruby-identifier">val</span>)
+20:       <span class="ruby-keyword kw">else</span>
+21:         <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;Cannot use #{self.class}#includes for type '#{val.class}'&quot;</span>
+22:       <span class="ruby-keyword kw">end</span>
+23:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000068"></a><b>module</b>(name, &amp;block)
+  </div>
+  <div class="description">
+  <p>
+Register another <a href="RbModule.html#M000068">module</a> to be defined
+inside of this <a href="RbModule.html#M000068">module</a>. Acts the same as
+<a href="Extension.html#M000058">Extension#module</a>.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000068_source')" id="l_M000068_source">show source</a> ]</p>
+  <div id="M000068_source" class="dyn-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rbplusplus/module.rb, line 53</span>
+53:     <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">module</span>(<span class="ruby-identifier">name</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+54:       <span class="ruby-ivar">@modules</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">RbModule</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">name</span>, <span class="ruby-ivar">@parser</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+55:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000067"></a><b>namespace</b>(name)
+  </div>
+  <div class="description">
+  <p>
+Specify a C++ <a href="RbModule.html#M000067">namespace</a> from which the
+contained code will be wrapped and exposed to Ruby under this Module.
+</p>
+<p>
+Also see <a href="Extension.html#M000057">Extension#namespace</a>
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000067_source')" id="l_M000067_source">show source</a> ]</p>
+  <div id="M000067_source" class="dyn-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rbplusplus/module.rb, line 47</span>
+47:     <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">namespace</span>(<span class="ruby-identifier">name</span>)
+48:       <span class="ruby-ivar">@node</span> = <span class="ruby-ivar">@parser</span>.<span class="ruby-identifier">namespaces</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">:all</span>, <span class="ruby-identifier">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">name</span>)
+49:     <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+</div>
+
+  </div>
+
+    </body>
+</html>

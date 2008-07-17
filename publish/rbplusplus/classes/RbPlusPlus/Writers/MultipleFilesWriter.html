@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Class: RbPlusPlus::Writers::MultipleFilesWriter</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+
+    <script language="JavaScript" type="text/javascript">
+    // <![CDATA[
+
+        function toggleSource( id )
+        {
+          var elem
+          var link
+
+          if( document.getElementById )
+          {
+            elem = document.getElementById( id )
+            link = document.getElementById( "l_" + id )
+          }
+          else if ( document.all )
+          {
+            elem = eval( "document.all." + id )
+            link = eval( "document.all.l_" + id )
+          }
+          else
+            return false;
+
+          if( elem.style.display == "block" )
+          {
+            elem.style.display = "none"
+            link.innerHTML = "show source"
+          }
+          else
+          {
+            elem.style.display = "block"
+            link.innerHTML = "hide source"
+          }
+        }
+
+        function openCode( url )
+        {
+          window.open( url, "SOURCE_CODE", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=480,width=750" ).focus();
+        }
+      // ]]>
+    </script>
+  </head>
+
+  <body>
+  <table width="100%" border='0' cellpadding='0' cellspacing='0' class='banner'><tr>
+  <td class="file-title"><span class="file-title-prefix">Class</span><br />RbPlusPlus::Writers::MultipleFilesWriter</td>
+  <td align="right">
+    <table cellspacing="0" cellpadding="2">
+      <tr valign="top">
+        <td>In:</td>
+        <td>
+<a href="../../../files/lib/rbplusplus/writers/multiple_files_writer_rb.html">lib/rbplusplus/writers/multiple_files_writer.rb</a>
+        </td>
+      </tr>
+    <tr>
+      <td>Parent:</td>
+      <td>
+        <a href="Base.html">
+Base
+         </a>
+     </td>
+   </tr>
+         </table>
+        </td>
+        </tr>
+      </table>
+ <!-- banner header -->
+
+  <div id="bodyContent">
+      <div id="content">
+
+  <div class="description"><p>
+Writer that takes a builder and writes out the code in multiple files.
+</p>
+</div>
+
+
+
+  <div class="sectiontitle">Methods</div>
+  <ul>
+  <li><a href="#M000054">_write_node</a></li>
+  <li><a href="#M000052">write</a></li>
+  <li><a href="#M000053">write_to_from_ruby</a></li>
+  </ul>
+
+
+
+
+
+
+<div class="sectiontitle">Public Instance methods</div>
+<div class="method">
+  <div class="title">
+    <a name="M000054"></a><b>_write_node</b>(node)
+  </div>
+  <div class="description">
+  <p>
+How this works:
+</p>
+<p>
+We&#8216;ll recurse through the builder heirarchy, starting at the bottom.
+This lets us to properly link up each file so that all classes / modules /
+functions get properly exposed.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000054_source')" id="l_M000054_source">show source</a> ]</p>
+  <div id="M000054_source" class="dyn-source">
+<pre>
+     <span class="ruby-comment cmt"># File lib/rbplusplus/writers/multiple_files_writer.rb, line 48</span>
+ 48:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">_write_node</span>(<span class="ruby-identifier">node</span>)
+ 49:         <span class="ruby-identifier">node</span>.<span class="ruby-identifier">builders</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">b</span><span class="ruby-operator">|</span>
+ 50:           <span class="ruby-identifier">_write_node</span>(<span class="ruby-identifier">b</span>)
+ 51:         <span class="ruby-keyword kw">end</span>
+ 52: 
+ 53:         <span class="ruby-identifier">filename</span> = <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>
+ 54:                      <span class="ruby-value str">&quot;_&quot;</span><span class="ruby-operator">+</span><span class="ruby-identifier">node</span>.<span class="ruby-identifier">qualified_name</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-regexp re">/::/</span>, <span class="ruby-value str">&quot;_&quot;</span>)
+ 55:                    <span class="ruby-keyword kw">else</span>
+ 56:                      <span class="ruby-identifier">node</span>.<span class="ruby-identifier">name</span>
+ 57:                    <span class="ruby-keyword kw">end</span>
+ 58:                    
+ 59:         <span class="ruby-comment cmt">#templated classes</span>
+ 60:         <span class="ruby-identifier">filename</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-regexp re">/[ ,&lt;&gt;]/</span>,<span class="ruby-value str">&quot;_&quot;</span>)
+ 61:         <span class="ruby-comment cmt">#templates to pointers</span>
+ 62:         <span class="ruby-identifier">filename</span>.<span class="ruby-identifier">gsub!</span>(<span class="ruby-value str">&quot;*&quot;</span>,<span class="ruby-value str">&quot;Ptr&quot;</span>)
+ 63: 
+ 64:         <span class="ruby-identifier">cpp_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">working_dir</span>, <span class="ruby-node">&quot;#{filename}.rb.cpp&quot;</span>)
+ 65: 
+ 66:         <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>
+ 67:           <span class="ruby-identifier">hpp_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">working_dir</span>, <span class="ruby-node">&quot;#{filename}.rb.hpp&quot;</span>)
+ 68:           <span class="ruby-identifier">hpp_include</span> = <span class="ruby-node">&quot;#include \&quot;#{hpp_file}\&quot;&quot;</span>
+ 69:           <span class="ruby-identifier">register_func</span> = <span class="ruby-node">&quot;register_#{filename}&quot;</span>
+ 70: 
+ 71:           <span class="ruby-identifier">include_guard</span> = <span class="ruby-node">&quot;__RICE_GENERATED_#{filename}_HPP__&quot;</span>
+ 72: 
+ 73:           <span class="ruby-identifier">register_func_arg</span> = <span class="ruby-value str">&quot;&quot;</span>
+ 74:           <span class="ruby-identifier">register_func_prototype</span> = <span class="ruby-value str">&quot;&quot;</span>
+ 75: 
+ 76:           <span class="ruby-keyword kw">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">is_a?</span>(<span class="ruby-constant">Builders</span><span class="ruby-operator">::</span><span class="ruby-constant">ExtensionBuilder</span>)
+ 77:             <span class="ruby-identifier">register_func_arg</span> = <span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">rice_variable</span>
+ 78:             <span class="ruby-identifier">register_func_prototype</span> = <span class="ruby-node">&quot;#{node.parent.rice_variable_type} #{register_func_arg}&quot;</span>
+ 79:           <span class="ruby-keyword kw">end</span>
+ 80: 
+ 81:           <span class="ruby-comment cmt"># Changes we need to make to the parent for everything to work across multiple </span>
+ 82:           <span class="ruby-comment cmt"># files</span>
+ 83:           <span class="ruby-comment cmt">#</span>
+ 84:           <span class="ruby-comment cmt"># * Add an include to the hpp file</span>
+ 85:           <span class="ruby-comment cmt"># * Add a call to the register method</span>
+ 86:           <span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">includes</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">hpp_include</span>
+ 87: 
+ 88:           <span class="ruby-comment cmt"># Register for proper flattening of the inheritance tree</span>
+ 89:           <span class="ruby-identifier">node</span>.<span class="ruby-identifier">parent</span>.<span class="ruby-identifier">register_node</span>(<span class="ruby-identifier">node</span>, <span class="ruby-node">&quot;#{register_func}(#{register_func_arg});&quot;</span>)
+ 90: 
+ 91:           <span class="ruby-comment cmt"># Modifications to this current node's code:</span>
+ 92:           <span class="ruby-comment cmt"># </span>
+ 93:           <span class="ruby-comment cmt"># * Add a register prototype to the header file</span>
+ 94:           <span class="ruby-comment cmt"># * Set include in node to the header file</span>
+ 95:           <span class="ruby-comment cmt"># * Wrap the body in a register method</span>
+ 96: 
+ 97:           <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">hpp_file</span>, <span class="ruby-value str">&quot;w+&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hpp</span><span class="ruby-operator">|</span>
+ 98:             <span class="ruby-identifier">hpp</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#ifndef #{include_guard}&quot;</span>
+ 99:             <span class="ruby-identifier">hpp</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#define #{include_guard}&quot;</span>
+100:             <span class="ruby-identifier">hpp</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>
+101:             <span class="ruby-identifier">hpp</span>.<span class="ruby-identifier">puts</span> <span class="ruby-ivar">@to_from_include</span>
+102:             <span class="ruby-identifier">hpp</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>
+103:             <span class="ruby-identifier">hpp</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;void #{register_func}(#{register_func_prototype});&quot;</span>
+104:             <span class="ruby-identifier">hpp</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;#endif&quot;</span>
+105:           <span class="ruby-keyword kw">end</span>
+106: 
+107:           <span class="ruby-identifier">node</span>.<span class="ruby-identifier">includes</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">hpp_include</span>
+108: 
+109:           <span class="ruby-identifier">node</span>.<span class="ruby-identifier">body</span> = [
+110:             <span class="ruby-node">&quot;void #{register_func}(#{register_func_prototype}) {&quot;</span>,
+111:             <span class="ruby-identifier">node</span>.<span class="ruby-identifier">body</span>,
+112:             <span class="ruby-value str">&quot;}&quot;</span>
+113:           ]
+114:         <span class="ruby-keyword kw">end</span>
+115: 
+116:         <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">cpp_file</span>, <span class="ruby-value str">&quot;w+&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cpp</span><span class="ruby-operator">|</span>
+117:           <span class="ruby-identifier">cpp</span>.<span class="ruby-identifier">puts</span> <span class="ruby-identifier">node</span>.<span class="ruby-identifier">to_s</span>
+118:         <span class="ruby-keyword kw">end</span>
+119:       <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000052"></a><b>write</b>()
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000052_source')" id="l_M000052_source">show source</a> ]</p>
+  <div id="M000052_source" class="dyn-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rbplusplus/writers/multiple_files_writer.rb, line 7</span>
+ 7:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write</span>
+ 8:         <span class="ruby-ivar">@to_from_include</span> = <span class="ruby-value str">&quot;&quot;</span>
+ 9:         <span class="ruby-identifier">write_to_from_ruby</span>
+10:         <span class="ruby-identifier">_write_node</span>(<span class="ruby-identifier">builder</span>)
+11:       <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+<div class="method">
+  <div class="title">
+    <a name="M000053"></a><b>write_to_from_ruby</b>()
+  </div>
+  <div class="description">
+  <p>
+Write out files that include the auto-generated to_/from_ruby constructs.
+</p>
+  </div>
+<div class="sourcecode">
+  <p class="source-link">[ <a href="javascript:toggleSource('M000053_source')" id="l_M000053_source">show source</a> ]</p>
+  <div id="M000053_source" class="dyn-source">
+<pre>
+    <span class="ruby-comment cmt"># File lib/rbplusplus/writers/multiple_files_writer.rb, line 14</span>
+14:       <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">write_to_from_ruby</span>
+15:         <span class="ruby-comment cmt"># Ignore this if there's nothing to write out</span>
+16:         <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">if</span> <span class="ruby-constant">Builders</span><span class="ruby-operator">::</span><span class="ruby-constant">TypesManager</span>.<span class="ruby-identifier">body</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+17: 
+18:         <span class="ruby-identifier">hpp_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">working_dir</span>, <span class="ruby-value str">&quot;_to_from_ruby.rb.hpp&quot;</span>)
+19:         <span class="ruby-identifier">cpp_file</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-identifier">working_dir</span>, <span class="ruby-value str">&quot;_to_from_ruby.rb.cpp&quot;</span>)
+20: 
+21:         <span class="ruby-ivar">@to_from_include</span> = <span class="ruby-node">&quot;#include \&quot;#{hpp_file}\&quot;&quot;</span>
+22: 
+23:         <span class="ruby-identifier">include_guard</span> = <span class="ruby-value str">&quot;__RICE_GENERATED_TO_FROM_RUBY_HPP__&quot;</span>
+24: 
+25:         <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">hpp_file</span>, <span class="ruby-value str">&quot;w+&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+26:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#ifndef #{include_guard}&quot;</span> 
+27:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#define #{include_guard}&quot;</span> 
+28:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>
+29:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-constant">Builders</span><span class="ruby-operator">::</span><span class="ruby-constant">TypesManager</span>.<span class="ruby-identifier">includes</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;\n&quot;</span>)
+30:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>
+31:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-constant">Builders</span><span class="ruby-operator">::</span><span class="ruby-constant">TypesManager</span>.<span class="ruby-identifier">prototypes</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;\n&quot;</span>)
+32:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>
+33:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;#endif // #{include_guard}&quot;</span> 
+34:         <span class="ruby-keyword kw">end</span>
+35: 
+36:         <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-identifier">cpp_file</span>, <span class="ruby-value str">&quot;w+&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">f</span><span class="ruby-operator">|</span>
+37:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-ivar">@to_from_include</span>
+38:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-value str">&quot;&quot;</span>
+39:           <span class="ruby-identifier">f</span>.<span class="ruby-identifier">puts</span> <span class="ruby-constant">Builders</span><span class="ruby-operator">::</span><span class="ruby-constant">TypesManager</span>.<span class="ruby-identifier">body</span>.<span class="ruby-identifier">join</span>(<span class="ruby-value str">&quot;\n&quot;</span>);
+40:         <span class="ruby-keyword kw">end</span>
+41:       <span class="ruby-keyword kw">end</span>
+</pre>
+  </div>
+</div>
+</div>
+</div>
+
+  </div>
+
+    </body>
+</html>
