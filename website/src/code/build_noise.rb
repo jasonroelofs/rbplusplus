@@ -24,10 +24,10 @@ Extension.new "noise" do |e|
     :includes => File.join(HERE_DIR, "code", "custom_to_from_ruby.hpp")
 
   e.module "Noise" do |m|
-    node = m.namespace "noise"
+    m.namespace "noise"
 
     m.module "Model" do |model|
-      node = model.namespace "model"
+      model.namespace "model"
     end
 
     m.module "Utils" do |utils|

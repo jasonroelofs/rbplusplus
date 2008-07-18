@@ -1,8 +1,8 @@
   e.module "Noise" do |m|
-    node = m.namespace "noise"
+    m.namespace "noise"
 
     m.module "Model" do |model|
-      node = model.namespace "model"
+      model.namespace "model"
     end
 
     m.module "Utils" do |utils|
