@@ -1,7 +1,7 @@
 ---
-title: rb++ / rbgccxml
-in_menu: true 
-routed_title: RbGCCXML
+title: RbGCCXML
+inMenu: true 
+orderInfo: 2
 ---
 ## RbGCCXML
 

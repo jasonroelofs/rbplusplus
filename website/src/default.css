@@ -55,5 +55,6 @@ a img:hover {background:#d85d5d; border-color:#d85d5d;}
 #content h1 {margin:0; color:#d85d5d; font-size:3.6em; letter-spacing:-4px; text-align:center;}
 #content h2 {margin:0; color:#808080; font-weight:normal; font-size:2em; letter-spacing:-2px; text-align:center;}
 #content h3 {margin:20px 0 10px 0; color:#d85d5d; font-weight:normal; font-size: 2em; letter-spacing:-2px;}
+#content h4 {margin:0; color:#404040; font-weight:bold; font-size: 1.25em;}
 
 #siteInfo {padding-top: 3em;}

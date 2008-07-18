@@ -1,8 +1,136 @@
 ---
-title: rb++ / rbgccxml
-in_menu: true
-routed_title: Rb++
+title: Rb++
+inMenu: true
+orderInfo: 1
 ---
-## Rb++
+<h1>Rb++</h1>
 
-<a href="rbplusplus/index.html">RDocs</a>
+<h3>Synopsis</h3>
+
+Rb++ is a code generation system using <a href="rbgccxml.html">RbGCCXML</a> and 
+<a href="http://rice.rubyforge.org" target="_blank">Rice</a> to make the creation
+of Ruby extensions as easy as possible.
+
+<h3>Documentation</h3>
+
+View the projects RDocs <a href="rbplusplus/index.html">here</a>.
+
+<h3>Example</h3>
+
+To give an idea of how easy it is to wrap C++ libraries into Ruby extensions, we'll
+go through the wrapping of the <a href="http://libnoise.sourceforge.net/" target="_blank">
+libnoise</a> library, a library built to easily generate coherent noise. 
+
+This libnoise wrapper is a part of the under-development <a href="http://github.com/jameskilton/ogrerb/tree/master">Ogre.rb</a> library. The following code will only run under the Ogre.rb environment so feel free to check out the project and follow along.
+
+We'll start by showing the full source code of the wrapper, which will then be broken down by each important
+part.
+
+<h4>First, the code</h4>
+
+{includeFile: {filename: code/build_noise.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+At first glance, this is probably quite overwhelming, but it breaks down into two very easy-to-understand sections: <a href="#source">souce code / compilation setup</a> and <a href="#definitions">wrapping definitions</a>.
+
+<a name="source"></a>
+<h4>Source Code / Compliation Setup</h4>
+
+{includeFile: {filename: code/build_noise.source.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+This section of the code constitutes the Setup portion of the wrapper. We'll go through each line to understand what all
+is happening here.
+
+<br/>
+{includeFile: {filename: code/build_noise.1.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+All extensions start with this declaration. The string passed in will be the final name of the extension. In this case,
+this will generate an extension named "noise.so".
+
+<br/>
+{includeFile: {filename: code/build_noise.2.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+The Working Directory is the place where all generated code is placed. By default, the Working Directory is "generated", local
+to the ruby script. In the case that this is not sufficient, such as this wrapper, use this attribute to set another
+directory. 
+
+Please note that all directories used in the script should be full paths to prevent problems, though this is not required.
+
+<br/>
+{includeFile: {filename: code/build_noise.3.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+Here we have the bulk of the required setup for this wrapper to function properly. Extension#sources is the method that controls
+configuration of what source code is to be wrapped, where such code is to be found, any extra code to be added to the extension,
+and how compilation works (flags, etc). We'll go through each part on it's own.
+
+<br/>
+{includeFile: {filename: code/build_noise.3.1.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+The first argument to Extension#sources is the only one required. It is where you specify what source header files are to be
+parsed for function / class / method definitions to wrap into an extension. Here, because libnoise gives us a "noise.h" file
+that itself includes the rest of the headers, we only need to specify this one file. Noiseutils is a seperate, downloadable 
+set of utility methods and classes that we also want to put in our extension, so we specify its header here as well.
+
+*Note* For any and all places where file paths are expected, said paths can be in one of these forms:
+
+* Straight string, like "/path/to/file.h"
+* Glob, such as "/where/headers/are/&#42;.h"
+* An array of strings ["/here/header1.h", "/there/header2.h", ...]
+* An array of globs ["/usr/lib/library/&#42;.h", "/usr/lib/other_lib/&#42;.hpp"]
+
+<br/>
+{includeFile: {filename: code/build_noise.3.2.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+These three options map directly onto compiler flags.
+
+* :include_paths are added to -I
+* :library_paths are added to -L
+* :libraries     are added to -l
+
+If you are getting errors about GCCXML being unable to find certain source files, :include_paths helps with fixing
+this as well.
+
+<br/>
+{includeFile: {filename: code/build_noise.3.3.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+This option is simply allowing you to specify extra C++ source files that need to be copied into the working directory and 
+compiled in with the extension, but not necessarily parsed and wrapped. 
+
+"custom_to_from_ruby.{c,h}pp" here is currently how you would handle any requirement of writing C++ wrapper code that rb++ doesn't
+handle automatically. The contents of these files are on github:
+
+* <a href="http://github.com/jameskilton/ogrerb/tree/master/wrappers/noise/code/custom_to_from_ruby.hpp">custom_to_from_ruby.hpp</a>
+* <a href="http://github.com/jameskilton/ogrerb/tree/master/wrappers/noise/code/custom_to_from_ruby.cpp">custom_to_from_ruby.cpp</a>
+
+In this case, there is some duplication between :include_source_files, the first argument of Extension#sources, and (further along
+in this tutorial) :includes, which should be minimized in future versions of rb++. For now, the duplication is unfortunately
+required for this wrapper to compile and run properly.
+
+<br/>
+{includeFile: {filename: code/build_noise.3.4.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+The final option given to Extension#sources fits in with :include_source_files above. When there's a header file that needs
+to be included in all of the generated source files (such as custom_to_from_ruby.hpp), it must be specified with this
+option. As said before, this will most likely made simplier and cleaner in the next release of rb++.
+
+With this, Rb++ is fully configured to create an extension from C++ source code. However, because C++ features and standards and Ruby features and standards don't often match up, Rb++ makes available many tools for manipulating the resulting extension to fit the Ruby-way.
+
+<a name="definitions"></a>
+<h4>Wrapping Definitions</h4>
+
+{includeFile: {filename: code/build_noise.definitions.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+
+<br/>
+The rest of the code handles defining the final Ruby extension. Rb++'s API is meant to be as simple and obvious as possible, 
+though there are some nuances that need to be explained.
+
+<br/>
+{includeFile: {filename: code/build_noise.4.rb, processOutput: false, escapeHTML: false, highlight: ruby}}

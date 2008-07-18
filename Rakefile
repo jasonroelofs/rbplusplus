@@ -11,7 +11,8 @@ task :default => :test
 # The tests wrap and load C++ wrapper code constantly.
 # When running all the tests at once, we very quickly run 
 # into problems where Rice crashes because 
-# a given C++ class is already wrapped. So we need to run the
+# a given C++ class is already wrapped, or glibc doesn't like our 
+# unorthodox handling of it's pieces. So we need to run the
 # tests individually
 desc "Run the tests"
 task :test do
@@ -31,18 +32,29 @@ end
 RUBYFORGE_USERNAME = "jameskilton"
 PROJECT_WEB_PATH = "/var/www/gforge-projects/rbplusplus"
 
-desc "Update the website" 
-task :upload_web => :rdoc  do |t|
-  unless File.directory?("publish")
-    mkdir "publish"
+namespace :web do
+  desc "Build website"
+  task :build => :rdoc do |t|
+    cd "website" do
+      sh "webgen"
+    end
+
+    unless File.directory?("publish")
+      mkdir "publish"
+    end
+    sh "cp -r website/output/* publish/"
+    sh "cp -r html/* publish/rbplusplus/"
   end
-  cd "website" do
-    sh "webgen"
+
+  desc "Update the website" 
+  task :upload => "web:build"  do |t|
+    Rake::SshDirPublisher.new("#{RUBYFORGE_USERNAME}@rubyforge.org", PROJECT_WEB_PATH, "publish").upload
   end
-  sh "cp -r website/out/* publish/"
-  sh "cp -r html/* publish/rbplusplus/"
-#	Rake::SshDirPublisher.new("#{RUBYFORGE_USERNAME}@rubyforge.org", PROJECT_WEB_PATH, "publish").upload
-#  rm_rf "publish"
+
+  desc "Clean up generated website files" 
+  task :clean do
+    rm_rf "publish"
+  end
 end
 
 spec = Gem::Specification.new do |s|
