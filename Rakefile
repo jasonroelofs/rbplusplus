@@ -16,9 +16,7 @@ task :default => :test
 # tests individually
 desc "Run the tests"
 task :test do
-  files = FileList["test/*_test.rb"]
-  puts files.inspect
-  files.each do |file|
+  FileList["test/*_test.rb"].each do |file|
     sh "ruby #{file}"
   end
 end
