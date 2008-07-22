@@ -3,7 +3,7 @@ require 'rake/rdoctask'
 require 'rake/contrib/sshpublisher'
 
 PROJECT_NAME = "rb++"
-RBPLUSPLUS_VERSION = "0.9"
+RBPLUSPLUS_VERSION = "0.8"
 
 task :default => :test
 
@@ -16,8 +16,10 @@ task :default => :test
 # tests individually
 desc "Run the tests"
 task :test do
-  FileList["test/*_test.rb"].each do |file|
-    ruby file
+  files = FileList["test/*_test.rb"]
+  puts files.inspect
+  files.each do |file|
+    sh "ruby #{file}"
   end
 end
 
@@ -71,7 +73,7 @@ Rb++ combines the powerful query interface of rbgccxml and the Rice library to
 make Ruby wrapping extensions easier to write than ever.
   END
 
-  s.add_dependency "rbgccxml", "0.9"
+  s.add_dependency "rbgccxml", "0.8"
   s.add_dependency "rice", ">= 1.0.2"
 
   patterns = [
