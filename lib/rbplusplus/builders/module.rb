@@ -41,6 +41,7 @@ module RbPlusPlus
 
         # Build each inner module
         @module.modules.each do |mod|
+          Logger.info "Generating module #{mod.qualified_name}"
           builder = ModuleBuilder.new(self, mod)
           builder.build
           builders << builder

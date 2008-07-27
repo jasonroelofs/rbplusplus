@@ -4,6 +4,7 @@ $:.unshift File.expand_path(File.dirname(__FILE__) + "/generated")
 require 'rubygems'
 require 'test/spec'
 require 'rbplusplus'
+require 'mocha_standalone'
 
 include RbPlusPlus
 
@@ -15,6 +16,9 @@ class Test::Unit::TestCase
 
   def setup
     `rm -rf #{full_dir('generated')}/*`
+    Logger.stubs(:info)
+    Logger.stubs(:warn)
+    Logger.stubs(:error)
   end
 
   def teardown

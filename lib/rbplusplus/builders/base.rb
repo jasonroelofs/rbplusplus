@@ -178,6 +178,7 @@ module RbPlusPlus
         classes.each do |klass|
           next if klass.ignored? || klass.moved?
           next unless klass.public?
+          Logger.info "Wrapping class #{klass.qualified_name}"
           builder = ClassBuilder.new(self, klass)
           builder.build
           builders << builder
@@ -187,6 +188,7 @@ module RbPlusPlus
       # Find and wrap up all enumerations
       def build_enumerations
         @node.enumerations.each do |enum|
+          Logger.info "Wrapping enumeration #{enum.qualified_name}"
           builder = EnumerationBuilder.new(self, enum)
           builder.build
           builders << builder

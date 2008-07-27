@@ -132,6 +132,7 @@ module RbPlusPlus
       end
 
       @sources = Dir.glob dirs
+      Logger.info "Parsing #{@sources.inspect}"
       @parser = RbGCCXML.parse(dirs, parser_options)
     end
 
@@ -171,16 +172,21 @@ module RbPlusPlus
       raise ConfigurationError.new("Must specify working directory") unless @working_dir
       raise ConfigurationError.new("Must specify which sources to wrap") unless @parser
 
+      Logger.info "Beginning code generation"
+
       @builder = Builders::ExtensionBuilder.new(@name, @node || @parser)
       Builders::Base.additional_includes  = @options[:includes]
       Builders::Base.sources              = @sources
       @builder.modules = @modules
       @builder.build
+
+      Logger.info "Code generation complete"
     end
 
     # Write out the generated code into files.
     # #build must be called before this step or nothing will be written out
     def write
+      Logger.info "Writing code to files"
       prepare_working_dir
       process_other_source_files
       
@@ -192,6 +198,7 @@ module RbPlusPlus
       extconf = Writers::ExtensionWriter.new(@builder, @working_dir)
       extconf.options = @options
       extconf.write
+      Logger.info "Files written"
     end
 
     # Compile the extension.
@@ -199,10 +206,12 @@ module RbPlusPlus
     # file to see the full compilation process including any compiler
     # errors / warnings.
     def compile
+      Logger.info "Compiling. See rbpp_compile.log for details."
       FileUtils.cd @working_dir do
         system("ruby extconf.rb > rbpp_compile.log 2>&1")
         system("make >> rbpp_compile.log 2>&1")
       end
+      Logger.info "Compilation complete."
     end
 
     protected

@@ -13,6 +13,9 @@ module RbPlusPlus
     # Access to the underlying RbGCCXML parser
     attr_reader :node
 
+    # Parent module if this is nested
+    attr_accessor :parent
+
     # Registers a new module definition for this extension.
     # Use Extension#module or RbModule#module instead
     # of creating an instance of this class directly
@@ -51,7 +54,18 @@ module RbPlusPlus
     # Register another module to be defined inside of
     # this module. Acts the same as Extension#module.
     def module(name, &block)
-      @modules << RbModule.new(name, @parser, &block)
+      m = RbModule.new(name, @parser, &block)
+      m.parent = self
+      @modules << m
+    end
+
+    # Get the fully nested name of this module
+    def qualified_name
+      if parent
+        "#{parent.qualified_name}::#{self.name}"
+      else
+        self.name
+      end
     end
 
   end

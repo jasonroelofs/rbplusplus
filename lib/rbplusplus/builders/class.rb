@@ -52,7 +52,10 @@ module RbPlusPlus
         # There are no constructors on purely virtual classes.
         node.methods.each do |method|
           next unless method.is_a? RbGCCXML::Method
-          return [] if method.purely_virtual?
+          if method.purely_virtual?
+            Logger.warn :pure_virtual, "Ignoring pure virtual method #{method.qualified_name}"
+            return [] 
+          end
         end
         # Constructors
         node.constructors.each do |init|

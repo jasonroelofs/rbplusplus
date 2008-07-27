@@ -27,6 +27,7 @@ module RbPlusPlus
             func_hash[func.name] ||= []
             func_hash[func.name] << func
           end
+
           #Iterate through the hash table to handle overloaded functions
           func_hash.each do |key, funcs|
             funcs.each_with_index do |func, i|
@@ -39,6 +40,7 @@ module RbPlusPlus
               wrapper_name = func.special_qualified_name || build_function_wrapper(func, func_append)
 
               if func.return_type.const? || func.const?
+                Logger.info "Creating converter for #{func.return_type.qualified_name}"
                 TypesManager.build_const_converter(func.return_type)
               end
 
@@ -56,6 +58,7 @@ module RbPlusPlus
 
       def build_modules
         @modules.each do |mod|
+          Logger.info "Generating module #{mod.name}"
           builder = ModuleBuilder.new(self, mod)
           builder.build
           builders << builder

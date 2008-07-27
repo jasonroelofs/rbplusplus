@@ -17,6 +17,7 @@ module RbPlusPlus
 
   autoload :Extension, "rbplusplus/extension"
   autoload :RbModule, "rbplusplus/module"
+  autoload :Logger, "rbplusplus/logger"
 
   module Builders
     autoload :Base, "rbplusplus/builders/base"
