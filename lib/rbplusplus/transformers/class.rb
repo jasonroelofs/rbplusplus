@@ -42,6 +42,16 @@ module RbGCCXML
     def classes(*args) #:nodoc:
       [@classes || [], node_classes].flatten
     end
+
+    alias_method :node_constructors, :constructors
+    def constructors(*args) #:nodoc:
+      nodes = node_constructors(*args)
+      constructors = @constructors || QueryResult.new
+      constructors << cache(nodes)
+      constructors.flatten!
+      return constructors if args.empty?
+      return (constructors.size == 1 ? constructors[0] : constructors)
+    end
       
     # returns a list of superclasses of this node, including the node's class
     def super_classes
