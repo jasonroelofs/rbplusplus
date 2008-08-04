@@ -58,8 +58,8 @@ module RbGCCXML
       retv = []
       unless node.attributes['bases'].nil? || node.attributes['bases'] == ""
         node.attributes['bases'].split.each do |cls_id|
-          c = XMLParsing.find(:type => "Class", :id => cls_id)
-          c = XMLParsing.find(:type => "Struct", :id => cls_id) if c.nil?
+          c = XMLParsing.find(:node_type => "Class", :id => cls_id)
+          c = XMLParsing.find(:node_type => "Struct", :id => cls_id) if c.nil?
           if c.nil?
             puts "#{self.qualified_name} cannot find super class for id #{cls_id} "
             next
