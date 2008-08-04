@@ -56,6 +56,9 @@ module RbPlusPlus
         # Don't need to deal with fundamental types
         return if type.is_a?(RbGCCXML::FundamentalType)
 
+        # It has to be a publically accessible type
+        return unless type.public?
+
         full_name = type.qualified_name
 
         # Only wrap once
