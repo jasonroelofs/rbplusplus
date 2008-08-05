@@ -26,6 +26,8 @@ module RbPlusPlus
           second_arg = ", #{parent.rice_variable}"
         end
 
+        TypesManager.build_const_converter(node)
+
         defn += "Rice::define_enum<#{full_name}>(\"#{enum_name}\" #{second_arg});"
 
         body << defn
