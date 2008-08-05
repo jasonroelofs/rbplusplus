@@ -46,6 +46,11 @@ module RbPlusPlus
       attr_accessor :rice_variable
       attr_accessor :rice_variable_type
 
+      # If the name of the element is something other than what GCCXML gives us 
+      # (say, using a typedef), then set the name here and it will be used
+      # appropriately.
+      attr_accessor :class_type
+
       # Create a new builder.
       def initialize(name, parser)
         @name = name
@@ -178,7 +183,7 @@ module RbPlusPlus
         classes.each do |klass|
           next if klass.ignored? || klass.moved?
           next unless klass.public?
-          Logger.info "Wrapping class #{klass.qualified_name}"
+          Logger.info "Wrapping class #{self.class_type || klass.qualified_name}"
           builder = ClassBuilder.new(self, klass)
           builder.build
           builders << builder

@@ -50,16 +50,15 @@ module RbPlusPlus
           _write_node(b)
         end
 
-        filename = if node.parent
-                     "_"+node.qualified_name.gsub(/::/, "_")
+        filename = if node.class_type
+                     "_" + node.class_type
+                   elsif node.parent
+                     "_" + node.qualified_name
                    else
                      node.name
                    end
                    
-        #templated classes
-        filename.gsub!(/[ ,<>]/,"_")
-        #templates to pointers
-        filename.gsub!("*","Ptr")
+        filename = filename.functionize
 
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 

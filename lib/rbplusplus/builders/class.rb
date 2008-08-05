@@ -11,9 +11,16 @@ module RbPlusPlus
       end
 
       def build
-
-        #Handles templated super classes
-        @typedef_name = node.qualified_name.functionize
+        # First, find out if there's a Typedef for this class
+        @typedef = RbGCCXML::XMLParsing.find(:node_type => "Typedef", :type => node.attributes["id"])
+        if @typedef
+          self.class_type = @typedef.qualified_name
+          @class_name = @typedef.name
+        else
+          self.class_type = @typedef ? @typedef.name : node.qualified_name.functionize
+          @class_name = node.name
+          self.declarations.insert(0,"typedef #{node.qualified_name} #{self.class_type};")
+        end
         
         #Handles templated super classes passing in complex members
         var_name = node.name
@@ -22,7 +29,7 @@ module RbPlusPlus
         var_name.gsub!("*", "Ptr")
         
         self.rice_variable = "rb_c#{var_name}"
-        self.rice_variable_type = "Rice::Data_Type<#{self.qualified_name} >"
+        self.rice_variable_type = "Rice::Data_Type<#{node.qualified_name} >"
 
         includes << "#include <rice/Class.hpp>"
         includes << "#include <rice/Data_Type.hpp>"
@@ -30,8 +37,6 @@ module RbPlusPlus
         
         add_additional_includes
         add_includes_for node
-        
-        self.declarations.insert(0,"typedef #{node.qualified_name} #{@typedef_name};")
         
         @body << class_definition
         
@@ -61,7 +66,7 @@ module RbPlusPlus
         node.constructors.each do |init|
           next if init.ignored?
           next unless init.public?
-          args = [@typedef_name, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
+          args = [self.class_type, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
           result << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
         result
@@ -125,12 +130,12 @@ module RbPlusPlus
         
         class_name = node.name
         supers = node.super_classes.collect { |s| s.qualified_name }
-        class_names = [@typedef_name, supers].flatten.join(",")
+        class_names = [self.class_type, supers].flatten.join(",")
         
         if !parent.is_a?(ExtensionBuilder)
-          class_defn += "Rice::define_class_under<#{class_names} >(#{parent.rice_variable}, \"#{class_name}\");"
+          class_defn += "Rice::define_class_under<#{class_names} >(#{parent.rice_variable}, \"#{@class_name}\");"
         else
-          class_defn += "Rice::define_class<#{class_names} >(\"#{class_name}\");"
+          class_defn += "Rice::define_class<#{class_names} >(\"#{@class_name}\");"
         end
         class_defn
       end

@@ -19,7 +19,7 @@ context "Multiple file writer (default)" do
 
   specify "should properly split up code into multiple files" do
     files = Dir["#{@working_dir}/*"]
-    files.size.should == 6
+    files.size.should == 8
 
     %w(
       extconf.rb
@@ -27,6 +27,8 @@ context "Multiple file writer (default)" do
       _Mod.rb.hpp
       _classes_Adder.rb.cpp
       _classes_Adder.rb.hpp
+      _classes_IntAdder.rb.cpp
+      _classes_IntAdder.rb.hpp
       adder.rb.cpp
     ).each do |wants|
       assert_not_nil files.find {|got| File.basename(got) == wants }, "Didn't find #{wants}"

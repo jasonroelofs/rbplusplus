@@ -21,6 +21,13 @@ namespace classes {
 
       string getClassName() { return "Adder"; }
   };
+
+  template<typename T>
+  class TemplateAdder {
+
+  };
+
+  typedef TemplateAdder<int> IntAdder;
 }
 
 #endif 

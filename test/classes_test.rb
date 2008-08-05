@@ -38,5 +38,9 @@ context "Extension with wrapped classes" do
     Adder.do_adding(1, 2, 3, 4, 5).should == 15
   end
 
+  specify "should use typedefs when findable" do
+    assert defined?(IntAdder), "Did not use the typedef for TemplateAdder"
+  end
+
 end
 
