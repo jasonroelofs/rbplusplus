@@ -156,4 +156,17 @@ context "Compiler settings" do
     # is a symbol lookup failure and death to the Ruby VM
     needs_to_ruby(3).value.should == 3
   end
+
+  specify "can specify a directory containing code to be included into compilation process" do
+    Extension.new "code_dir" do |e|
+      e.sources full_dir("headers/needs_code.h"),
+        :include_source_dir => full_dir("headers/code")
+
+      e.namespace "needs_code"
+    end
+
+    require 'code_dir'
+
+    get_number(2).should == 2
+  end
 end

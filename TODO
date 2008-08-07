@@ -1,4 +1,6 @@
 TODO
+* Wrapping of static overloaded methods is problematic
+
 * Figure out how to fix the error when running rake test
 * Allowing use of "have_library"
 * Other mkmf functions?

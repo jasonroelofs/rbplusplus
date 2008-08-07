@@ -93,8 +93,22 @@ module RbPlusPlus
     # * <tt>:ldflags</tt> - Flag(s) to be added to command line for linking
     # * <tt>:includes</tt> -  Header file(s) to include at the beginning of each .rb.cpp file generated.
     # * <tt>:include_source_files</tt> - C++ source files that need to be compiled into the extension but not wrapped.
+    # * <tt>:include_source_dir</tt> - A combination option for reducing duplication, this option will 
+    #   query the given directory for source files, adding all to <tt>:include_source_files</tt> and 
+    #   adding all h/hpp files to <tt>:includes</tt> 
     def sources(dirs, options = {})
       parser_options = {}
+
+      if (code_dir = options.delete(:include_source_dir)) 
+        options[:include_source_files] ||= []
+        options[:includes] ||= []
+        Dir["#{code_dir}/*"].each do |f|
+          next if File.directory?(f)
+
+          options[:include_source_files] << f
+          options[:includes] << f if File.extname(f) =~ /hpp/i || File.extname(f) =~ /h/i
+        end
+      end
 
       if (paths = options.delete(:include_paths))
         @options[:include_paths] << paths
