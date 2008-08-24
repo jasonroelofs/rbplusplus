@@ -59,6 +59,10 @@ module RbGCCXML
     def name #:nodoc:
       @renamed || rbgccxml_name
     end
+
+    def cpp_name
+      rbgccxml_name
+    end
     
     private
     # Looks up the objects in the node cache.

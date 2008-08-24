@@ -16,3 +16,4 @@ inline UI::C_UIVector *newInstanceButBetter(Rice::Object *self) {
 }
 
 #endif
+

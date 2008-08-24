@@ -1,5 +1,5 @@
 module RbGCCXML
-  class Function
+  class Function < Node
     attr_reader :special_qualified_name
     
     # always true for functions, false for methods

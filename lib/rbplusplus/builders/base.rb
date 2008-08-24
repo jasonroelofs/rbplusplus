@@ -231,7 +231,7 @@ module RbPlusPlus
       # wrapper that includes a self and discards it, forwarding the call as needed.
       #
       # Returns: the name of the wrapper function
-      def build_function_wrapper(function, append="")
+      def build_function_wrapper(function, append = "")
         return if function.ignored? || function.moved?
         wrapper_func = "wrap_#{function.qualified_name.functionize}#{append}"
 
@@ -249,31 +249,130 @@ module RbPlusPlus
       # Compatibility with Rice 1.0.1's method overloading issues. Build a quick
       # wrapper that includes a self, forwarding the call as needed.
       #
-      # Returns: the name of the wrapper function
-      def build_method_wrapper(cls, method, i)
+      # Returns: the name of the function to send to Rice
+      def build_method_wrapper(klass, method, append = "")
         return if method.ignored? || method.moved?
-        wrapper_func = "wrap_#{method.qualified_name.functionize}_#{i}"
-        proto_string = ["#{cls.qualified_name} *self"]
-        call_string = []
-        method.arguments.map{|arg| [arg.cpp_type.to_s(true), arg.name]}.each do |parts|
-          type = parts[0]
-          name = parts[1]
-          proto_string << "#{type} #{name}"
-          call_string << "#{name}"
+
+        if method.arguments.size == 1 && (fp = method.arguments[0].cpp_type.base_type).is_a?(RbGCCXML::FunctionType)
+           Logger.info "Building callback wrapper for #{method.qualified_name}"
+           build_method_callback_wrapper(method, fp, append)
+        else
+          wrapper_func = "wrap_#{method.qualified_name.functionize}#{append}"
+
+          return_type = method.return_type.to_s(true)
+          returns = "" if return_type == "void"
+          returns ||= "return"
+
+          args = function_arguments_list(method, true)
+
+          parent = method.parent
+          to_call = ""
+
+          # Handles #as_instance_method designation
+          if parent.is_a?(RbGCCXML::Class) || parent.is_a?(RbGCCXML::Struct)
+            args.unshift "#{method.parent.qualified_name} *self"
+            to_call = "self->#{method.renamed? ? method.cpp_name : method.name}"
+          else
+            args.unshift "Rice::Object self"
+            to_call = method.qualified_name
+          end
+
+          declarations << "#{return_type} #{wrapper_func}(#{args.join(",")}) {"
+          declarations << "\t#{returns} #{to_call}(#{function_arguments_string(method)});"
+          declarations << "}"
+          
+          wrapper_func
         end
-        
-        proto_string = proto_string.join(",")
-        call_string = call_string.join(",")
-        return_type = method.return_type.to_s(true)
-        returns = "" if return_type == "void"
-        returns ||= "return"
-        
-        declarations << "#{return_type} #{wrapper_func}(#{proto_string}) {"
-        declarations << "\t#{returns} self->#{method.qualified_name}(#{call_string});"
+      end
+
+      # Build up C++ code to properly wrap up methods to take ruby block arguments
+      # which forward off calls to callback functions.
+      #
+      # This works as such. We need two functions here, one to be the wrapper into Ruby 
+      # and one to be the wrapper around the callback function. 
+      #
+      # The method wrapped into Ruby takes straight Ruby objects
+      #
+      # Current assumption: The callback argument is the only argument of the method
+      def build_function_callback_wrapper(function, func_pointer, append = "")
+        func_name = function.qualified_name.functionize
+        yielding_method_name = "do_yeild_on_#{func_name}"
+        wrapper_func = "wrap_for_callback_#{func_name}#{append}"
+
+        fp_arguments = func_pointer.arguments
+        fp_return = func_pointer.return_type
+
+        returns = fp_return.to_s
+
+        # The callback wrapper method.
+        block_var_name = "_block_for_#{func_name}"
+        declarations << "VALUE #{block_var_name};"
+        declarations << "#{returns} #{yielding_method_name}(#{function_arguments_string(func_pointer, true)}) {"
+
+        num_args = fp_arguments.length
+        args_string = "#{num_args}"
+        if num_args > 0
+          args_string += ", #{function_arguments_list(func_pointer).map{|c| "to_ruby(#{c}).value()"}.join(",") }"
+        end
+
+        funcall = "rb_funcall(#{block_var_name}, rb_intern(\"call\"), #{args_string})"
+        if returns == "void"
+          declarations << "\t#{funcall};"
+        else
+          declarations << "\treturn from_ruby<#{returns}>(#{funcall});"
+        end
         declarations << "}"
-        
+
+        # The method to get wrapped into Ruby
+        declarations << "VALUE #{wrapper_func}(Rice::Object self) {"
+        declarations << "\t#{block_var_name} = rb_block_proc();"
+        declarations << "\t#{function.qualified_name}(&#{yielding_method_name});"
+        declarations << "\treturn Qnil;"
+        declarations << "}"
+
         wrapper_func
       end
+
+      def build_method_callback_wrapper(method, func_pointer, append = "")
+        func_name = method.qualified_name.functionize
+        yielding_method_name = "do_yeild_on_#{func_name}"
+        wrapper_func = "wrap_for_callback_#{func_name}#{append}"
+
+        fp_arguments = func_pointer.arguments
+        fp_return = func_pointer.return_type
+
+        returns = fp_return.to_s
+
+        # The callback wrapper method.
+        block_var_name = "_block_for_#{func_name}"
+        declarations << "VALUE #{block_var_name};"
+        declarations << "#{returns} #{yielding_method_name}(#{function_arguments_string(func_pointer, true)}) {"
+
+        num_args = fp_arguments.length
+        args_string = "#{num_args}"
+        if num_args > 0
+          args_string += ", #{function_arguments_list(func_pointer).map{|c| "to_ruby(#{c}).value()"}.join(",") }"
+        end
+
+        funcall = "rb_funcall(#{block_var_name}, rb_intern(\"call\"), #{args_string})"
+        if returns == "void"
+          declarations << "\t#{funcall};"
+        else
+          declarations << "\treturn from_ruby<#{returns} >(#{funcall});"
+        end
+        declarations << "}"
+
+        # The method to get wrapped into Ruby
+        declarations << "VALUE #{wrapper_func}(#{method.parent.qualified_name} *self) {"
+        declarations << "\t#{block_var_name} = rb_block_proc();"
+        declarations << "\tself->#{method.name}(&#{yielding_method_name});"
+        declarations << "\treturn Qnil;"
+        declarations << "}"
+
+        wrapper_func
+      end
+
+
     end
   end
 end

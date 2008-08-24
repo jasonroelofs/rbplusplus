@@ -84,39 +84,66 @@ module RbPlusPlus
         
         methods_hash.each do |key, methods|
           #Add any method with a const return type to the typemanager
-          methods.each do |method|
+          methods.each_with_index do |method, i|
             next if method.ignored? || method.moved?
             if method.return_type.const? || method.const?
               TypesManager.build_const_converter(method.return_type)
             end
-          end
-          #No overloaded methods
-          if methods.length == 1
-            method = methods[0]
-            next if method.ignored? || method.moved?
-            m = "define_method"
-            name = method.qualified_name
+
+            # Need to handle a number of side cases here:
+            #
+            # * Normal wrapped method
+            # * Normal wrapped static method
+            # * Overloaded method
+            # * Overloaded static method
+            # 
+            # Along with
+            #
+            # * possiblity of requiring a callback
+
+            method_append = methods.length == 1 ? "" : "_#{i}"
 
             if method.static?
-              m = "define_singleton_method"
-              name = build_function_wrapper(method)
+              rice_method = "define_singleton_method"
+              wrapped_name = build_function_wrapper(method, method_append)
+            else
+              rice_method = "define_method"
+              wrapped_name = build_method_wrapper(node, method, method_append)
             end
+            
+            method_name = "#{Inflector.underscore(method.name)}"
+            method_name += method_append unless method.renamed?
 
-            result << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
-          else
-            #Handle overloaded methods
-            #currently we just append an index to them if they have not been renamed
-            #for example getOrigin() and getOrigin(x,y) become
-            #get_origin_0 and get_origin_1
-            methods.each_with_index do |method, i|
-              next if method.ignored? || method.moved?
-              name = build_method_wrapper(node, method, i)
-              m = "define_method"
-              method_name = "#{Inflector.underscore(method.name)}"
-              method_name += "_#{i}" unless method.renamed?
-              result << "\t#{rice_variable}.#{m}(\"#{method_name}\", &#{name});"  
-            end
+            result << "\t#{rice_variable}.#{rice_method}(\"#{Inflector.underscore(method_name)}\", &#{wrapped_name});"  
           end
+
+          #No overloaded methods
+#          if methods.length == 1
+#            method = methods[0]
+#            next if method.ignored? || method.moved?
+#            m = "define_method"
+#            name = method.qualified_name
+#
+#            if method.static?
+#              m = "define_singleton_method"
+#              name = build_function_wrapper(method)
+#            end
+#
+#            result << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
+#          else
+#            #Handle overloaded methods
+#            #currently we just append an index to them if they have not been renamed
+#            #for example getOrigin() and getOrigin(x,y) become
+#            #get_origin_0 and get_origin_1
+#            methods.each_with_index do |method, i|
+#              next if method.ignored? || method.moved?
+#              name = build_method_wrapper(node, method, i)
+#              m = "define_method"
+#              method_name = "#{Inflector.underscore(method.name)}"
+#              method_name += "_#{i}" unless method.renamed?
+#              result << "\t#{rice_variable}.#{m}(\"#{method_name}\", &#{name});"  
+#            end
+#          end
         end
         result
       end

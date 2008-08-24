@@ -95,7 +95,7 @@ context "Ugly interfaces cleaner" do
       UI::Modulus.mod(3,2).should == 1
     end
     
-    should.raise TypeError do
+    should.raise ArgumentError do
       UI::Modulus.new.method_mod(2)
     end
     

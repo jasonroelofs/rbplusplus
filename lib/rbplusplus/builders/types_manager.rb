@@ -68,6 +68,8 @@ module RbPlusPlus
         # Some types are already handled by Rice, ignore such types
         return if full_name =~ /std::string/
 
+        Logger.info "Creating converter for #{type.qualified_name}"
+
         @consts_wrapped << full_name
 
         # Enumerations are handled slightly differently

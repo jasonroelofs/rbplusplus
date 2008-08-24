@@ -1,4 +1,4 @@
 module RbGCCXML
-  class Method #:nodoc:
+  class Method < Function #:nodoc:
   end
 end
