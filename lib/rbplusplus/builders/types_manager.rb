@@ -90,7 +90,6 @@ module RbPlusPlus
         @prototypes << "template<>"
         @prototypes << "Rice::Object to_ruby<#{full_name} >(#{full_name} const & a);"
       end
-
     end
   end
 end

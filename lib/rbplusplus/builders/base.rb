@@ -200,31 +200,47 @@ module RbPlusPlus
         end
       end
 
+      # Builds up a string containing arguments.
+      #  <tt>include_self</tt>: Boolean on whether to include the type information in the list. 
+      #  <tt>with_self</tt>:    Boolean on whether the list should include the explicit self.
+      #
+      def function_arguments_list(function, include_type = false, with_self = false)
+        list = []
+        function.arguments.map{|arg| [arg.cpp_type.to_s(true), arg.name]}.each_with_index do |parts, i|
+          type = parts[0]
+          name = parts[1] || "arg#{i}"
+          tmp = "#{include_type ? type : ''} #{name}"
+          list << tmp
+        end
+
+        if with_self
+          list.unshift "#{include_type ? 'Rice::Object' : ''} self"
+        end
+
+        list
+      end
+
+      # Takes the results of function_arguments_list above and outputs it as
+      # a comma delimited string. Doing this allows post-processing of the
+      # list of argument as needed (such as in ExtensionBuilder#build_callback_wrapper). 
+      def function_arguments_string(*args)
+        function_arguments_list(*args).join(",")
+      end
+
       # Compatibility with Rice 1.0.1's explicit self requirement, build a quick
       # wrapper that includes a self and discards it, forwarding the call as needed.
       #
       # Returns: the name of the wrapper function
       def build_function_wrapper(function, append="")
         return if function.ignored? || function.moved?
-        wrapper_func = "wrap_#{function.qualified_name.gsub(/::/, "_")}#{append}"
+        wrapper_func = "wrap_#{function.qualified_name.functionize}#{append}"
 
-        proto_string = ["Rice::Object self"]
-        call_string = []
-        function.arguments.map{|arg| [arg.cpp_type.to_s(true), arg.name]}.each do |parts|
-          type = parts[0]
-          name = parts[1]
-          proto_string << "#{type} #{name}"
-          call_string << "#{name}"
-        end
-
-        proto_string = proto_string.join(",")
-        call_string = call_string.join(",")
         return_type = function.return_type.to_s(true)
         returns = "" if return_type == "void"
         returns ||= "return"
 
-        declarations << "#{return_type} #{wrapper_func}(#{proto_string}) {"
-        declarations << "\t#{returns} #{function.qualified_name}(#{call_string});"
+        declarations << "#{return_type} #{wrapper_func}(#{function_arguments_string(function, true, true)}) {"
+        declarations << "\t#{returns} #{function.qualified_name}(#{function_arguments_string(function)});"
         declarations << "}"
 
         wrapper_func

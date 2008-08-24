@@ -23,10 +23,7 @@ module RbPlusPlus
         end
         
         #Handles templated super classes passing in complex members
-        var_name = node.name
-        var_name.gsub!("::","_")
-        var_name.gsub!(/[ ,<>]/, "_")
-        var_name.gsub!("*", "Ptr")
+        var_name = node.name.functionize
         
         self.rice_variable = "rb_c#{var_name}"
         self.rice_variable_type = "Rice::Data_Type<#{node.qualified_name} >"
