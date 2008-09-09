@@ -7,6 +7,9 @@ using namespace std;
 namespace classes {
   class Adder {
     public:
+
+      static const int MY_VALUE;
+
       Adder() { }
 
       static int doAdding(int a, int b, int c, int d, int e) {

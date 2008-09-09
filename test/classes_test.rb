@@ -7,7 +7,11 @@ context "Extension with wrapped classes" do
       super
       @@adder_built = true 
       Extension.new "adder" do |e|
-        e.sources full_dir("headers/Adder.h")
+        e.sources full_dir("headers/Adder.h"),
+          :include_source_files => [
+            full_dir("headers/Adder.h"),
+            full_dir("headers/Adder.cpp")
+          ]
         e.namespace "classes"
       end
 
@@ -42,5 +46,12 @@ context "Extension with wrapped classes" do
     assert defined?(IntAdder), "Did not use the typedef for TemplateAdder"
   end
 
+  specify "makes class constants available" do
+    Adder::MY_VALUE.should == 10
+  end
+
+  xspecify "makes public instance variables accessible" do
+
+  end
 end
 

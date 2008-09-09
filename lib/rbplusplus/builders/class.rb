@@ -38,14 +38,23 @@ module RbPlusPlus
         @body << class_definition
         
         @body += constructors
-        
         @body += methods
+        @body += constants
 
         # Nested Classes
         build_classes
 
         # Enumerations
         build_enumerations
+      end
+
+      # Loop through the constants for this class and wrap them up.
+      def constants
+        result = []
+        [node.constants.find(:access => :public)].flatten.each do |constant|
+          result << "\t#{rice_variable}.const_set(\"#{constant.name}\", to_ruby(#{constant.qualified_name}));"
+        end
+        result
       end
 
       # Build the constructors, and return an array of rice code

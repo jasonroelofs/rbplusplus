@@ -8,10 +8,14 @@ context "Extension with modules" do
       @@modules_built = true 
       Extension.new "modules" do |e|
         e.sources [
-          full_dir("headers/Adder.h"),
-          full_dir("headers/functions.h"),
-          full_dir("headers/Subtracter.hpp")
-        ]
+            full_dir("headers/Adder.h"),
+            full_dir("headers/functions.h"),
+            full_dir("headers/Subtracter.hpp")
+          ],
+          :include_source_files => [
+            full_dir("headers/Adder.h"),
+            full_dir("headers/Adder.cpp")
+          ]
 
 #        e.writer_mode :single
 
