@@ -324,10 +324,9 @@ module RbPlusPlus
         declarations << "}"
 
         # The method to get wrapped into Ruby
-        declarations << "VALUE #{wrapper_func}(Rice::Object self) {"
+        declarations << "void #{wrapper_func}(Rice::Object self) {"
         declarations << "\t#{block_var_name} = rb_block_proc();"
         declarations << "\t#{function.qualified_name}(&#{yielding_method_name});"
-        declarations << "\treturn Qnil;"
         declarations << "}"
 
         wrapper_func
