@@ -1,0 +1,60 @@
+/*
+Original design: andreas07 (v2.0 - Jul 07, 2008) - A free xhtml/css website template by Andreas Viklund.
+For more information, see http://andreasviklund.com/templates/andreas07/
+*/
+
+/* Main tags */
+body {margin:0; padding:0; color:#404040; background:#fafafa url(/images/bodybg.gif) top left repeat-y; font:76% Verdana,Tahoma,sans-serif;}
+ul {margin:5px 0 16px 5px; padding:0;}
+li {margin:0 0 8px 15px; padding:0; }
+img {margin:10px auto 16px auto; padding:1px; background:#ffffff; border:1px solid #d0d0d0;}
+a {color:#d85d5d; font-weight:bold; text-decoration:none;}
+a:hover {color:#505050; text-decoration:underline;}
+a img {border-color:#d85d5d;}
+a img:hover {background:#d85d5d; border-color:#d85d5d;}
+
+/* Wrap */
+#wrap {width: 990px;}
+
+/* Left sidebar */
+#leftside {width:220px; background:#e0e0e0 url(/images/sidebarbg.gif) top right repeat-y; text-align:right; float:left;}
+#leftside h1 {margin:20px 18px 0 5px; color:#d85d5d; font-size:1.6em; letter-spacing:-2px; text-align:right;}
+#leftside h2, #leftside h3 {margin:0 20px 18px 5px; color:#808080; font-size:1.1em; font-weight:bold; letter-spacing:-1px; text-align:right;}
+#leftside h3 {margin:20px 18px 4px 5px; color:#606060;}
+#leftside p {margin:0 20px 18px 5px; color:#606060; font-size:0.8em;}
+#leftside a {color:#808080}
+
+/* Navigation menu */
+#menu  ul
+{list-style-type: none; margin: 0px; padding: 0px; font-size: 1.0em;}
+
+#menu  li
+{margin: 0px; padding: 0px}
+
+#menu  a, #menu  span
+{display:block; width:202px; padding:5px 18px 5px 0; color:#606060; background:#e0e0e0 url(/images/sidebarbg.gif) top right repeat-y; font-size:1.8em; font-weight:normal; text-decoration:none; letter-spacing:-2px;}
+
+#menu  a:hover, #menu  span:hover
+{color:#303030; background:#f0f0f0 url(/images/sidebarbg.gif) top right repeat-y;}
+
+#menu  li.selected a, #menu  li.selected span
+{padding:5px 18px 5px 0; background:#fafafa; border-top:2px solid #c0c0c0; border-bottom:2px solid #c0c0c0;}
+
+#menu  li.selected a:hover, #menu  li.selected span:hover
+{color:#505050; background:#fafafa;}
+
+
+/* Right sidebar */
+#extras {width:200px; float:right; color:#666;}
+#extras h2, #extras h3 {margin:10px 0 12px 0; color:#606060; font-size:1.6em; font-weight:400; letter-spacing:-1px; text-align:center; border-bottom:2px solid #b0b0b0;}
+#extras p {line-height:1.4em; margin: 0 0 15px 0;}
+
+/* Content area */
+#content {width:520px; margin-left:240px; padding:10px 0; padding-top: 2em;background:#fafafa;}
+#content p {margin:0 0 16px 0; line-height:1.5em;}
+#content h1 {margin:0; color:#d85d5d; font-size:3.6em; letter-spacing:-4px; text-align:center;}
+#content h2 {margin:0; color:#808080; font-weight:normal; font-size:2em; letter-spacing:-2px; text-align:center;}
+#content h3 {margin:20px 0 10px 0; color:#d85d5d; font-weight:normal; font-size: 2em; letter-spacing:-2px;}
+#content h4 {margin:0; color:#404040; font-weight:bold; font-size: 1.25em;}
+
+#siteInfo {padding-top: 3em;}
