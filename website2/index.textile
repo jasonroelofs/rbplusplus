@@ -90,15 +90,30 @@ At first glance, this is probably quite overwhelming, but it breaks down into tw
 
 h4. Source Code / Compliation Setup
 
-{includeFile: {filename: code/build_noise.source.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+Extension.new "noise" do |e|
+  e.working_dir = File.join(OGRE_RB_ROOT, "generated", "noise")
+  e.sources [
+      File.join(NOISE_DIR, "include/noise.h"),
+      File.join(HERE_DIR, "code", "noiseutils.h")
+    ],
+    :library_paths => File.join(OGRE_RB_ROOT, "lib", "noise"),
+    :include_paths => File.join(OGRE_RB_ROOT, "tmp", "noise", "include"),
+    :include_source_dir => File.join(HERE_DIR, "code"),
+    :libraries => "noise",
+{% endhighlight %}
 
 This section of the code constitutes the Setup portion of the wrapper. We'll go through each line to understand what all is happening here.
 
-{includeFile: {filename: code/build_noise.1.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+Extension.new "noise" do |e|
+{% endhighlight %}
 
 All extensions start with this declaration. The string passed in will be the final name of the extension. In this case, this will generate an extension named "noise.so".
 
-{includeFile: {filename: code/build_noise.2.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+e.working_dir = File.join(OGRE_RB_ROOT, "generated", "noise")
+{% endhighlight %}
 
 The Working Directory is the place where all generated code is placed. By default, the Working Directory is "generated", local to the ruby script. In the case that this is not sufficient, such as this wrapper, use this attribute to set another directory. 
 
