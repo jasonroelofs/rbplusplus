@@ -35,14 +35,11 @@ PROJECT_WEB_PATH = "/var/www/gforge-projects/rbplusplus"
 namespace :web do
   desc "Build website"
   task :build => :rdoc do |t|
-    cd "website" do
-      sh "webgen"
-    end
-
     unless File.directory?("publish")
       mkdir "publish"
     end
-    sh "cp -r website/output/* publish/"
+
+    sh "jekyll --pygment website2 publish/"
     sh "cp -r html/* publish/rbplusplus/"
   end
 
@@ -61,7 +58,7 @@ spec = Gem::Specification.new do |s|
   s.name = "rbplusplus"
   s.version = RBPLUSPLUS_VERSION
   s.summary = 'Ruby library to generate Rice wrapper code'
-  s.homepage = 'http://rbplusplus.rubyforge.org/rbplusplus'
+  s.homepage = 'http://rbplusplus.rubyforge.org'
   s.rubyforge_project = "rbplusplus"
   s.author = 'Jason Roelofs'
   s.email = 'jameskilton@gmail.com'
