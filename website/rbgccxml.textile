@@ -1,0 +1,25 @@
+---
+layout: default
+title: rb++
+rbpp: ""
+rbgccxml: "class=\"selected\""
+---
+h1. rbgccxml
+
+h3. Synopsis
+
+Rbgccxml is a C++ source code querying library. It makes use of "GCCXML":http://www.gccxml.org and "libxml-ruby":http://libxml.rubyforge.org/ to process the C++ code (currently only headers and not body code) into easy to read XML, then opens up a very simple but powerful query API for searching everything about the code.
+
+Rbgccxml is released under the "MIT Licence":http://github.com/jameskilton/rbgccxml/tree/master/MIT_LICENCE
+
+h3. Installation
+
+<pre>
+  gem install rbgccxml
+</pre>
+
+h3. Documentation
+
+View the project's README and RDocs, including how to get started and sample queries, "here":rbgccxml/index.html.
+
+
