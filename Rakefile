@@ -39,7 +39,7 @@ namespace :web do
       mkdir "publish"
     end
 
-    sh "jekyll --pygment website2 publish/"
+    sh "jekyll --pygment website publish/"
     sh "cp -r html/* publish/rbplusplus/"
   end
 
