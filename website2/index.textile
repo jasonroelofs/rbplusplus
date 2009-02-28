@@ -26,7 +26,7 @@ h3. Using rb++
 
 To give an idea of how easy it is to wrap C++ libraries into Ruby extensions, we'll go through the wrapping of the "libnoise":http://libnoise.sourceforge.net/ library, a library built to easily generate coherent noise. 
 
-This libnoise wrapper is a part of the under-development "Ogre.rb":http://github.com/jameskilton/ogrerb/tree/master library. The following code will only run under the Ogre.rb environment so feel free to check out the project and follow along.
+This libnoise wrapper (also called noise.rb) is a part of the under-development "Ogre.rb":http://github.com/jameskilton/ogrerb/tree/master library. The following code will only run under the Ogre.rb environment so feel free to check out the project and follow along.
 
 We'll start by showing the full source code of the wrapper, which will then be broken down by each important part.
 
@@ -52,8 +52,8 @@ Extension.new "noise" do |e|
     ],
     :library_paths => File.join(OGRE_RB_ROOT, "lib", "noise"),
     :include_paths => File.join(OGRE_RB_ROOT, "tmp", "noise", "include"),
-    :include_source_dir => File.join(HERE_DIR, "code"),
-    :libraries => "noise"
+    :libraries => "noise",
+    :include_source_dir => File.join(HERE_DIR, "code")
 
   e.module "Noise" do |m|
     node = m.namespace "noise"
@@ -99,8 +99,8 @@ Extension.new "noise" do |e|
     ],
     :library_paths => File.join(OGRE_RB_ROOT, "lib", "noise"),
     :include_paths => File.join(OGRE_RB_ROOT, "tmp", "noise", "include"),
-    :include_source_dir => File.join(HERE_DIR, "code"),
     :libraries => "noise",
+    :include_source_dir => File.join(HERE_DIR, "code")
 {% endhighlight %}
 
 This section of the code constitutes the Setup portion of the wrapper. We'll go through each line to understand what all is happening here.
@@ -119,22 +119,40 @@ The Working Directory is the place where all generated code is placed. By defaul
 
 Please note that all directories used in the script should be full paths to prevent problems, though this is not required.
 
-{includeFile: {filename: code/build_noise.3.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+e.sources [
+    File.join(NOISE_DIR, "include/noise.h"),
+    File.join(HERE_DIR, "code", "noiseutils.h")
+  ],
+  :library_paths => File.join(OGRE_RB_ROOT, "lib", "noise"),
+  :include_paths => File.join(OGRE_RB_ROOT, "tmp", "noise", "include"),
+  :libraries => "noise",
+  :include_source_dir => File.join(HERE_DIR, "code")
+{% endhighlight %}
 
 This is the bulk of the required setup for this wrapper to function properly. Extension#sources is the method that controls configuration of what source code is to be wrapped, where such code is to be found, any extra code to be added to the extension, and how compilation works (flags, etc). We'll go through each part on it's own.
 
-{includeFile: {filename: code/build_noise.3.1.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+e.sources [
+    File.join(NOISE_DIR, "include/noise.h"),
+    File.join(HERE_DIR, "code", "noiseutils.h")
+  ],
+{% endhighlight %}
 
 The first argument to Extension#sources is the only one required. It is where you specify what source header files are to be parsed for function / class / method definitions to wrap into an extension. Here, because libnoise gives us a "noise.h" file that itself includes the rest of the headers, we only need to specify this one file. Noiseutils is a seperate, downloadable set of utility methods and classes that we also want to put in our extension, so we specify its header here as well.
 
 *Note* For any and all places where file paths are expected, said paths can be in one of these forms:
 
 * Straight string, like "/path/to/file.h"
-* Glob, such as "/where/headers/are/&#42;.h"
+* Glob, such as "/where/headers/are/*.h"
 * An array of strings ["/here/header1.h", "/there/header2.h", ...]
-* An array of globs ["/usr/lib/library/&#42;.h", "/usr/lib/other_lib/&#42;.hpp"]
+* An array of globs ["/usr/lib/library/*.h", "/usr/lib/other_lib/*.hpp"]
 
-{includeFile: {filename: code/build_noise.3.2.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+  :library_paths => File.join(OGRE_RB_ROOT, "lib", "noise"),
+  :include_paths => File.join(OGRE_RB_ROOT, "tmp", "noise", "include"),
+  :libraries => "noise"
+{% endhighlight %}
 
 These three options map directly onto compiler flags.
 
@@ -144,20 +162,26 @@ These three options map directly onto compiler flags.
 
 If you are getting errors about GCCXML being unable to find certain header files, :include_paths helps with fixing this as well.
 
-{includeFile: {filename: code/build_noise.3.3.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+  :include_source_dir => File.join(HERE_DIR, "code")
+{% endhighlight %}
 
-This option is simply allowing you to specify extra C++ source files that need to be copied into the working directory and compiled in with the extension, but not necessarily parsed and wrapped. 
+The option :include_source_dir tells rb++ to take all source files it finds in the given directory and use them during the compilation step. Any source files it finds (c / cpp) gets copied into working_dir and compiled into the extension. Any header file it finds (h, hpp) will get included into all generated source files and compiled into the extension. 
 
-"custom_to_from_ruby.{c,h}pp" here is currently how you would handle any requirement of writing C++ wrapper code that rb++ doesn't handle automatically. The contents of these files are on github:
+You will most likely need to use this option eventually. Rb++ does not handle everything you'll need in a C++ wrapper extension. For an example, look at the source files written for noise.rb, viewable here:
 
-* <a href="http://github.com/jameskilton/ogrerb/tree/master/wrappers/noise/code/custom_to_from_ruby.hpp">custom_to_from_ruby.hpp</a>
-* <a href="http://github.com/jameskilton/ogrerb/tree/master/wrappers/noise/code/custom_to_from_ruby.cpp">custom_to_from_ruby.cpp</a>
+* <a href="http://github.com/jameskilton/ogrerb/tree/master/wrappers/noise/code/">libnoise include_source_dir</a>
 
-In this case, there is some duplication between :include_source_files, the first argument of Extension#sources, and (further along in this tutorial) :includes, which should be minimized in future versions of rb++. For now, the duplication is unfortunately required for this wrapper to compile and run properly.
+For more fine-grained control over what files get used where, you can use two other options to #sources:
 
-{includeFile: {filename: code/build_noise.3.4.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+  :include_source_files => file(s),
+  :includes => file(s)
+{% endhighlight %}
 
-The final option given to Extension#sources fits in with :include_source_files above. When there's a header file that needs to be included in all of the generated source files (such as custom_to_from_ruby.hpp), it must be specified with this option. As said before, this will most likely made simplier and cleaner in the next release of rb++.
+This option :include_source_files allows you to specify extra C++ source files that need to be copied into the working directory and compiled in with the extension, but not necessarily parsed and wrapped by rb++. 
+
+The other option, :includes, is used when you need header file(s) that needs to be included in all of the generated source files (such as noise.rb's custom_to_from_ruby.hpp), it must be specified with this option. 
 
 With this, rb++ is fully configured to create an extension from C++ source code. However, because C++ features and standards and Ruby features and standards don't often match up, rb++ makes available many tools for manipulating the resulting extension to fit the Ruby-way.
 
@@ -165,11 +189,40 @@ With this, rb++ is fully configured to create an extension from C++ source code.
 
 h4. Wrapping Definitions
 
-{includeFile: {filename: code/build_noise.definitions.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+  e.module "Noise" do |m|
+    node = m.namespace "noise"
+
+    m.module "Model" do |model|
+      node = model.namespace "model"
+    end
+
+    m.module "Utils" do |utils|
+      node = utils.namespace "utils"
+
+      node.classes("NoiseMap").constructors.find(:arguments => [nil, nil]).ignore
+      node.classes("NoiseMap").constructors.find(:arguments => [nil]).ignore
+
+      node.classes("Image").constructors.find(:arguments => [nil, nil]).ignore
+      node.classes("Image").constructors.find(:arguments => [nil]).ignore
+    end
+
+    m.module "Module" do |mod|
+      node = mod.namespace "module"
+
+      node.classes("Module").methods("GetSourceModuleCount").ignore
+      node.classes("Module").methods("GetValue").ignore
+    end
+  end
+end
+{% endhighlight %}
 
 The rest of the code handles defining the final Ruby extension. rb++'s API is meant to be as simple and obvious as possible, though there are some nuances that need to be explained.
 
-{includeFile: {filename: code/build_noise.4.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+e.module "Noise" do |m|
+  m.namespace "noise"
+{% endhighlight %}
 
 Extensions can have any number of Modules defined in them. This defines a "Noise" module as a top-level module in the extension. 
 
@@ -177,27 +230,52 @@ The #namespace call seen here is the hook into the rb++ code querying and proces
 
 This call is then specifying that all code in the "noise" namespace should be wrapped under the Noise module. Note that this is not recursive. Deeper namespaces must be manually specified, as you'll see below.
 
-{includeFile: {filename: code/build_noise.5.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+m.module "Model" do |model|
+  node = model.namespace "model"
+end
+{% endhighlight %}
 
 Here we're wrapping code in the C++ "noise::model" namespace into Noise::Module in Ruby. Modules can be nested infinitely deep.
 
-{includeFile: {filename: code/build_noise.6.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+m.module "Utils" do |utils|
+  node = utils.namespace "utils"
+
+  node.classes("NoiseMap").constructors.find(:arguments => [nil, nil]).ignore
+  node.classes("NoiseMap").constructors.find(:arguments => [nil]).ignore
+
+  node.classes("Image").constructors.find(:arguments => [nil, nil]).ignore
+  node.classes("Image").constructors.find(:arguments => [nil]).ignore
+end
+{% endhighlight %}
 
 As was mentioned at the beginning, many times C++ does not adhere to Ruby, either in style, layout, or in Rice's ability to handle functionality. This section of the code shows off the internal querying system available via RbGCCXML and added on top of that the ability to specify which parts of C++ do or do not actually get wrapped.
 
-{includeFile: {filename: code/build_noise.6.1.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+  node = utils.namespace "utils"
+{% endhighlight %}
 
 To gain access to the underlying C++ node tree and RbGCCXML's querying system, simply save the return value of the #namespace call. This node will be the RbGCCMXL Namespace node for that C++ namespace.
 
-{includeFile: {filename: code/build_noise.6.2.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+node.classes("NoiseMap").constructors.find(:arguments => [nil, nil]).ignore
+node.classes("NoiseMap").constructors.find(:arguments => [nil]).ignore
 
-Here we see both the power of the RbGCCXML query system and rb++'s ability to mark nodes for exclusion. For this method, NoiseMapBuilder::SetCallback, we need to ignore it from the wrapping because Rice does not currently know how to handle methods with function pointer arguments.
-
-{includeFile: {filename: code/build_noise.6.3.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+node.classes("Image").constructors.find(:arguments => [nil, nil]).ignore
+node.classes("Image").constructors.find(:arguments => [nil]).ignore
+{% endhighlight %}
 
 These lines are here because Rice currently does not handle method overloads, including in constructors, though it will not complain if multiple constructors are wrapped. Because of this, it's difficult to know which constructor will actually be available in Ruby, so we ignore all of those we know we don't want, leaving just one.
 
-{includeFile: {filename: code/build_noise.7.rb, processOutput: false, escapeHTML: false, highlight: ruby}}
+{% highlight ruby %}
+m.module "Module" do |mod|
+  node = mod.namespace "module"
+
+  node.classes("Module").methods("GetSourceModuleCount").ignore
+  node.classes("Module").methods("GetValue").ignore
+end
+{% endhighlight %}
 
 This finishes up the wrapper definition, specifying one more Module to create and a few methods to ignore (again overloaded methods but in this case we ignore all of them).
 
