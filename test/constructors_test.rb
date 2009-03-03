@@ -2,7 +2,6 @@ require File.dirname(__FILE__) + '/test_helper'
 
 context "Extension with constructors out the whazoo" do
 
-  # Test is currently broken due to something Rice is or isn't doing.
   specify "should make constructors available" do
     Extension.new "constructors" do |e|
       e.sources full_dir("headers/constructors.h")

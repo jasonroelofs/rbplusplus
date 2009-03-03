@@ -74,6 +74,7 @@ module RbPlusPlus
         node.constructors.each do |init|
           next if init.ignored?
           next unless init.public?
+          next if init.attributes[:artificial]
           args = [self.class_type, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
           result << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
