@@ -128,34 +128,6 @@ module RbPlusPlus
 
             result << "\t#{rice_variable}.#{rice_method}(\"#{Inflector.underscore(method_name)}\", &#{wrapped_name});"  
           end
-
-          #No overloaded methods
-#          if methods.length == 1
-#            method = methods[0]
-#            next if method.ignored? || method.moved?
-#            m = "define_method"
-#            name = method.qualified_name
-#
-#            if method.static?
-#              m = "define_singleton_method"
-#              name = build_function_wrapper(method)
-#            end
-#
-#            result << "\t#{rice_variable}.#{m}(\"#{Inflector.underscore(method.name)}\", &#{name});"  
-#          else
-#            #Handle overloaded methods
-#            #currently we just append an index to them if they have not been renamed
-#            #for example getOrigin() and getOrigin(x,y) become
-#            #get_origin_0 and get_origin_1
-#            methods.each_with_index do |method, i|
-#              next if method.ignored? || method.moved?
-#              name = build_method_wrapper(node, method, i)
-#              m = "define_method"
-#              method_name = "#{Inflector.underscore(method.name)}"
-#              method_name += "_#{i}" unless method.renamed?
-#              result << "\t#{rice_variable}.#{m}(\"#{method_name}\", &#{name});"  
-#            end
-#          end
         end
         result
       end
