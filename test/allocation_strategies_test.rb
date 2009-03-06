@@ -13,7 +13,7 @@ context "Allocation Strategies" do
     end
   end
 
-  specify "properly figures out what allocation to do" do
+  xspecify "properly figures out what allocation to do" do
     assert_nothing_raised LoadError  do
       require 'alloc_strats'
     end 
