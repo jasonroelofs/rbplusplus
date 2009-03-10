@@ -59,8 +59,8 @@ context "Multiple file writer with to_from_ruby" do
 
     %w(
       extconf.rb
-      _to_from_ruby.rb.hpp
-      _to_from_ruby.rb.cpp
+      _rbpp_custom.rb.hpp
+      _rbpp_custom.rb.cpp
     ).each do |wants|
       assert_not_nil files.find {|got| File.basename(got) == wants }, "Didn't find #{wants}"
     end

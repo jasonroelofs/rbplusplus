@@ -7,6 +7,10 @@ module RbPlusPlus
       def write
         process_code(builder)
 
+        if Builders::TypesManager.prototypes.length > 0
+          builder.declarations << Builders::TypesManager.prototypes
+        end
+
         if Builders::TypesManager.body.length > 0
           # Handle to_from_ruby constructions
           builder.declarations << Builders::TypesManager.body

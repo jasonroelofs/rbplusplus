@@ -15,12 +15,12 @@ module RbPlusPlus
         # Ignore this if there's nothing to write out
         return if Builders::TypesManager.body.length == 0
 
-        hpp_file = File.join(working_dir, "_to_from_ruby.rb.hpp")
-        cpp_file = File.join(working_dir, "_to_from_ruby.rb.cpp")
+        hpp_file = File.join(working_dir, "_rbpp_custom.rb.hpp")
+        cpp_file = File.join(working_dir, "_rbpp_custom.rb.cpp")
 
         @to_from_include = "#include \"#{hpp_file}\""
 
-        include_guard = "__RICE_GENERATED_TO_FROM_RUBY_HPP__"
+        include_guard = "__RICE_GENERATED_RBPP_CUSTOM_HPP__"
 
         File.open(hpp_file, "w+") do |f|
           f.puts "#ifndef #{include_guard}" 

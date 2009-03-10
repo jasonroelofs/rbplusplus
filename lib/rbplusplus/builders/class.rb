@@ -32,7 +32,7 @@ module RbPlusPlus
         includes << "#include <rice/Data_Type.hpp>"
         includes << "#include <rice/Constructor.hpp>"  
 
-        check_allocation_strategies
+        TypesManager.build_allocation_strategies(node)
         
         add_additional_includes
         add_includes_for node
@@ -146,26 +146,6 @@ module RbPlusPlus
           class_defn += "Rice::define_class<#{class_names} >(\"#{@class_name}\");"
         end
         class_defn
-      end
-
-      # Classes with non-public constructors and/or destructors
-      # need to have the appropriate allocation strategy defined for
-      # the extension to properly compile
-      # Right now, we don't bother with destructors, so if a constructor
-      # is private, forget about the destructor too.
-      def check_allocation_strategies
-        found = node.constructors.find(:access => :public)
-
-        if found.nil? || (found.is_a?(RbGCCXML::QueryResult) && found.empty?)
-          # Got here means no public constructors. Build up a class specific allocation strat
-          self.declarations << "namespace Rice {"
-          self.declarations << "\ttemplate<>"
-          self.declarations << "\tstruct Default_Allocation_Strategy< #{node.qualified_name} > {"
-          self.declarations << "\t\tstatic #{node.qualified_name} * allocate() { return NULL; }"
-          self.declarations << "\t\tstatic void free(#{node.qualified_name} * obj) { }"
-          self.declarations << "\t};"
-          self.declarations << "}"
-        end
       end
     end
   end

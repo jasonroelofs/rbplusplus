@@ -13,12 +13,15 @@ context "Allocation Strategies" do
     end
   end
 
-  xspecify "properly figures out what allocation to do" do
+  specify "properly figures out what allocation to do" do
     assert_nothing_raised LoadError  do
       require 'alloc_strats'
     end 
 
+    # Private constructor, public destructor
     assert defined?(NoConstructor)
+
+    # Private constructor and destructor
     assert defined?(Neither)
   end
 

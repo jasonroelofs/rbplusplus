@@ -36,6 +36,8 @@ module RbPlusPlus
       attr_accessor :includes
       # The list of declarations to add
       attr_accessor :declarations
+      # Any prototypes
+      attr_accessor :prototypes
       # The body code
       attr_accessor :body
 
@@ -58,6 +60,7 @@ module RbPlusPlus
         @builders = []
         @includes = []
         @declarations = []
+        @prototypes = []
         @body = []
         @registered_nodes = []
       end
