@@ -1,3 +1,6 @@
+#ifndef __FUNC_POINTERS_CLASS_H__
+#define __FUNC_POINTERS_CLASS_H__
+
 namespace function_pointers_class {
   
   // With argument and returns a value
@@ -19,3 +22,5 @@ namespace function_pointers_class {
       Callback mCallback;
   };
 }
+
+#endif

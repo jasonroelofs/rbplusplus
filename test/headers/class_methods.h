@@ -1,3 +1,6 @@
+#ifndef __ENCAPSULATE_H__
+#define __ENCAPSULATE_H__
+
 namespace encapsulation {
   class Base {
     protected:
@@ -39,3 +42,5 @@ namespace encapsulation {
     }
   };
 }
+
+#endif

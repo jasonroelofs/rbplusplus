@@ -2,6 +2,8 @@
  * Code to wrap and handle function callbacks by exposing them
  * into Ruby as block arguments
  */
+#ifndef __FUNCTION_POINTERS_H__
+#define __FUNCTION_POINTERS_H__
 
 namespace function_pointers {
 
@@ -27,3 +29,5 @@ namespace function_pointers {
   int callCallbackReturns(int in) { return returnCallback(in); }
 
 }
+
+#endif
