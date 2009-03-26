@@ -46,6 +46,10 @@ context "Extension with wrapped classes" do
     assert defined?(IntAdder), "Did not use the typedef for TemplateAdder"
   end
 
+  specify "finds and uses multi-nested typedefs" do
+    assert defined?(ShouldFindMe), "Didn't find top level typedef for NestedTemplate"
+  end
+
   specify "makes class constants available" do
     Adder::MY_VALUE.should == 10
   end

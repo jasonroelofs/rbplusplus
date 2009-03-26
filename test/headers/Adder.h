@@ -31,6 +31,15 @@ namespace classes {
   };
 
   typedef TemplateAdder<int> IntAdder;
+
+  template<typename T>
+  class NestedTemplate {
+
+  };
+
+  typedef NestedTemplate<int> SuperTemplate;
+  typedef SuperTemplate MiddleTypedef;
+  typedef MiddleTypedef ShouldFindMe;
 }
 
 #endif 
