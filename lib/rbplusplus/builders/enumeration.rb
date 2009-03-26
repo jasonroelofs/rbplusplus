@@ -1,7 +1,7 @@
 module RbPlusPlus
   module Builders
 
-    # This class handles generating source for a requested Module
+    # This class handles generating source for a requested Enumeration
     class EnumerationBuilder < Base
       
       # Different initializer to keep things clean
@@ -11,6 +11,11 @@ module RbPlusPlus
       end
 
       def build
+        if node.anonymous?
+          build_as_const
+          return
+        end
+
         includes << "#include <rice/Enum.hpp>"
         enum_name = node.name
         full_name = node.qualified_name
@@ -34,6 +39,22 @@ module RbPlusPlus
 
         node.values.each do |v|
           body << "\t#{rice_variable}.define_value(\"#{v.name}\", #{v.to_s(true)});"
+        end
+      end
+
+      # Anonymous enumerations don't fit the Enum type definitions
+      # we do below. In C++ they act as just another constant, so 
+      # we shall define them as such in the extension
+      def build_as_const
+        scope = 
+          if parent.is_a?(ExtensionBuilder) 
+            "Module(rb_mKernel)"
+          else
+            parent.rice_variable
+          end
+
+        node.values.each do |v|
+          body << "\t#{scope}.const_set(\"#{v.name}\", to_ruby((int)#{v.to_s(true)}));"
         end
       end
 

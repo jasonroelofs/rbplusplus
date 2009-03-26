@@ -60,4 +60,28 @@ context "Wrapping enumerations" do
     t.get_an_enum("I like money").should == Tester::MyEnum::I_LIKE_MONEY
     t.get_an_enum("You like money").should == Tester::MyEnum::YOU_LIKE_MONEY_TOO
   end
+
+  specify "anonymous enumerations' values are added as constants to the parent class" do
+    assert defined?(Tester::ANON_ENUM_VAL1)
+    assert defined?(Tester::ANON_ENUM_VAL2)
+    assert defined?(Tester::ANON_ENUM_VAL3)
+    assert defined?(Tester::ANON_ENUM_VAL4)
+
+    Tester::ANON_ENUM_VAL1.should.equal 1
+    Tester::ANON_ENUM_VAL2.should.equal 2
+    Tester::ANON_ENUM_VAL3.should.equal 5
+    Tester::ANON_ENUM_VAL4.should.equal 3
+  end
+
+  specify "top-level anonymous enumerations' values are added to the global scope" do
+    assert defined?(OUTER_ANON_1)
+    assert defined?(OUTER_ANON_2)
+    assert defined?(FOURTY_TWO)
+    assert defined?(SEPERATE_OUTER_VALUE)
+
+    OUTER_ANON_1.should.equal 0
+    OUTER_ANON_2.should.equal 1
+    FOURTY_TWO.should.equal 42
+    SEPERATE_OUTER_VALUE.should.equal 14
+  end
 end

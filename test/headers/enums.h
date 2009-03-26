@@ -15,6 +15,16 @@ namespace enums {
     VALUE3
   };
 
+  enum {
+    OUTER_ANON_1,
+    OUTER_ANON_2,
+    FOURTY_TWO = 42
+  };
+
+  enum {
+    SEPERATE_OUTER_VALUE = 14
+  };
+
   namespace inner {
     enum InnerEnum {
       INNER_1,
@@ -36,6 +46,19 @@ namespace enums {
         I_LIKE_MONEY = 3,
         YOU_LIKE_MONEY_TOO,
         I_LIKE_YOU = 7
+      };
+
+      /*
+       * Anonymous Enums
+       */
+      enum {
+        ANON_ENUM_VAL1 = 1
+      };
+
+      enum {
+        ANON_ENUM_VAL2 = 2,
+        ANON_ENUM_VAL3 = 5,
+        ANON_ENUM_VAL4 = 3
       };
 
       std::string getEnumDescription(MyEnum e) {
