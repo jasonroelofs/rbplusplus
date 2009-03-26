@@ -4,9 +4,9 @@ Rb++ makes it almost trivially easy to create Ruby extensions for any C
 or C++ library / code. In the simplest of cases, there is no need to ever
 touch C, everything is done in a very simple and clean Ruby API.
 
-Note: For those familiar with py++, the similarities are minimal. 
-Outside of the purpose of both libraries, rb++ was built from scratch to 
-provide a Ruby-esque query and wrapping API instead of being a port. However, 
+Note: For those familiar with py++, the similarities are minimal.
+Outside of the purpose of both libraries, rb++ was built from scratch to
+provide a Ruby-esque query and wrapping API instead of being a port. However,
 many thanks to Roman for his work, the major inspiration for this library.
 
 == Requirements
@@ -34,11 +34,11 @@ Feel free to post help request, hints, or general ideas on the forums.
 
 Rb++'s source is in a git repository hosted on github:
 
-Project page: 
+Project page:
 
 http://github.com/jameskilton/rbgplusplus/tree/master
 
-Clone with: 
+Clone with:
 
   git clone git://github.com/jameskilton/rbplusplus.git
 
@@ -53,7 +53,7 @@ All rb++ projects start off with the Extension class:
 
 The one requirement on the C++ code for rb++ to easily handle it, is that the code that's
 to be wrapped is in its own namespace. If the code to be wrapped is in the global namespace,
-then you should build a seperate header file that includes all the files to be wrapped 
+then you should build a seperate header file that includes all the files to be wrapped
 inside of a namespace:
 
   namespace to_wrap {
@@ -93,7 +93,7 @@ for more details.
 == Basic Usage
 
 For the most basic usage, where there are C++ header files to wrap and it's simple enough
-to not need extra processing, there are only two required calls: Extension.sources and 
+to not need extra processing, there are only two required calls: Extension.sources and
 Extension.namespace. Extension.sources has a few ways to be called (and is much the same as RbGCCXML.parse):
 
   # A single header file
@@ -118,14 +118,14 @@ Extension.namespace. Extension.sources has a few ways to be called (and is much 
 
 One special method that's also required in the Immediate Mode is Extension#working_dir=. This
 specifies where rb++ will put the generated code. In Block Mode, the default is to put the code
-in __FILE__/generated, but as rb++ cannot ascertain the __FILE__ information without a block, 
+in __FILE__/generated, but as rb++ cannot ascertain the __FILE__ information without a block,
 it will need to be stated explicitly. Use this method in Block Mode if the default location does
 not work.
 
-  e = Extension.new "extension" 
+  e = Extension.new "extension"
   e.working_dir = "/path/to/generate/files/"
 
-The last required method is Extension#namespace. As mentioned above, all extensions 
+The last required method is Extension#namespace. As mentioned above, all extensions
 are built from code in a given C++ namespace. That namespace needs to be specified before
 Rb++ will start any processing
 
@@ -137,13 +137,13 @@ Rb++ will start any processing
 There is one place where Extension#namespace isn't exactly required: when you'll be wrapping up
 the C++ code soley in other Ruby modules to be contained in the extension.
 
-The general rule is this: <b>If you want C++ code wrapped, you must use Extension#namespace to specify 
+The general rule is this: <b>If you want C++ code wrapped, you must use Extension#namespace to specify
 which code should go where</b>.
 
 == More Detailed Usage
 
 Because C++ does not easily wrap into Ruby code for many reasons, rb++ is much more capable than just
-the basic usage above. There are many different features available to help define and build the wrapper. 
+the basic usage above. There are many different features available to help define and build the wrapper.
 
 === Modules
 
@@ -157,7 +157,7 @@ a ##namespace call. This defines which C++ code will be wrapped into this module
 
     e.module "MyModule" do |m|
       # We want to wrap all code in ::my_module into this ruby module
-      m.namespace "my_module"  
+      m.namespace "my_module"
     end
   end
 
@@ -199,7 +199,7 @@ you can easily fix this by using the declarative 'include'.
   Extension.new "extension" do |e|
     e.sources ...
     node = e.namespace "PhysicsMath"
-    
+
     e.module "Physics" do |m|
       m.module "Math" do |math|
         #moves each class to Physics::Math
@@ -208,7 +208,7 @@ you can easily fix this by using the declarative 'include'.
         end
       end
     end
-    
+
   end
 
 Note that when you include something in a module it is moved from it's original location.  In the example above
@@ -243,7 +243,7 @@ and you want to add it to your Math class:
   node.classes("Math").includes mod.as_instance_method
 
 Please note the #as_instance_method. You now have Math#mod in your extension
-  
+
   require 'extension'
 
   Math.new.mod(1, 2)
@@ -252,7 +252,7 @@ Please note the #as_instance_method. You now have Math#mod in your extension
 
 === Constructor overloading
 
-A current limitation in rice currently does not allow for more than one constructor to be exported.  This 
+A current limitation in rice currently does not allow for more than one constructor to be exported.  This
 will not be a limitation in future versions of Rice, but for now make sure that only one constructor is wrapped.
 This can be done via direct constructor access:
 
@@ -283,7 +283,7 @@ can be used by default in rb++ like so:
 You can, however, rename them as you see fit if you tell rb++ how, for example:
 
   puts_methods = node.classes("System").methods("puts")  # Gives 2 puts methods back
-  puts_methods[0].wrap_as("puts")  
+  puts_methods[0].wrap_as("puts")
 
 After doing this you can use the methods as follows:
 
@@ -295,8 +295,8 @@ After doing this you can use the methods as follows:
 
 Rice does not currently support default arguments.  Right now they are all required.  For example:
 
-  int times(int a=0, int b=0) { 
-    return a*b; 
+  int times(int a=0, int b=0) {
+    return a*b;
   }
 
 can only be invoked with 2 arguments.  If you are having problems with this, please consult the rb++ forum.
@@ -318,20 +318,20 @@ By default, rb++ will write out the extension in multiple files, following the c
   _ModuleName_ClassName.rb.cpp
   ...
 
-This is done to prevent obscenely long compile times, super large code files, or uncompilable extensions due to 
+This is done to prevent obscenely long compile times, super large code files, or uncompilable extensions due to
 system limitations (e.g. RAM) that are common with big SWIG projects.
 
 Rb++ can also write out the extension code in a single file (extension_name.cpp) with Extension#writer_mode
 
   Extension.new "extension" do |e|
-    e.writer_mode :single 
+    e.writer_mode :single
   end
 
 === Compilation options
 
 rb++ takes care of setting up the extension to be properly compiled, but sometimes certain
 compiler options can't be deduced. rb++ has options to specify library paths (-L), libraries (-l),
-and include paths (-I) to add to the compilation lines, as well as just adding your own flags 
+and include paths (-I) to add to the compilation lines, as well as just adding your own flags
 directly to the command line. These are options on Extension.sources
 
   Extension.new "extension" do |e|
