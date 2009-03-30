@@ -12,9 +12,12 @@ module RbPlusPlus
 
       def build
         if node.anonymous?
+          Logger.info "Wrapping enumeration #{node.qualified_name} as constants on parent"
           build_as_const
           return
         end
+
+        Logger.info "Wrapping enumeration #{node.qualified_name}"
 
         includes << "#include <rice/Enum.hpp>"
         enum_name = node.name

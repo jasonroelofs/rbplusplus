@@ -32,6 +32,8 @@ module RbPlusPlus
           self.declarations.insert(0,"typedef #{node.qualified_name} #{self.class_type};")
         end
 
+        Logger.info "Wrapping class #{self.class_type}"
+
         #Handles templated super classes passing in complex members
         var_name = node.name.functionize
 
