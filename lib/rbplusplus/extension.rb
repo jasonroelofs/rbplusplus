@@ -7,7 +7,7 @@ module RbPlusPlus
   #     ...
   #   end
   #
-  # "extension_name" is what the resulting Ruby library will be named, aka in your code
+  # "extension_name" is what the resulting Ruby library will be named; thus in your ruby code
   # you will have
   #
   #   require "extension_name"
@@ -71,7 +71,9 @@ module RbPlusPlus
 
       @node = nil
 
-      if block
+      if requesting_console?
+        block.call(self) if block
+      elsif block
         build_working_dir(&block)
         block.call(self)
         build
@@ -148,6 +150,10 @@ module RbPlusPlus
       @sources = Dir.glob dirs
       Logger.info "Parsing #{@sources.inspect}"
       @parser = RbGCCXML.parse(dirs, parser_options)
+
+      if requesting_console?
+        start_console
+      end
     end
 
     # Set a namespace to be the main namespace used for this extension.
@@ -230,6 +236,19 @@ module RbPlusPlus
 
     protected
 
+    # Check ARGV to see if someone asked for "console"
+    def requesting_console?
+      ARGV[0] == "console"
+    end
+
+    # Start up a new IRB console session giving the user access
+    # to the RbGCCXML parser instance to do real-time querying
+    # of the code they're trying to wrap
+    def start_console
+      puts "IRB Session starting. @parser is now available to you for querying your code. The extension object is available as 'self'"
+      IRB.start_session(binding)
+    end
+
     # If the working dir doesn't exist, make it
     # and if it does exist, clean it out
     def prepare_working_dir
@@ -253,3 +272,29 @@ module RbPlusPlus
     end
   end
 end
+
+require 'irb'
+
+module IRB # :nodoc:
+  def self.start_session(binding)
+    unless @__initialized
+      args = ARGV
+      ARGV.replace(ARGV.dup)
+      IRB.setup(nil)
+      ARGV.replace(args)
+      @__initialized = true
+    end
+    
+    workspace = WorkSpace.new(binding)
+
+    irb = Irb.new(workspace)
+
+    @CONF[:IRB_RC].call(irb.context) if @CONF[:IRB_RC]
+    @CONF[:MAIN_CONTEXT] = irb.context
+
+    catch(:IRB_EXIT) do
+      irb.eval_input
+    end
+  end
+end
+
