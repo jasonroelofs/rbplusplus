@@ -1,7 +1,7 @@
 $:.unshift File.expand_path(File.dirname(__FILE__))
 $:.unshift File.expand_path(File.dirname(__FILE__) + "/rbplusplus")
 
-gem 'rbgccxml'
+require 'rubygems'
 require 'rbgccxml'
 
 require 'inflector'
