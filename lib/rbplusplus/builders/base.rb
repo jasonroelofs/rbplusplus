@@ -270,7 +270,7 @@ module RbPlusPlus
           to_call = ""
 
           # Handles #as_instance_method designation
-          if ((method.is_a?(RbGCCXML::Function) && method.as_instance_method?) || (method.is_a?(RbGCCXML::Method))) &&
+          if ((method.is_a?(RbGCCXML::Function) && method.as_instance_method?) || (method.is_a?(RbGCCXML::Method) && append != "")) &&
               (parent.is_a?(RbGCCXML::Class) || parent.is_a?(RbGCCXML::Struct))
             args.unshift "#{method.parent.qualified_name} *self"
             to_call = "self->#{method.renamed? ? method.cpp_name : method.name}"
