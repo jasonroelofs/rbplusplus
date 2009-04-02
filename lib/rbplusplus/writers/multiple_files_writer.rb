@@ -23,14 +23,14 @@ module RbPlusPlus
         include_guard = "__RICE_GENERATED_RBPP_CUSTOM_HPP__"
 
         File.open(hpp_file, "w+") do |f|
-          f.puts "#ifndef #{include_guard}" 
-          f.puts "#define #{include_guard}" 
+          f.puts "#ifndef #{include_guard}"
+          f.puts "#define #{include_guard}"
           f.puts ""
           f.puts Builders::TypesManager.includes.uniq.join("\n")
           f.puts ""
           f.puts Builders::TypesManager.prototypes.join("\n")
           f.puts ""
-          f.puts "#endif // #{include_guard}" 
+          f.puts "#endif // #{include_guard}"
         end
 
         File.open(cpp_file, "w+") do |f|
@@ -43,21 +43,31 @@ module RbPlusPlus
       # How this works:
       #
       # We'll recurse through the builder heirarchy, starting at the bottom.
-      # This lets us to properly link up each file so that all classes / modules / 
+      # This lets us to properly link up each file so that all classes / modules /
       # functions get properly exposed.
       def _write_node(node)
         node.builders.each do |b|
           _write_node(b)
         end
 
-        filename = if node.class_type
-                     "_" + node.class_type
-                   elsif node.parent
-                     "_" + node.qualified_name
-                   else
-                     node.name
-                   end
-                   
+        has_parent = node.parent && !node.parent.is_a?(Builders::ExtensionBuilder)
+        is_top = node.is_a?(Builders::ExtensionBuilder)
+
+        filename =
+          if node.class_type
+            node.class_type
+          elsif has_parent && !is_top
+            node.qualified_name
+          else
+            node.name
+          end
+
+        # We don't want the top-level extension.rb.cpp file to have an underscore, but
+        # all of the rest should have one
+        if !is_top
+          filename = "_#{filename}"
+        end
+
         filename = filename.functionize
 
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
@@ -72,12 +82,12 @@ module RbPlusPlus
           register_func_arg = ""
           register_func_prototype = ""
 
-          if !node.parent.is_a?(Builders::ExtensionBuilder)
+          if has_parent
             register_func_arg = node.parent.rice_variable
             register_func_prototype = "#{node.parent.rice_variable_type} #{register_func_arg}"
           end
 
-          # Changes we need to make to the parent for everything to work across multiple 
+          # Changes we need to make to the parent for everything to work across multiple
           # files
           #
           # * Add an include to the hpp file
@@ -88,7 +98,7 @@ module RbPlusPlus
           node.parent.register_node(node, "#{register_func}(#{register_func_arg});")
 
           # Modifications to this current node's code:
-          # 
+          #
           # * Add a register prototype to the header file
           # * Set include in node to the header file
           # * Wrap the body in a register method

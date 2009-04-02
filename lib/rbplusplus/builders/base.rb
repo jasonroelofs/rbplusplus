@@ -26,7 +26,7 @@ module RbPlusPlus
     class Base
 
       attr_reader :name, :node
-      
+
       # Any given builder has a list of sub-builders of any type
       attr_accessor :builders
 
@@ -48,7 +48,7 @@ module RbPlusPlus
       attr_accessor :rice_variable
       attr_accessor :rice_variable_type
 
-      # If the name of the element is something other than what GCCXML gives us 
+      # If the name of the element is something other than what GCCXML gives us
       # (say, using a typedef), then set the name here and it will be used
       # appropriately.
       attr_accessor :class_type
@@ -64,14 +64,14 @@ module RbPlusPlus
         @body = []
         @registered_nodes = []
       end
-      
+
       # adds a register function to the Init or register of this node
       def register_node(node, register_func)
         @registered_nodes << [node, register_func]
       end
-      
+
     private
-      
+
       def nested_level(node, level=0)
         return level if node.is_a?(RbGCCXML::Namespace) || node.is_a?(RbGCCXML::Enumeration)
         return level if node.super_classes.length == 0
@@ -80,9 +80,9 @@ module RbPlusPlus
         end
         return level
       end
-      
+
     public
-      
+
       # Sorts the registered nodes by hierachy, registering the base classes
       # first.
       #
@@ -92,17 +92,17 @@ module RbPlusPlus
         nodes = @registered_nodes.sort_by do |build, func|
           if build.node.nil?
             0
-          else  
+          else
             nested_level(build.node)
           end
         end
-        
+
         #collect the sorted members
         nodes.collect do |node, func|
           func
         end
       end
-      
+
       # The name of the header file to include
       # This is the file default, so long as it matches one of the export files
       # If not this returns all exported files.
@@ -113,37 +113,37 @@ module RbPlusPlus
         return [file] if self.class.sources.include?(file)
         self.class.sources
       end
-      
+
       # Adds the necessary includes in order to compile the specified node
       def add_includes_for(node)
         header_files(node).each do |header|
           includes << "#include \"#{header}\""
         end
       end
-      
+
       # Include any user specified include files
       def add_additional_includes
         self.class.additional_includes.each do |inc|
           includes << "#include \"#{inc}\""
         end
       end
-      
+
       # Set a list of user specified include files
       def self.additional_includes=(addl)
         @@additional_includes = addl
       end
-      
+
       # Get an array of user specified include files
       def self.additional_includes
         @@additional_includes || []
       end
-      
-      # A list of all the source files.  This is used in order to prevent files 
+
+      # A list of all the source files.  This is used in order to prevent files
       # that are not in the list from being included and mucking things up
       def self.sources=(sources)
         @@sources = sources
       end
-      
+
       # Retrieves a list of user specified source files
       def self.sources
         @@sources || []
@@ -162,15 +162,15 @@ module RbPlusPlus
         if self.body.flatten[-1].strip == "}"
           extras << self.body.delete_at(-1)
         end
-    
+
         return [
-          self.includes.flatten.uniq, 
-          "", 
-          self.declarations, 
-          "", 
+          self.includes.flatten.uniq,
+          "",
+          self.declarations,
+          "",
           self.body,
-          "", 
-          self.registered_nodes, 
+          "",
+          self.registered_nodes,
           extras
         ].flatten.join("\n")
       end
@@ -202,7 +202,7 @@ module RbPlusPlus
       end
 
       # Builds up a string containing arguments.
-      #  <tt>include_self</tt>: Boolean on whether to include the type information in the list. 
+      #  <tt>include_self</tt>: Boolean on whether to include the type information in the list.
       #  <tt>with_self</tt>:    Boolean on whether the list should include the explicit self.
       #
       def function_arguments_list(function, include_type = false, with_self = false)
@@ -223,7 +223,7 @@ module RbPlusPlus
 
       # Takes the results of function_arguments_list above and outputs it as
       # a comma delimited string. Doing this allows post-processing of the
-      # list of argument as needed (such as in ExtensionBuilder#build_callback_wrapper). 
+      # list of argument as needed (such as in ExtensionBuilder#build_callback_wrapper).
       def function_arguments_string(*args)
         function_arguments_list(*args).join(",")
       end
@@ -284,7 +284,7 @@ module RbPlusPlus
           declarations << "#{return_type} #{wrapper_func}(#{args.join(",")}) {"
           declarations << "\t#{returns} #{to_call}(#{function_arguments_string(method)});"
           declarations << "}"
-          
+
           wrapper_func
         end
       end
@@ -292,8 +292,8 @@ module RbPlusPlus
       # Build up C++ code to properly wrap up methods to take ruby block arguments
       # which forward off calls to callback functions.
       #
-      # This works as such. We need two functions here, one to be the wrapper into Ruby 
-      # and one to be the wrapper around the callback function. 
+      # This works as such. We need two functions here, one to be the wrapper into Ruby
+      # and one to be the wrapper around the callback function.
       #
       # The method wrapped into Ruby takes straight Ruby objects
       #
