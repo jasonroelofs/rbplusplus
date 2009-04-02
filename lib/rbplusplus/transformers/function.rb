@@ -13,6 +13,10 @@ module RbGCCXML
       @as_method = true
       return self
     end
+
+    def as_instance_method?
+      @as_method || false
+    end
     
     def calls(method_name) 
       @special_qualified_name = method_name
