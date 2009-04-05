@@ -149,7 +149,7 @@ module RbPlusPlus
         class_defn = "\t#{rice_variable_type} #{rice_variable} = "
 
         class_name = node.name
-        supers = node.superclasses.select {|s| !s.ignored? }.map {|s| s.qualified_name }
+        supers = node.superclasses(:public).select {|s| !s.ignored? }.map {|s| s.qualified_name }
         class_names = [self.class_type, supers].flatten.join(",")
 
         if !parent.is_a?(ExtensionBuilder)
