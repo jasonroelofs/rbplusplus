@@ -75,7 +75,7 @@ module RbPlusPlus
       def constructors
         result = []
         # There are no constructors on purely virtual classes.
-        node.methods.each do |method|
+        [node.methods].flatten.each do |method|
           next unless method.is_a? RbGCCXML::Method
           if method.purely_virtual?
             Logger.warn :pure_virtual, "Ignoring pure virtual method #{method.qualified_name}"
@@ -99,7 +99,7 @@ module RbPlusPlus
         # Methods are thrown into a hash table so that we can
         # determine overloaded methods
         methods_hash = {}
-        node.methods.each do |method|
+        [node.methods].flatten.each do |method|
           next unless method.public?
 
           methods_hash[method.qualified_name] ||= []
@@ -149,7 +149,7 @@ module RbPlusPlus
         class_defn = "\t#{rice_variable_type} #{rice_variable} = "
 
         class_name = node.name
-        supers = node.super_classes.collect { |s| s.qualified_name }
+        supers = node.superclasses.select {|s| !s.ignored? }.map {|s| s.qualified_name }
         class_names = [self.class_type, supers].flatten.join(",")
 
         if !parent.is_a?(ExtensionBuilder)

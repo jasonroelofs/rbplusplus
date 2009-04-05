@@ -74,8 +74,8 @@ module RbPlusPlus
 
       def nested_level(node, level=0)
         return level if node.is_a?(RbGCCXML::Namespace) || node.is_a?(RbGCCXML::Enumeration)
-        return level if node.super_classes.length == 0
-        node.super_classes.each do |sup|
+        return level if node.superclasses.length == 0
+        node.superclasses.each do |sup|
           level = nested_level(sup, level+1)
         end
         return level
