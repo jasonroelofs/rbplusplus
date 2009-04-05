@@ -1,18 +1,14 @@
 module RbPlusPlus
   class NodeCache #:nodoc:
-    include Singleton
-    # Retrieves a node from the cache based on the node's qualified name
-    def get(node)
+    # Retrieves or initializes a node's information cache
+    def self.get(node)
       demangled = node.attributes['demangled']
       @@nodes ||= {}
-      if @@nodes[demangled].nil?
-        @@nodes[demangled] = node
-      end
-      return @@nodes[demangled]
+      @@nodes[demangled] ||= {}
     end
     
     # Clears out the cache
-    def clear
+    def self.clear
       @@nodes = {}
     end
   end

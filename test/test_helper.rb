@@ -23,6 +23,6 @@ class Test::Unit::TestCase
 
   def teardown
     RbGCCXML::XMLParsing.clear_cache
-    NodeCache.instance.clear
+    NodeCache.clear
   end
 end

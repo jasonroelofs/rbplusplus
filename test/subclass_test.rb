@@ -16,13 +16,18 @@ context "Extension with class hierachies" do
     end
 
     require 'subclass'
+
+    # Ignored superclasses should not cause problems with wrapped subclasses
     should.not.raise NameError do
       Sub::Base.new.one.should == Sub::Sub.new.one
       Sub::Base.new.zero.should == Sub::Sub.new.zero
     end
+
+    # Template superclasses shouldn't cause problems
     should.not.raise NameError do
       Sub::TemplateSub.new.zero.should == Sub::TemplateSub.new.custom
     end
+
     should.not.raise NameError do
       Sub::TemplatePtr.new.custom
     end

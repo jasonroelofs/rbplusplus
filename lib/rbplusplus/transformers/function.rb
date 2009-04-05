@@ -1,31 +1,38 @@
 module RbGCCXML
   class Function < Node
-    attr_reader :special_qualified_name
-    
-    # always true for functions, false for methods
+    # Always true for functions, false for methods
     def static?
-      !(@as_method || false)
+      !cache[:as_method]
     end
     
     # Sets this function to be an instance method.
     # Useful for custom function declaration.
     def as_instance_method
-      @as_method = true
-      return self
+      cache[:as_method] = true
+      self
     end
 
+    # Are we wrapping this function as an instance method?
     def as_instance_method?
-      @as_method || false
+      !!cache[:as_method]
     end
     
+    # Use this method to designate calling a different function
+    # when the ruby method is requested
+    #
+    # TODO Is this really necessary?
     def calls(method_name) 
-      @special_qualified_name = method_name
+      cache[:special_qualified_name] = method_name
       self
+    end
+
+    def special_qualified_name
+      cache[:special_qualified_name]
     end
     
     alias_method :method_qualified_name, :qualified_name
     def qualified_name #:nodoc:
-      @special_qualified_name || method_qualified_name
+      cache[:special_qualified_name] || method_qualified_name
     end
   end
 end
