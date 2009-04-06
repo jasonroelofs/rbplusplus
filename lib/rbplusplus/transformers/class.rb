@@ -30,22 +30,27 @@ module RbGCCXML
     
     alias_method :node_classes, :classes
     def classes(*args) #:nodoc:
-      results = QueryResult.new
-      results << (cache[:classes] || [])
-      results << node_classes(*args)
-      results.flatten!
-
-      results.length == 1 ? results[0] : results
+      find_with_cache(:classes, node_classes(*args))
     end
 
     alias_method :node_methods, :methods
     def methods(*args) #:nodoc:
-      results = QueryResult.new
-      results << (cache[:methods] || [])
-      results << node_methods(*args)
-      results.flatten!
+      find_with_cache(:methods, node_methods(*args))
+    end
 
-      results.length == 1 ? results[0] : results
+    private
+
+    # Take the cache key, and the normal results, adds to the results
+    # those that are in the cache and returns them properly.
+    def find_with_cache(type, results)
+      in_cache = cache[type]
+
+      ret = QueryResult.new
+      ret << results if results
+      ret << in_cache if in_cache
+      ret.flatten!
+
+      ret.size == 1 ? ret[0] : ret
     end
   end
 end
