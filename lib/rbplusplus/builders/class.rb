@@ -18,21 +18,30 @@ module RbPlusPlus
         found = node
         while found
           last_found = found
-          found = RbGCCXML::XMLParsing.find(:node_type => "Typedef", :type => found.attributes["id"])
+          typedef = RbGCCXML::XMLParsing.find(:node_type => "Typedef", :type => found.attributes["id"])
+
+          # Some typedefs have the access attribute, some don't. We want those without the attribute
+          # and those with the access="public". For this reason, we can't put :access => "public" in the
+          # query above.
+          found = (typedef && typedef.public?) ? typedef : nil
         end
 
-        @typedef = last_found
+        if last_found != node
+          typedef = last_found
+          self.class_type = typedef.qualified_name
+          wrapping = typedef.qualified_name
 
-        if @typedef
-          self.class_type = @typedef.qualified_name
-          @class_name = @typedef.name
+          @class_name = typedef.name
+          Logger.debug("Found typedef #{typedef.qualified_name} for #{node.qualified_name}")
         else
-          self.class_type = @typedef ? @typedef.name : node.qualified_name.functionize
+          self.class_type = node.qualified_name
           @class_name = node.name
-          self.declarations.insert(0,"typedef #{node.qualified_name} #{self.class_type};")
+          wrapping = node.qualified_name
         end
 
-        Logger.info "Wrapping class #{self.class_type}"
+#        self.declarations.insert(0,"typedef #{node.qualified_name} #{self.class_type};")
+
+        Logger.info "Wrapping class #{wrapping}"
 
         #Handles templated super classes passing in complex members
         var_name = node.name.functionize
