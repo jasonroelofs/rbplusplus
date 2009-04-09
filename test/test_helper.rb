@@ -19,6 +19,7 @@ class Test::Unit::TestCase
     Logger.stubs(:info)
     Logger.stubs(:warn)
     Logger.stubs(:error)
+    Logger.stubs(:debug)
   end
 
   def teardown

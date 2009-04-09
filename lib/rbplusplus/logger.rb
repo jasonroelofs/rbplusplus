@@ -12,6 +12,10 @@ module RbPlusPlus
         $stdout.puts "(WARNING) #{msg}"
       end
 
+      def debug(msg)
+        $stdout.puts "(DEBUG) #{msg}"
+      end
+
       def error(msg)
         $stderr.puts "(ERROR) #{msg}"
       end
