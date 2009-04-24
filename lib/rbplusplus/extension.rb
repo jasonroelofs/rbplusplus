@@ -267,8 +267,15 @@ module RbPlusPlus
 
     # Cool little eval / binding hack, from need.rb
     def build_working_dir(&block)
+      file_name = 
+        if block.respond_to?(:source_location)
+          block.source_location[0]
+        else
+          eval("__FILE__", block.binding)
+        end
+
       @working_dir = File.expand_path(
-        File.join(File.dirname(eval("__FILE__", block.binding)), "generated"))
+        File.join(File.dirname(file_name), "generated"))
     end
   end
 end
