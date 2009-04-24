@@ -16,8 +16,13 @@ task :default => :test
 # tests individually
 desc "Run the tests"
 task :test do
+  require 'rbconfig'
   FileList["test/*_test.rb"].each do |file|
-    sh "ruby #{file}"
+    # To allow multiple ruby installs (like a multiruby test suite), I need to get
+    # the exact ruby binary that's linked to the ruby running the Rakefile. Just saying
+    # "ruby" will find the system's installed ruby and be worthless
+    ruby = File.join(Config::CONFIG["bindir"], Config::CONFIG["RUBY_INSTALL_NAME"])
+    sh "#{ruby} #{file}"
   end
 end
 
