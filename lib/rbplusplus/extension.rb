@@ -227,8 +227,10 @@ module RbPlusPlus
     # errors / warnings.
     def compile
       Logger.info "Compiling. See rbpp_compile.log for details."
+      require 'rbconfig'
+      ruby = File.join(Config::CONFIG["bindir"], Config::CONFIG["RUBY_INSTALL_NAME"])
       FileUtils.cd @working_dir do
-        system("ruby extconf.rb > rbpp_compile.log 2>&1")
+        system("#{ruby} extconf.rb > rbpp_compile.log 2>&1")
         system("make >> rbpp_compile.log 2>&1")
       end
       Logger.info "Compilation complete."
