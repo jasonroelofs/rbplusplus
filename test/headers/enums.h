@@ -39,6 +39,16 @@ namespace enums {
   }
 
   class Tester {
+      enum NotWrapped {
+        I_IS_PRIVATE
+      };
+
+    protected:
+
+      enum AlsoNotWrapped {
+        CAUSE_I_IS_PROT
+      };
+
     public:
       Tester() {}
 

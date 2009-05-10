@@ -195,6 +195,8 @@ module RbPlusPlus
       # Find and wrap up all enumerations
       def build_enumerations
         @node.enumerations.each do |enum|
+          next if enum.ignored? || enum.moved?
+          next unless enum.public?
           builder = EnumerationBuilder.new(self, enum)
           builder.build
           builders << builder

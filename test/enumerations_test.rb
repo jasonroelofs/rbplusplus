@@ -27,6 +27,11 @@ context "Wrapping enumerations" do
     TestEnum::VALUE2.to_i.should == 1
     TestEnum::VALUE3.to_i.should == 2
   end
+  
+  specify "should only wrap public enums" do
+    assert !defined?(Tester::NotWrapped)
+    assert !defined?(Tester::AlsoNotWrapped)
+  end
 
   specify "should wrap up enumerations at proper nesting" do
     assert defined?(Tester::MyEnum)
