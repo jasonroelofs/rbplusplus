@@ -5,6 +5,12 @@ module RbGCCXML
     def ignore
       cache[:ignored] = true
     end
+
+    # Un-ignore this node, useful if there's a glob ignore and the wrapper
+    # just wants a few of the classes
+    def unignore
+      cache[:ignored] = false
+    end
     
     # Has this node been previously declared to not be wrapped?
     def ignored?
