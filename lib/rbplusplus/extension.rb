@@ -255,7 +255,7 @@ module RbPlusPlus
     # and if it does exist, clean it out
     def prepare_working_dir
       FileUtils.mkdir_p @working_dir unless File.directory?(@working_dir)
-      FileUtils.rm_rf Dir["#{@working_dir}/*"]
+      FileUtils.rm_rf Dir["#{@working_dir}/*"] if ARGV.include?("clean")
     end
 
     # Make sure that any files or globs of files in :include_source_files are copied into the working
