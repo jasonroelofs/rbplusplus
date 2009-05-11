@@ -118,7 +118,14 @@ module RbPlusPlus
         # determine overloaded methods
         methods_hash = {}
         [node.methods].flatten.each do |method|
+          # Ignore all non-public methods
           next unless method.public?
+
+          # Ignore methods that have non-public arguments anywhere
+          if !method.arguments.empty? && !method.arguments.select {|a| !a.cpp_type.base_type.public?}.empty?
+            Logger.info "Ignoring method #{method.qualified_name} due to non-public argument type(s)"
+            next
+          end
 
           methods_hash[method.qualified_name] ||= []
           methods_hash[method.qualified_name] << method

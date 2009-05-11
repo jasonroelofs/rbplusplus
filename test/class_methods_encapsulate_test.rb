@@ -31,5 +31,29 @@ context "Correct handling of encapsulated methods" do
     ext.fundamental_type_virtual_method.should == 1
     ext.user_defined_type_virtual_method.class.should == Base
   end
+
+  specify "don't wrap methods that use non-public types in their arguments" do
+    arg = ArgumentAccess.new
+
+    # Single argument methods
+    should.raise NoMethodError do
+      arg.wrap_me_private
+    end
+    should.raise NoMethodError do
+      arg.wrap_me_protected
+    end
+
+    should.not.raise NoMethodError do
+      arg.wrap_me_public ArgumentAccess::PublicStruct.new
+    end
+    
+    # Multiple argument methods
+    should.raise NoMethodError do
+      arg.wrap_me_many_no
+    end
+    should.not.raise NoMethodError do
+      arg.wrap_me_many_yes(1, 2.0, ArgumentAccess::PublicStruct.new)
+    end
+  end
 end
 

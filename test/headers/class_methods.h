@@ -41,6 +41,31 @@ namespace encapsulation {
       return new Extended();
     }
   };
+
+  class ArgumentAccess {
+    struct PrivateStruct { }; 
+
+  protected:
+    struct ProtStruct { };
+
+  public:
+    struct PublicStruct { 
+      PublicStruct() {}
+    };
+
+    ArgumentAccess() {}
+    ~ArgumentAccess() {}
+
+    // Only wrap methods that use public structs
+    void wrapMePrivate(PrivateStruct st) { }
+    void wrapMeProtected(ProtStruct st) { }
+    void wrapMePublic(PublicStruct st) { }
+
+    // And make sure it works with multiple arguments
+    void wrapMeManyNo(int a, float b, PublicStruct st1, ProtStruct st2) { }
+    void wrapMeManyYes(int a, float b, PublicStruct st1) { }
+
+  };
 }
 
 #endif
