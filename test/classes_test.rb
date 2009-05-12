@@ -54,8 +54,15 @@ context "Extension with wrapped classes" do
     Adder::MY_VALUE.should == 10
   end
 
-  xspecify "makes public instance variables accessible" do
+  specify "makes public instance variables accessible" do
+    a = Adder.new
+    a.value1 = 10
+    a.value2 = 15.5
+    a.value3 = "This is a value!"
 
+    a.value1.should.equal 10
+    a.value2.should.be.close 15.5, 0.01
+    a.value3.should.equal "This is a value!"
   end
 end
 

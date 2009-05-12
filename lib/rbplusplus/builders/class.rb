@@ -64,6 +64,9 @@ module RbPlusPlus
         @body += methods
         @body += constants
 
+        # Expose any public instance variables
+        public_ivars
+
         # Nested Classes
         build_classes
 
@@ -109,6 +112,32 @@ module RbPlusPlus
           result << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
         result
+      end
+
+      # Find all public instance variables and expose them as
+      # variable and variable=.
+      # Because Rice doesn't support this internally yet, we need to
+      # generate helper methods and wrap into those
+      def public_ivars
+        [node.variables.find(:access => :public)].flatten.each do |var|
+          next if var.ignored? || var.moved?
+
+          # Setter
+          method_name = "wrap_#{node.qualified_name.functionize}_#{var.name}_set"
+          declarations << "void #{method_name}(#{node.qualified_name}* self, #{var.cpp_type} val) {"
+          declarations << "\tself->#{var.name} = val;"
+          declarations << "}"
+
+          body << "\t#{self.rice_variable}.define_method(\"#{var.name}=\", &#{method_name});"
+
+          # Getter
+          method_name = "wrap_#{node.qualified_name.functionize}_#{var.name}_get"
+          declarations << "#{var.cpp_type} #{method_name}(#{node.qualified_name}* self) {"
+          declarations << "\treturn self->#{var.name};"
+          declarations << "}"
+
+          body << "\t#{self.rice_variable}.define_method(\"#{var.name}\", &#{method_name});"
+        end
       end
 
       # Build the methods, and return an array of rice code

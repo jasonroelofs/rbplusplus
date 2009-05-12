@@ -23,6 +23,10 @@ namespace classes {
       string addStrings(string a, string b) { return a + b; }
 
       string getClassName() { return "Adder"; }
+
+      int value1;
+      float value2;
+      string value3;
   };
 
   template<typename T>
