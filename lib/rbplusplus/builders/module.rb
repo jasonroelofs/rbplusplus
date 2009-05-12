@@ -18,7 +18,7 @@ module RbPlusPlus
         self.rice_variable_type = "Rice::Module"
 
         includes << "#include <rice/Module.hpp>"
-        
+
         add_additional_includes
 
         mod_defn = "\t#{rice_variable_type} #{rice_variable} = "
@@ -32,12 +32,12 @@ module RbPlusPlus
 
         # If a namespace has been given to this module, find and wrap the appropriate code
         if self.node
-          build_enumerations 
+          build_enumerations
         end
 
         build_functions unless @module.functions.empty?
-        build_classes(@module.classes) unless @module.classes.empty?
-   
+        klasses = [@module.classes + @module.structs].flatten
+        build_classes(klasses) unless klasses.empty?
 
         # Build each inner module
         @module.modules.each do |mod|
@@ -69,7 +69,6 @@ module RbPlusPlus
         end
       end
 
-      
     end
   end
 end
