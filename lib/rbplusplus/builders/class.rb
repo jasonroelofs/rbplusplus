@@ -124,7 +124,7 @@ module RbPlusPlus
 
           # Setter
           method_name = "wrap_#{node.qualified_name.functionize}_#{var.name}_set"
-          declarations << "void #{method_name}(#{node.qualified_name}* self, #{var.cpp_type} val) {"
+          declarations << "void #{method_name}(#{node.qualified_name}* self, #{var.cpp_type.to_s(true)} val) {"
           declarations << "\tself->#{var.name} = val;"
           declarations << "}"
 
@@ -132,7 +132,7 @@ module RbPlusPlus
 
           # Getter
           method_name = "wrap_#{node.qualified_name.functionize}_#{var.name}_get"
-          declarations << "#{var.cpp_type} #{method_name}(#{node.qualified_name}* self) {"
+          declarations << "#{var.cpp_type.to_s(true)} #{method_name}(#{node.qualified_name}* self) {"
           declarations << "\treturn self->#{var.name};"
           declarations << "}"
 
