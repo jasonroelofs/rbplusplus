@@ -39,7 +39,7 @@ module RbPlusPlus
         new = File.expand_path(File.join(@build_dir, filename))
         return true if !File.exists?(existing)
 
-        !system("diff #{existing} #{new}")
+        !system("diff #{existing} #{new} > #{@build_dir}/diff_info 2>&1")
       end
 
       # Write out files that include the auto-generated to_/from_ruby constructs.
