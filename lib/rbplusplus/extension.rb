@@ -231,6 +231,7 @@ module RbPlusPlus
       ruby = File.join(Config::CONFIG["bindir"], Config::CONFIG["RUBY_INSTALL_NAME"])
       FileUtils.cd @working_dir do
         system("#{ruby} extconf.rb > rbpp_compile.log 2>&1")
+        system("rm -f *.so")
         system("make >> rbpp_compile.log 2>&1")
       end
       Logger.info "Compilation complete."
