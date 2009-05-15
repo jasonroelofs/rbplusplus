@@ -203,8 +203,24 @@ module RbPlusPlus
         class_defn = "\t#{rice_variable_type} #{rice_variable} = "
 
         class_name = node.name
-        supers = node.superclasses(:public).select {|s| !s.ignored? }.map {|s| s.qualified_name }
-        class_names = [self.class_type, supers].flatten.join(",")
+        supers = node.superclasses(:public)
+
+        if supers.length > 1 
+          if node.get_superclass.nil?
+            Logger.warn :mutiple_subclasses, "#{@class_name} has multiple public superclasses. " +
+              "Will use first superclass, which is #{supers[0].qualified_name} "
+              "Please use #use_superclass to specify another superclass as needed."
+            superclass = supers[0]
+          else
+            superclass = node.get_superclass
+          end
+        else
+          superclass = supers[0]
+        end
+
+        class_names = [self.class_type]
+        class_names << superclass.qualified_name if superclass && !superclass.ignored?
+        class_names = class_names.join(",")
 
         if !parent.is_a?(ExtensionBuilder)
           class_defn += "Rice::define_class_under<#{class_names} >(#{parent.rice_variable}, \"#{@class_name}\");"

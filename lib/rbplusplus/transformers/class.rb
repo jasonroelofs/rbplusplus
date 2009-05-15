@@ -38,6 +38,21 @@ module RbGCCXML
       find_with_cache(:methods, node_methods(*args))
     end
 
+    # Specify which superclass to use.
+    # Because Rice doesn't support multiple inheritance right now,
+    # we need to know which superclass Rice should use for this class.
+    # An error message will show on classes with mutiple superclasses
+    # where this method hasn't been used yet.
+    #
+    # klass should be the node for the class you want to wrap
+    def use_superclass(klass)
+      cache[:use_superclass] = klass
+    end
+
+    def get_superclass
+      cache[:use_superclass]
+    end
+
     private
 
     # Take the cache key, and the normal results, adds to the results
