@@ -4,10 +4,42 @@ module RbPlusPlus
     # multiple files.
     class MultipleFilesWriter < Base
 
+      # Writing out a multiple-file built is a multi-stage process. This writer
+      # first builds a [working_dir]/.build directory, where new code initially goes.
+      # Once the writing is complete, each file in .build/ is diff-checked by the files
+      # in [working_dir]. If the files are different, the new file is copied into place.
+      # Then, the .build dir is removed.
+      #
+      # We do this to allow for easy and quick-ish work on large wrapping projects. Because
+      # Rice code takes so long to compile, the fewer files one has to compile per change
+      # the better.
       def write
         @to_from_include = ""
+        @build_dir = File.join(working_dir, ".build")
+
+        # Build our temp dir
+        FileUtils.mkdir_p @build_dir
+
+        # Write out files
         write_to_from_ruby
         _write_node(builder)
+
+        # Done with writing, commence diff checking
+        Dir["#{@build_dir}/*.rb.*"].each do |file|
+          FileUtils.cp file, working_dir if files_differ(file)
+        end
+
+        # Comparison and move done, remove .build
+        FileUtils.rm_rf @build_dir
+      end
+
+      def files_differ(file)
+        filename = File.basename(file)
+        existing = File.expand_path(File.join(working_dir, filename))
+        new = File.expand_path(File.join(@build_dir, filename))
+        return true if !File.exists?(existing)
+
+        !system("diff #{existing} #{new}")
       end
 
       # Write out files that include the auto-generated to_/from_ruby constructs.
@@ -15,10 +47,10 @@ module RbPlusPlus
         # Ignore this if there's nothing to write out
         return if Builders::TypesManager.body.length == 0
 
-        hpp_file = File.join(working_dir, "_rbpp_custom.rb.hpp")
-        cpp_file = File.join(working_dir, "_rbpp_custom.rb.cpp")
+        hpp_file = File.join(@build_dir, "_rbpp_custom.rb.hpp")
+        cpp_file = File.join(@build_dir, "_rbpp_custom.rb.cpp")
 
-        @to_from_include = "#include \"#{hpp_file}\""
+        @to_from_include = "#include \"#{hpp_file.gsub(/\.build\//, "")}\""
 
         include_guard = "__RICE_GENERATED_RBPP_CUSTOM_HPP__"
 
@@ -70,11 +102,11 @@ module RbPlusPlus
 
         filename = filename.functionize
 
-        cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
+        cpp_file = File.join(@build_dir, "#{filename}.rb.cpp")
 
         if node.parent
-          hpp_file = File.join(working_dir, "#{filename}.rb.hpp")
-          hpp_include = "#include \"#{hpp_file}\""
+          hpp_file = File.join(@build_dir, "#{filename}.rb.hpp")
+          hpp_include = "#include \"#{hpp_file.gsub(/\.build\//, "")}\""
           register_func = "register_#{filename}"
 
           include_guard = "__RICE_GENERATED_#{filename}_HPP__"
