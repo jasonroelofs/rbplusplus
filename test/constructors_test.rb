@@ -7,6 +7,11 @@ context "Extension with constructors out the whazoo" do
       e.sources full_dir("headers/constructors.h")
       node = e.namespace "constructors"
       e.writer_mode :single
+
+
+      node.classes("DoubleStringHolder").use_constructor(
+        node.classes("DoubleStringHolder").constructors.find(:arguments => [nil, nil])
+      )
     end
 
     require 'constructors'

@@ -12,7 +12,11 @@ context "Extension with wrapped classes" do
             full_dir("headers/Adder.h"),
             full_dir("headers/Adder.cpp")
           ]
-        e.namespace "classes"
+        node = e.namespace "classes"
+
+        node.classes("Adder").use_constructor(
+          node.classes("Adder").constructors.find(:arguments => [])
+        )
       end
 
       require 'adder'

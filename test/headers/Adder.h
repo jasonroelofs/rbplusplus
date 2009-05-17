@@ -10,8 +10,6 @@ namespace classes {
 
       static const int MY_VALUE;
 
-      Adder() { }
-
       static int doAdding(int a, int b, int c, int d, int e) {
         return a + b + c + d + e;
       }

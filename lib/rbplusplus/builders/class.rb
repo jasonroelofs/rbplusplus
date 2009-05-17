@@ -103,14 +103,24 @@ module RbPlusPlus
             return []
           end
         end
+
         # Constructors
-        node.constructors.each do |init|
-          next if init.ignored?
-          next unless init.public?
-          next if init.attributes[:artificial]
+        to_use = node.get_constructor 
+
+        if to_use.nil? && node.constructors.length > 1
+          Logger.warn :multiple_constructors, "#{node.qualified_name} has multiple constructors. While the extension will probably compile, Rice only supports one custructor, please use #use_contructor to select which one to use."
+        end
+
+        [to_use || node.constructors].flatten.each do |init|
+          next if init.ignored? || !init.public?
+          
+          # For safety's sake, we also ignore the generated copy constructor
+          next if init.attributes[:artificial] && init.arguments.length == 1
+
           args = [self.class_type, init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
           result << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
         end
+
         result
       end
 

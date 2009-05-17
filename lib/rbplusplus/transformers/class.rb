@@ -53,6 +53,20 @@ module RbGCCXML
       cache[:use_superclass]
     end
 
+    # Like #use_superclass, this method allows the user to specify 
+    # which constructor Rice should expose to Ruby. 
+    # Rice currently, because of the lack of method overloading, 
+    # only supports one constructor definition. Having multiple
+    # in the code will work, but only the last defined will actually
+    # work. 
+    def use_constructor(klass)
+      cache[:use_constructor] = klass
+    end
+
+    def get_constructor
+      cache[:use_constructor]
+    end
+
     private
 
     # Take the cache key, and the normal results, adds to the results
