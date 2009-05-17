@@ -78,6 +78,7 @@ module RbPlusPlus
       def constants
         result = []
         [node.constants.find(:access => :public)].flatten.each do |constant|
+          next if constant.ignored? || constant.moved?
           # If this constant is initialized in the header, we need to set the constant to the initialized value
           # If we just use the variable itself, Linux will fail to compile because the linker won't be able to 
           # find the constant.

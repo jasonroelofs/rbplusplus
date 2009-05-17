@@ -17,6 +17,8 @@ context "Extension with wrapped classes" do
         node.classes("Adder").use_constructor(
           node.classes("Adder").constructors.find(:arguments => [])
         )
+
+        node.classes("Adder").constants("HideMe").ignore
       end
 
       require 'adder'
@@ -56,6 +58,10 @@ context "Extension with wrapped classes" do
 
   specify "makes class constants available" do
     Adder::MY_VALUE.should == 10
+  end
+
+  specify "can ignore constants" do
+    assert !defined?(Adder::HideMe), "Found HideMe when I shouldn't have"
   end
 
   specify "makes public instance variables accessible" do
