@@ -45,8 +45,8 @@ module RbGCCXML
     # where this method hasn't been used yet.
     #
     # klass should be the node for the class you want to wrap
-    def use_superclass(klass)
-      cache[:use_superclass] = klass
+    def use_superclass(node)
+      cache[:use_superclass] = node
     end
 
     def get_superclass
@@ -59,8 +59,8 @@ module RbGCCXML
     # only supports one constructor definition. Having multiple
     # in the code will work, but only the last defined will actually
     # work. 
-    def use_constructor(klass)
-      cache[:use_constructor] = klass
+    def use_constructor(node)
+      cache[:use_constructor] = node
     end
 
     def get_constructor
