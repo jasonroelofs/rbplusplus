@@ -10,7 +10,8 @@ context "Multiple file writer (default)" do
     e.sources full_dir("headers/Adder.h")
 
     e.module "Mod" do |m|
-      m.namespace "classes"
+      node = m.namespace "classes"
+      node.classes("Adder").disable_typedef_lookup
     end
 
     e.build

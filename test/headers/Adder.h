@@ -44,6 +44,8 @@ namespace classes {
   typedef NestedTemplate<int> SuperTemplate;
   typedef SuperTemplate MiddleTypedef;
   typedef MiddleTypedef ShouldFindMe;
+
+  typedef Adder DontFindMeBro;
 }
 
 #endif 

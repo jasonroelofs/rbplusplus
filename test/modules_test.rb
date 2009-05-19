@@ -24,7 +24,8 @@ context "Extension with modules" do
 
         # Can use without a block
         wrapper = e.module "Wrapper"
-        wrapper.namespace "classes"
+        node = wrapper.namespace "classes"
+        node.classes("Adder").disable_typedef_lookup
 
         e.module "Functions" do |m|
           m.namespace "functions"

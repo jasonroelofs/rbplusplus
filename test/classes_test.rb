@@ -13,12 +13,13 @@ context "Extension with wrapped classes" do
             full_dir("headers/Adder.cpp")
           ]
         node = e.namespace "classes"
-
-        node.classes("Adder").use_constructor(
-          node.classes("Adder").constructors.find(:arguments => [])
+        adder = node.classes("Adder")
+        adder.use_constructor(
+          adder.constructors.find(:arguments => [])
         )
 
-        node.classes("Adder").constants("HideMe").ignore
+        adder.constants("HideMe").ignore
+        adder.disable_typedef_lookup
       end
 
       require 'adder'
@@ -54,6 +55,10 @@ context "Extension with wrapped classes" do
 
   specify "finds and uses multi-nested typedefs" do
     assert defined?(ShouldFindMe), "Didn't find top level typedef for NestedTemplate"
+  end
+
+  specify "can turn off typedef lookup for certain classes" do
+    assert !defined?(DontFindMeBro), "Found a typedef we shouldn't have"
   end
 
   specify "makes class constants available" do

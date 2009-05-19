@@ -15,15 +15,17 @@ module RbPlusPlus
         # Make sure that if there is a Typedef tree that we find
         # the lowest of this tree to ensure we don't get massive
         # definitions with nested template declarations
-        found = node
-        while found
-          last_found = found
-          typedef = RbGCCXML::XMLParsing.find(:node_type => "Typedef", :type => found.attributes["id"])
+        found = last_found = node
+        if !node._disable_typedef_lookup?
+          while found
+            last_found = found
+            typedef = RbGCCXML::XMLParsing.find(:node_type => "Typedef", :type => found.attributes["id"])
 
-          # Some typedefs have the access attribute, some don't. We want those without the attribute
-          # and those with the access="public". For this reason, we can't put :access => "public" in the
-          # query above.
-          found = (typedef && typedef.public?) ? typedef : nil
+            # Some typedefs have the access attribute, some don't. We want those without the attribute
+            # and those with the access="public". For this reason, we can't put :access => "public" in the
+            # query above.
+            found = (typedef && typedef.public?) ? typedef : nil
+          end 
         end
 
         if last_found != node
