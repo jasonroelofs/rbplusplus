@@ -49,7 +49,7 @@ module RbGCCXML
       cache[:use_superclass] = node
     end
 
-    def get_superclass
+    def _get_superclass
       cache[:use_superclass]
     end
 
@@ -63,8 +63,70 @@ module RbGCCXML
       cache[:use_constructor] = node
     end
 
-    def get_constructor
+    def _get_constructor
       cache[:use_constructor]
+    end
+
+    # Sometimes, type manipulation, moving nodes around, or flat
+    # ignoring nodes just doesn't do the trick and you need to write
+    # your own custom wrapper code. This method is for that. There are
+    # two parts to custom code: the declaration and the wrapping. 
+    #
+    # The Declaration:
+    #   This is the actual custom code you write. It may need to take
+    #   a pointer to the class type as the first parameter (or if this
+    #   is a singleton method, give it Rice::Object self)
+    #   and follow with that any parameters you want. 
+    #
+    # The Wrapping
+    #   The wrapping is the custom (usually one-line) bit of Rice code that
+    #   hooks up your declaration with the class in question. To ensure that
+    #   you doesn't need to know the variable of the ruby class object, 
+    #   use <class> and rb++ will replace it as needed.
+    #
+    # Example (taken from Ogre.rb's wrapping of Ogre)
+    #
+    #   decl = <<-END
+    #   int RenderTarget_getCustomAttributeInt(Ogre::RenderTarget* self, const std::string& name) {
+    #     int value(0);
+    #     self->getCustomAttribute(name, &value);
+    #     return value;
+    #   }
+    #   END
+    #   wrapping = "<class>.define_method(\"get_custom_attribute_int\", &RenderTarget_getCustomAttributeInt);"
+    #
+    #   rt.add_custom_code(decl, wrapping)
+    #
+    # This method works as an aggregator, so feel free to use it any number
+    # of times for a class, it won't clobber any previous uses.
+    #
+    def add_custom_code(declaration, wrapping)
+      cache[:declarations] ||= []
+      cache[:declarations] << declaration
+
+      cache[:wrappings] ||= []
+      cache[:wrappings] << wrapping
+    end
+
+    def _get_custom_declarations
+      cache[:declarations] || []
+    end
+
+    def _get_custom_wrappings
+      cache[:wrappings] || []
+    end
+
+    # In some cases, the automatic typedef lookup of rb++ can end up
+    # doing the wrong thing (for example, it can take a normal class
+    # and end up using the typedef for stl::container<>::value_type).
+    # Flag a given class as ignoring this typedef lookup if this
+    # situation happens.
+    def disable_typedef_lookup
+      cache[:disable_typedef_lookup] = true
+    end
+
+    def _disable_typedef_lookup?
+      !!cache[:disable_typedef_lookup]
     end
 
     private

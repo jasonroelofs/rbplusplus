@@ -60,11 +60,23 @@ module RbPlusPlus
         add_additional_includes
         add_includes_for node
 
+        # Write out any custom code declarations given to us
+        # by the wrapping code
+        node._get_custom_declarations.flatten.each do |decl|
+          @declarations << decl
+        end
+
         @body << class_definition
 
         @body += constructors
         @body += methods
         @body += constants
+
+        # And write out the custom mappings related
+        # to the custom declarations
+        node._get_custom_wrappings.flatten.each do |wrap|
+          @body << "\t#{wrap.gsub(/<class>/, rice_variable)}"
+        end
 
         # Expose any public instance variables
         public_ivars
@@ -108,7 +120,7 @@ module RbPlusPlus
         end
 
         # Constructors
-        to_use = node.get_constructor 
+        to_use = node._get_constructor 
 
         if to_use.nil? && node.constructors.length > 1
           Logger.warn :multiple_constructors, "#{node.qualified_name} has multiple constructors. While the extension will probably compile, Rice only supports one custructor, please use #use_contructor to select which one to use."
@@ -219,13 +231,13 @@ module RbPlusPlus
         supers = node.superclasses(:public)
 
         if supers.length > 1 
-          if node.get_superclass.nil?
+          if node._get_superclass.nil?
             Logger.warn :mutiple_subclasses, "#{@class_name} has multiple public superclasses. " +
               "Will use first superclass, which is #{supers[0].qualified_name} "
               "Please use #use_superclass to specify another superclass as needed."
             superclass = supers[0]
           else
-            superclass = node.get_superclass
+            superclass = node._get_superclass
           end
         else
           superclass = supers[0]
