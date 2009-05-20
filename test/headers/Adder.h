@@ -7,6 +7,7 @@ using namespace std;
 namespace classes {
   class Adder {
     public:
+      Adder();
 
       static const int MY_VALUE;
 
@@ -27,6 +28,8 @@ namespace classes {
       int value1;
       float value2;
       string value3;
+
+      const int const_var;
   };
 
   template<typename T>

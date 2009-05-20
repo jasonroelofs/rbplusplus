@@ -147,13 +147,15 @@ module RbPlusPlus
         [node.variables.find(:access => :public)].flatten.each do |var|
           next if var.ignored? || var.moved?
 
-          # Setter
-          method_name = "wrap_#{node.qualified_name.functionize}_#{var.name}_set"
-          declarations << "void #{method_name}(#{node.qualified_name}* self, #{var.cpp_type.to_s(true)} val) {"
-          declarations << "\tself->#{var.name} = val;"
-          declarations << "}"
+          # Setter, only if it isn't const
+          if !var.cpp_type.const?
+            method_name = "wrap_#{node.qualified_name.functionize}_#{var.name}_set"
+            declarations << "void #{method_name}(#{node.qualified_name}* self, #{var.cpp_type.to_s(true)} val) {"
+            declarations << "\tself->#{var.name} = val;"
+            declarations << "}"
 
-          body << "\t#{self.rice_variable}.define_method(\"#{var.name}=\", &#{method_name});"
+            body << "\t#{self.rice_variable}.define_method(\"#{var.name}=\", &#{method_name});"
+          end
 
           # Getter
           method_name = "wrap_#{node.qualified_name.functionize}_#{var.name}_get"

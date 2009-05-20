@@ -79,5 +79,15 @@ context "Extension with wrapped classes" do
     a.value2.should.be.close 15.5, 0.01
     a.value3.should.equal "This is a value!"
   end
+
+  specify "const variables are exported as read-only" do
+    a = Adder.new
+
+    should.raise NoMethodError do
+      a.const_var = "This is a value!"
+    end
+
+    a.const_var.should.equal 14
+  end
 end
 
