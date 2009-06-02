@@ -211,7 +211,10 @@ module RbPlusPlus
 
             method_append = methods.length == 1 ? "" : "_#{i}"
 
-            if method.static?
+            if @wrapped_methods.include?(method.name)
+              rice_method = "define_method"
+              wrapped_name = "#{@director_name}::#{method.name}"
+            elsif method.static?
               rice_method = "define_singleton_method"
               wrapped_name = build_function_wrapper(method, method_append)
             else
@@ -263,7 +266,7 @@ module RbPlusPlus
       # Build the Director proxy class
       # Returns the list of methods wrapped in this proxy
       def build_director
-        wrapped_methods = []
+        @wrapped_methods = []
 
         declarations << "class #{@director_name} : public #{self.class_type}, public Rice::Director {"
         declarations << "\tpublic:"
@@ -292,12 +295,10 @@ module RbPlusPlus
           declarations << "     }"
           declarations << "   }"
 
-          wrapped_methods = m.name
+          @wrapped_methods << m.name
         end 
 
         declarations << "};"
-
-        wrapped_methods
       end
     end
   end

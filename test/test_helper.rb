@@ -16,10 +16,10 @@ class Test::Unit::TestCase
 
   def setup
     `rm -rf #{full_dir('generated')}/*`
-#    Logger.stubs(:info)
-#    Logger.stubs(:warn)
-#    Logger.stubs(:error)
-#    Logger.stubs(:debug)
+    Logger.stubs(:info)
+    Logger.stubs(:warn)
+    Logger.stubs(:error)
+    Logger.stubs(:debug)
   end
 
   def teardown

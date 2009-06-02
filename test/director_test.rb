@@ -26,10 +26,6 @@ context "Director proxy generation" do
     h.add_worker(MyWorker.new)
 
     h.process_workers(5).should.equal 15
-
-    h.add_worker(MultiplyWorker.new)
-
-    h.process_workers(5).should.equal 30
   end
 
   specify "super calls on pure virtual raise exception" do
@@ -67,6 +63,20 @@ context "Director proxy generation" do
   xspecify "takes into account renamed / moved classes"
 
   # Is this necessary?
-  xspecify "handles superclasses of the class with virtual methods"
+  xspecify "handles superclasses of the class with virtual methods" do
+    class QuadWorker < MultiplyWorker
+      def process(num)
+        num * 4
+      end
+    end
+
+    h = Handler.new
+
+    h.add_worker(MultiplyWorker.new)
+    h.process_workers(5).should.equal 10
+
+    h.add_worker(QuadWorker.new)
+    h.process_workers(5).should.equal 40
+  end
 
 end

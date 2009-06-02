@@ -34,5 +34,10 @@ module RbGCCXML
     def qualified_name #:nodoc:
       cache[:special_qualified_name] || method_qualified_name
     end
+
+    # For Class#needs_director?
+    def virtual?
+      false
+    end
   end
 end
