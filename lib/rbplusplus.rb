@@ -22,6 +22,7 @@ module RbPlusPlus
   module Builders
     autoload :Base, "rbplusplus/builders/base"
     autoload :ClassBuilder, "rbplusplus/builders/class"
+    autoload :DirectorBuilder, "rbplusplus/builders/director"
     autoload :ExtensionBuilder, "rbplusplus/builders/extension"
     autoload :ModuleBuilder, "rbplusplus/builders/module"
     autoload :EnumerationBuilder, "rbplusplus/builders/enumeration"

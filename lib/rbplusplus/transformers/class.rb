@@ -129,6 +129,13 @@ module RbGCCXML
       !!cache[:disable_typedef_lookup]
     end
 
+    # Does this class have virtual methods (especially pure virtual?)
+    # If so, then rb++ will generate a proxy class to handle 
+    # the message routing as needed.
+    def needs_director?
+      [methods].flatten.select {|m| m.virtual? }.length > 0
+    end
+
     private
 
     # Take the cache key, and the normal results, adds to the results

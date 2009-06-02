@@ -186,7 +186,8 @@ module RbPlusPlus
         classes.each do |klass|
           next if klass.ignored? || klass.moved?
           next unless klass.public?
-          builder = ClassBuilder.new(self, klass)
+          builder_klass = klass.needs_director? ? DirectorBuilder : ClassBuilder
+          builder = builder_klass.new(self, klass)
           builder.build
           builders << builder
         end
