@@ -2,6 +2,7 @@
 #define __DIRECTOR__H__
 
 #include <vector>
+#include <string>
 
 namespace director {
 
@@ -87,8 +88,8 @@ namespace director {
         b_ = b;
       }
 
-      virtual int processA() {
-        return a_;
+      virtual int processA(std::string in) {
+        return in.length() + a_;
       }
 
       virtual bool processB() {

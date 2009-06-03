@@ -81,7 +81,7 @@ context "Director proxy generation" do
 
   specify "properly adds all constructor arguments" do
     v = VirtualWithArgs.new 14, true
-    v.process_a.should.equal 14
+    v.process_a("hi").should.equal 16
     v.process_b.should.be true
   end
 
