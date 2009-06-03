@@ -57,6 +57,34 @@ namespace director {
       }
   };
 
+
+  class BadNameClass {
+    public:
+      BadNameClass() { }
+
+      virtual bool _is_x_ok_to_run() { return false; }
+
+      virtual int __do_someProcessing() { return 14; }
+  };
+
+  class VirtualWithArgs {
+    int a_;
+    bool b_;
+    public:
+      VirtualWithArgs(int a, bool b) {
+        a_ = a;
+        b_ = b;
+      }
+
+      virtual int processA() {
+        return a_;
+      }
+
+      virtual bool processB() {
+        return b_;
+      }
+  };
+
 }
 
 #endif

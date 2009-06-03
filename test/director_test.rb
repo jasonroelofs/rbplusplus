@@ -12,6 +12,10 @@ context "Director proxy generation" do
         node = e.namespace "director"
         node.classes("Worker").methods("doProcessImpl").default_return_value(0)
 
+        klass = node.classes("BadNameClass")
+        klass.wrap_as("BetterNamedClass")
+        klass.methods("_is_x_ok_to_run").wrap_as("x_ok?")
+        klass.methods("__do_someProcessing").wrap_as("do_processing")
       end
 
       require 'director'
@@ -75,11 +79,18 @@ context "Director proxy generation" do
     h.process_workers(10).should.equal 18
   end
 
-  xspecify "properly adds all constructor arguments"
+  specify "properly adds all constructor arguments" do
+    v = VirtualWithArgs.new 14, true
+    v.process_a.should.equal 14
+    v.process_b.should.be true
+  end
 
-  xspecify "takes into account renamed methods"
+  specify "takes into account renamed methods / classes" do
+    c = BetterNamedClass.new
+    assert !c.x_ok?
 
-  xspecify "takes into account renamed / moved classes"
+    c.do_processing.should.equal 14
+  end
 
   # TODO Is this a valid / common use case?
   xspecify "handles superclasses of the class with virtual methods" do

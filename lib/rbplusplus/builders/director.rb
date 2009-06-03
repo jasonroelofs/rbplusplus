@@ -31,7 +31,7 @@ module RbPlusPlus
             # and those with the access="public". For this reason, we can't put :access => "public" in the
             # query above.
             found = (typedef && typedef.public?) ? typedef : nil
-          end 
+          end
         end
 
         if last_found != node
@@ -105,9 +105,9 @@ module RbPlusPlus
         [node.constants.find(:access => :public)].flatten.each do |constant|
           next if constant.ignored? || constant.moved?
           # If this constant is initialized in the header, we need to set the constant to the initialized value
-          # If we just use the variable itself, Linux will fail to compile because the linker won't be able to 
+          # If we just use the variable itself, Linux will fail to compile because the linker won't be able to
           # find the constant.
-          set_to = 
+          set_to =
             if init = constant.attributes["init"]
               init
             else
@@ -123,7 +123,7 @@ module RbPlusPlus
         result = []
 
         # Constructors
-        to_use = node._get_constructor 
+        to_use = node._get_constructor
 
         if to_use.nil? && node.constructors.length > 1
           Logger.warn :multiple_constructors, "#{node.qualified_name} has multiple constructors. While the extension will probably compile, Rice only supports one custructor, please use #use_contructor to select which one to use."
@@ -131,7 +131,7 @@ module RbPlusPlus
 
         [to_use || node.constructors].flatten.each do |init|
           next if init.ignored? || !init.public?
-          
+
           # For safety's sake, we also ignore the generated copy constructor
           next if init.attributes[:artificial] && init.arguments.length == 1
 
@@ -213,7 +213,7 @@ module RbPlusPlus
 
             if @wrapped_methods.include?(method.name)
               rice_method = "define_method"
-              wrapped_name = "#{@director_name}::#{method.name}"
+              wrapped_name = "#{@director_name}::#{method.rbgccxml_name}"
             elsif method.static?
               rice_method = "define_singleton_method"
               wrapped_name = build_function_wrapper(method, method_append)
@@ -240,7 +240,7 @@ module RbPlusPlus
         class_name = node.name
         supers = node.superclasses(:public)
 
-        if supers.length > 1 
+        if supers.length > 1
           if node._get_superclass.nil?
             Logger.warn :mutiple_subclasses, "#{@class_name} has multiple public superclasses. " +
               "Will use first superclass, which is #{supers[0].qualified_name} "
@@ -268,9 +268,30 @@ module RbPlusPlus
       def build_director
         @wrapped_methods = []
 
+        # Constructors
+        to_use = node._get_constructor
+
+        if to_use.nil? && node.constructors.length > 1
+          Logger.warn :multiple_constructors, "#{node.qualified_name} has multiple constructors. For the purposes of the Director, the first constructor found will be used. Rice only supports one custructor, please use #use_contructor to select which one to use."
+        end
+
+        constructor = nil
+        [to_use || node.constructors].flatten.each do |init|
+          next if init.ignored? || !init.public?
+
+          # For safety's sake, we also ignore the generated copy constructor
+          next if init.attributes[:artificial] && init.arguments.length == 1
+          constructor = init
+          break
+        end
+
+        args = ["Rice::Object self", constructor.arguments.map {|a| "#{a.cpp_type.to_s(true)} #{a.name}" }].flatten
+        args_use = constructor.arguments.map {|a| a.name }
+
         declarations << "class #{@director_name} : public #{self.class_type}, public Rice::Director {"
         declarations << "\tpublic:"
-        declarations << "\t\t#{@director_name}(Rice::Object self /*, ... */) : Rice::Director(self) {  }"
+        declarations << "\t\t#{@director_name}(#{args.join(",")}) :
+          Rice::Director(self), #{self.class_type}(#{args_use.join(",")}) {  }"
 
         [node.methods].flatten.each do |m|
           next if m.ignored? || m.moved? || !m.public?
@@ -296,7 +317,7 @@ module RbPlusPlus
             self_call = "return from_ruby<#{m.return_type}>( #{self_call} )"
           end
 
-          declarations << "   #{m.return_type} #{m.name}(#{arg_types}) {"
+          declarations << "   #{m.return_type} #{m.rbgccxml_name}(#{arg_types}) {"
           declarations << "     if(#{reverse}callIsFromRuby(\"#{ruby_name}\")) {"
           declarations << "       #{raise_or_call}"
           declarations << "     } else {"
@@ -305,7 +326,7 @@ module RbPlusPlus
           declarations << "   }"
 
           @wrapped_methods << m.name
-        end 
+        end
 
         declarations << "};"
       end

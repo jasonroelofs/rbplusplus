@@ -4,7 +4,7 @@ module RbGCCXML
     def static?
       !cache[:as_method]
     end
-    
+
     # Sets this function to be an instance method.
     # Useful for custom function declaration.
     def as_instance_method
@@ -16,12 +16,12 @@ module RbGCCXML
     def as_instance_method?
       !!cache[:as_method]
     end
-    
+
     # Use this method to designate calling a different function
     # when the ruby method is requested
     #
     # TODO Is this really necessary?
-    def calls(method_name) 
+    def calls(method_name)
       cache[:special_qualified_name] = method_name
       self
     end
@@ -29,7 +29,7 @@ module RbGCCXML
     def special_qualified_name
       cache[:special_qualified_name]
     end
-    
+
     alias_method :method_qualified_name, :qualified_name
     def qualified_name #:nodoc:
       cache[:special_qualified_name] || method_qualified_name
