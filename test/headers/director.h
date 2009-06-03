@@ -55,6 +55,17 @@ namespace director {
 
         return results;
       }
+
+      int addWorkerNumbers() {
+        std::vector<Worker*>::iterator i = mWorkers.begin();
+        int results = 0;
+
+        for(; i != mWorkers.end(); i++) {
+          results += (*i)->getNumber();
+        }
+
+        return results;
+      }
   };
 
 

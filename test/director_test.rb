@@ -100,6 +100,24 @@ context "Director proxy generation" do
     n.do_something.should.equal 4
   end
 
+  specify "only builds method wrappers for virtual methods" do
+    class NumberWorker < Worker
+      def get_number
+        super + 15
+      end
+    end
+
+    # Super calls still work
+    w = NumberWorker.new
+    w.get_number.should.equal 27
+
+    # But polymorphism stops in the C++
+    h = Handler.new
+    h.add_worker(w)
+
+    h.add_worker_numbers.should.equal 12
+  end
+
   # TODO Is this a valid / common use case?
   xspecify "handles superclasses of the class with virtual methods" do
     class QuadWorker < MultiplyWorker

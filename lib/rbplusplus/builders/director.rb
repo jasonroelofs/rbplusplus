@@ -316,6 +316,9 @@ module RbPlusPlus
         [node.methods].flatten.each do |m|
           next if m.ignored? || m.moved? || !m.public?
 
+          # Only wrap virtual methods.
+          next unless m.virtual?
+
           ruby_name = Inflector.underscore(m.name)
 
           arg_types = m.arguments.map {|a| "#{a.cpp_type.to_s(true)} #{a.name}"}.join(", ")
