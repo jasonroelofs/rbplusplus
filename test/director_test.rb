@@ -92,6 +92,14 @@ context "Director proxy generation" do
     c.do_processing.should.equal 14
   end
 
+  specify "handles no constructors" do
+    class MyThing < NoConstructor
+    end
+
+    n = MyThing.new
+    n.do_something.should.equal 4
+  end
+
   # TODO Is this a valid / common use case?
   xspecify "handles superclasses of the class with virtual methods" do
     class QuadWorker < MultiplyWorker

@@ -85,6 +85,15 @@ namespace director {
       }
   };
 
+  class NoConstructor {
+    protected:
+      NoConstructor() { }
+      NoConstructor(const NoConstructor&) { }
+
+    public:
+      virtual int doSomething() { return 4; }
+  };
+
 }
 
 #endif

@@ -63,8 +63,6 @@ module RbPlusPlus
         includes << "#include <rice/Constructor.hpp>"
         includes << "#include <rice/Director.hpp>"
 
-        TypesManager.build_allocation_strategies(node)
-
         add_additional_includes
         add_includes_for node
 
@@ -129,14 +127,27 @@ module RbPlusPlus
           Logger.warn :multiple_constructors, "#{node.qualified_name} has multiple constructors. While the extension will probably compile, Rice only supports one custructor, please use #use_contructor to select which one to use."
         end
 
+        using = []
+
         [to_use || node.constructors].flatten.each do |init|
           next if init.ignored? || !init.public?
 
           # For safety's sake, we also ignore the generated copy constructor
           next if init.attributes[:artificial] && init.arguments.length == 1
 
-          args = [@director_name, "Rice::Object", init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
+          using << init
+        end
+
+        if using.empty?
+          # We do this to ensure there's always a constructor definition for the director class.
+          # Otherwise, subclasses can't work because there's no allocator defined.
+          args = [@director_name, "Rice::Object"]
           result << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
+        else
+          using.each do |init|
+            args = [@director_name, "Rice::Object", init.arguments.map {|a| a.cpp_type.to_s(true) }].flatten
+            result << "\t#{rice_variable}.define_constructor(Rice::Constructor<#{args.join(",")}>());"
+          end
         end
 
         result
@@ -285,13 +296,22 @@ module RbPlusPlus
           break
         end
 
-        args = ["Rice::Object self", constructor.arguments.map {|a| "#{a.cpp_type.to_s(true)} #{a.name}" }].flatten
-        args_use = constructor.arguments.map {|a| a.name }
+        # If we can't find a constructor, then we simply super the default constructor
+        if constructor
+          args = ["Rice::Object self", constructor.arguments.map {|a| "#{a.cpp_type.to_s(true)} #{a.name}" }].flatten
+          args_use = constructor.arguments.map {|a| a.name }
+          super_cons = ", #{self.class_type}(#{args_use.join(",")})"
+        else
+          args = ["Rice::Object self"]
+          args_use = []
+          super_cons = ", #{self.class_type}()"
+        end
+
 
         declarations << "class #{@director_name} : public #{self.class_type}, public Rice::Director {"
         declarations << "\tpublic:"
         declarations << "\t\t#{@director_name}(#{args.join(",")}) :
-          Rice::Director(self), #{self.class_type}(#{args_use.join(",")}) {  }"
+          Rice::Director(self)#{super_cons} {  }"
 
         [node.methods].flatten.each do |m|
           next if m.ignored? || m.moved? || !m.public?
