@@ -280,7 +280,16 @@ module RbPlusPlus
           arg_types = m.arguments.map {|a| "#{a.cpp_type} #{a.name}"}.join(", ")
           arg_calls = m.arguments.map {|a| a.name }
           returns = m.return_type == "void" ? "" : "return "
-          raise_or_call = m.purely_virtual? ? "raisePureVirtual();" : "#{returns}this->#{m.qualified_name}(#{arg_calls.join(", ")});"
+
+          if m.default_return_value
+            raise_or_return = "return #{m.default_return_value};"
+            reverse = "!"
+          else
+            raise_or_return = "raisePureVirtual();"
+            reverse = ""
+          end
+
+          raise_or_call = m.purely_virtual? ? raise_or_return : "#{returns}this->#{m.qualified_name}(#{arg_calls.join(", ")});"
           self_call = %Q(getSelf().call(#{[%Q("#{ruby_name}"), arg_calls].flatten.join(", ")}))
 
           if returns == "return "
@@ -288,7 +297,7 @@ module RbPlusPlus
           end
 
           declarations << "   #{m.return_type} #{m.name}(#{arg_types}) {"
-          declarations << "     if(callIsFromRuby(\"#{ruby_name}\")) {"
+          declarations << "     if(#{reverse}callIsFromRuby(\"#{ruby_name}\")) {"
           declarations << "       #{raise_or_call}"
           declarations << "     } else {"
           declarations << "       #{self_call};"

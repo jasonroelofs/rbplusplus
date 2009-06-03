@@ -8,7 +8,10 @@ context "Director proxy generation" do
       @@director_built = true 
       Extension.new "director" do |e|
         e.sources full_dir("headers/director.h")
-        e.namespace "director"
+
+        node = e.namespace "director"
+        node.classes("Worker").methods("doProcessImpl").default_return_value(0)
+
       end
 
       require 'director'
@@ -52,9 +55,25 @@ context "Director proxy generation" do
     end
   end
 
-  xspecify "implements proxy so that infinite loop can't occur (polymorphism + super())" 
+  specify "can specify a default return value in the wrapper" do
+    class MyAwesomeWorker < Worker
+      def do_process_impl(num)
+        num + 7
+      end
 
-  xspecify "can specify a default return value in the wrapper"
+      def process(num)
+        num + 8
+      end
+    end    
+
+    w = MyAwesomeWorker.new
+    w.do_process(3).should.equal 10
+
+    h = Handler.new
+    h.add_worker(w)
+
+    h.process_workers(10).should.equal 18
+  end
 
   xspecify "properly adds all constructor arguments"
 
@@ -62,7 +81,7 @@ context "Director proxy generation" do
 
   xspecify "takes into account renamed / moved classes"
 
-  # Is this necessary?
+  # TODO Is this a valid / common use case?
   xspecify "handles superclasses of the class with virtual methods" do
     class QuadWorker < MultiplyWorker
       def process(num)
