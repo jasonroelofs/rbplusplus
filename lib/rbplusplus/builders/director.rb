@@ -318,7 +318,7 @@ module RbPlusPlus
 
           ruby_name = Inflector.underscore(m.name)
 
-          arg_types = m.arguments.map {|a| "#{a.cpp_type} #{a.name}"}.join(", ")
+          arg_types = m.arguments.map {|a| "#{a.cpp_type.to_s(true)} #{a.name}"}.join(", ")
           arg_calls = m.arguments.map {|a| a.name }
           returns = m.return_type == "void" ? "" : "return "
 
