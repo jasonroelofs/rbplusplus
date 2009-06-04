@@ -336,11 +336,13 @@ module RbPlusPlus
           raise_or_call = m.purely_virtual? ? raise_or_return : "#{returns}this->#{m.qualified_name}(#{arg_calls.join(", ")});"
           self_call = %Q(getSelf().call(#{[%Q("#{ruby_name}"), arg_calls].flatten.join(", ")}))
 
+          const = m.const? ? "const" : ""
+
           if returns == "return "
             self_call = "return from_ruby<#{m.return_type.to_s(true)}>( #{self_call} )"
           end
 
-          declarations << "   #{m.return_type.to_s(true)} #{m.rbgccxml_name}(#{arg_types}) {"
+          declarations << "   #{m.return_type.to_s(true)} #{m.rbgccxml_name}(#{arg_types}) #{const} {"
           declarations << "     if(#{reverse}callIsFromRuby(\"#{ruby_name}\")) {"
           declarations << "       #{raise_or_call}"
           declarations << "     } else {"

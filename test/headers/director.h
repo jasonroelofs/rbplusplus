@@ -20,7 +20,7 @@ namespace director {
       virtual int process(int num) = 0;
 
       virtual int doProcess(int num) { return doProcessImpl(num); }
-      virtual int doProcessImpl(int num) = 0;
+      virtual int doProcessImpl(int num) const = 0;
   };
 
   /**
