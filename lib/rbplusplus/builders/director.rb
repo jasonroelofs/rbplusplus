@@ -327,8 +327,8 @@ module RbPlusPlus
         declarations << "\t\t#{@director_name}(#{args.join(",")}) :
           Rice::Director(self)#{super_cons} {  }"
 
-        methods_to_wrap = [node.methods]
-        method_names = methods_to_wrap.map {|m| m.name }
+        methods_to_wrap = [node.methods].flatten
+        method_names = methods_to_wrap.map {|m| m.rbgccxml_name }
 
         # To ensure proper compilation, this director class needs
         # to implement all pure virtual methods found up the
@@ -337,9 +337,9 @@ module RbPlusPlus
         checking = node
         while checking.superclass.is_a?(RbGCCXML::Class) || checking.superclass.is_a?(RbGCCXML::Struct)
           checking = checking.superclass
-          found = [checking.methods].flatten.select {|m| !method_names.include?(m.name) && m.virtual? }
+          found = [checking.methods].flatten.select {|m| !method_names.include?(m.rbgccxml_name) && m.virtual? }
           methods_to_wrap << found
-          method_names += found.map {|m| m.name }
+          method_names += found.map {|m| m.rbgccxml_name }
         end
 
         methods_to_wrap.flatten.each do |m|
