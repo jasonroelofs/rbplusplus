@@ -72,8 +72,10 @@ module RbPlusPlus
           @declarations << decl
         end
 
-        # Need to tell Rice of the base class
-        @body << "\tRice::define_class<#{self.class_type} >(\"__#{self.name}__\");"
+        # Need to tell Rice of the base class, while also making sure that if there's a superclass to this class
+        # that we know about it, or attempts to use polymorphism will crash with 'unknown caster for __{name}__
+        superclass = node.superclass ? ", #{node.superclass.qualified_name}" : " "
+        @body << "\tRice::define_class<#{self.class_type}#{superclass}>(\"__#{self.name}__\");"
 
         @body << class_definition
 
@@ -184,10 +186,11 @@ module RbPlusPlus
       # Build the methods, and return an array of rice code
       def methods
         result = []
+        already_wrapped_names = []
         # Methods are thrown into a hash table so that we can
         # determine overloaded methods
         methods_hash = {}
-        [node.methods].flatten.each do |method|
+        [node.methods].uniq.flatten.each do |method|
           # Ignore all non-public methods
           next unless method.public?
 
@@ -222,7 +225,7 @@ module RbPlusPlus
 
             method_append = methods.length == 1 ? "" : "_#{i}"
 
-            if @wrapped_methods.include?(method.name)
+            if @wrapped_method_names.include?(method.name)
               rice_method = "define_method"
               wrapped_name = "#{@director_name}::#{method.rbgccxml_name}"
             elsif method.static?
@@ -236,9 +239,19 @@ module RbPlusPlus
             method_name = "#{Inflector.underscore(method.name)}"
             method_name += method_append unless method.renamed?
 
+            already_wrapped_names << method.name
             result << "\t#{rice_variable}.#{rice_method}(\"#{Inflector.underscore(method_name)}\", &#{wrapped_name});"
           end
         end
+
+        @wrapped_methods.each do |method|
+          next if already_wrapped_names.include?(method.name)
+          rice_method = "define_method"
+          wrapped_name = "#{@director_name}::#{method.rbgccxml_name}"
+          method_name = "#{Inflector.underscore(method.name)}"
+          result << "\t#{rice_variable}.#{rice_method}(\"#{Inflector.underscore(method_name)}\", &#{wrapped_name});"
+        end
+
         result
       end
 
@@ -278,6 +291,7 @@ module RbPlusPlus
       # Returns the list of methods wrapped in this proxy
       def build_director
         @wrapped_methods = []
+        @wrapped_method_names = []
 
         # Constructors
         to_use = node._get_constructor
@@ -313,7 +327,22 @@ module RbPlusPlus
         declarations << "\t\t#{@director_name}(#{args.join(",")}) :
           Rice::Director(self)#{super_cons} {  }"
 
-        [node.methods].flatten.each do |m|
+        methods_to_wrap = [node.methods]
+        method_names = methods_to_wrap.map {|m| m.name }
+
+        # To ensure proper compilation, this director class needs
+        # to implement all pure virtual methods found up the
+        # inheritance heirarchy of this class. So here, we traverse
+        # this list and build the nest of required methods
+        checking = node
+        while checking.superclass.is_a?(RbGCCXML::Class) || checking.superclass.is_a?(RbGCCXML::Struct)
+          checking = checking.superclass
+          found = [checking.methods].flatten.select {|m| !method_names.include?(m.name) && m.virtual? }
+          methods_to_wrap << found
+          method_names += found.map {|m| m.name }
+        end
+
+        methods_to_wrap.flatten.each do |m|
           next if m.ignored? || m.moved? || !m.public?
 
           # Only wrap virtual methods.
@@ -350,7 +379,8 @@ module RbPlusPlus
           declarations << "     }"
           declarations << "   }"
 
-          @wrapped_methods << m.name
+          @wrapped_methods << m
+          @wrapped_method_names << m.name
         end
 
         declarations << "};"

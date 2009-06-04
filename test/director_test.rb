@@ -118,8 +118,29 @@ context "Director proxy generation" do
     h.add_worker_numbers.should.equal 12
   end
 
-  # TODO Is this a valid / common use case?
-  xspecify "handles superclasses of the class with virtual methods" do
+  specify "Directors implement all pure virtual methods up the inheritance tree" do
+    vbase = VBase.new
+    v1 = VOne.new
+    v2 = VTwo.new
+
+    v1.method_one.should.equal "methodOne"
+
+    should.raise NotImplementedError do
+      v1.method_two 
+    end
+    should.raise NotImplementedError do 
+      v1.method_three 
+    end
+
+    v2.method_one.should.equal "methodOne"
+    v2.method_two.should.equal "methodTwo"
+
+    should.raise NotImplementedError do
+      v2.method_three
+    end
+  end
+
+  specify "handles superclasses of the class with virtual methods" do
     class QuadWorker < MultiplyWorker
       def process(num)
         num * 4

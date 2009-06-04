@@ -26,15 +26,12 @@ namespace director {
   /**
    * Subclass that implements pure virtual
    */
-  /*
-   * TODO: Is this a valid use case?
   class MultiplyWorker : public Worker {
     public:
       virtual ~MultiplyWorker() { }
 
       virtual int process(int num) { return num * 2; }
   };
-  */
 
   /**
    * Class to handle workers
@@ -70,6 +67,9 @@ namespace director {
   };
 
 
+  /**
+   * Testing renaming works w/ directors
+   */
   class BadNameClass {
     public:
       BadNameClass() { }
@@ -79,6 +79,9 @@ namespace director {
       virtual int __do_someProcessing() { return 14; }
   };
 
+  /**
+   * Testing constructor args
+   */
   class VirtualWithArgs {
     int a_;
     bool b_;
@@ -97,6 +100,9 @@ namespace director {
       }
   };
 
+  /**
+   * Testing non-public constructors
+   */
   class NoConstructor {
     protected:
       NoConstructor() { }
@@ -106,6 +112,33 @@ namespace director {
       virtual int doSomething() { return 4; }
   };
 
+  /**
+   * Test inheritance heirarchy with virtual methods
+   * throughout the tree
+   */
+  class VBase {
+    public:
+      VBase() { }
+      virtual ~VBase() { }
+
+      virtual std::string methodOne() = 0;
+      virtual std::string methodTwo() = 0;
+      virtual std::string methodThree() = 0;
+  };
+
+  class VOne : public VBase { 
+    public:
+      virtual std::string methodOne() {
+        return "methodOne";
+      }
+  };
+
+  class VTwo : public VOne {
+    public:
+      virtual std::string methodTwo() {
+        return "methodTwo";
+      }
+  };
 }
 
 #endif
