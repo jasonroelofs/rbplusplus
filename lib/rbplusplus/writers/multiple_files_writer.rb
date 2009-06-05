@@ -74,12 +74,15 @@ module RbPlusPlus
 
       # How this works:
       #
-      # We'll recurse through the builder heirarchy, starting at the bottom.
-      # This lets us to properly link up each file so that all classes / modules /
-      # functions get properly exposed.
+      # We split code into files at the top-level class and module nodes. 
+      # Any nested classes / structs / enums, etc, get wrapped in the same
+      # file as the parent class. 
       def _write_node(node)
         node.builders.each do |b|
-          _write_node(b)
+          if b.is_a?(Builders::ModuleBuilder) ||
+            (b.parent.is_a?(Builders::ModuleBuilder) || b.parent.is_a?(Builders::ExtensionBuilder))
+            _write_node(b) 
+          end
         end
 
         has_parent = node.parent && !node.parent.is_a?(Builders::ExtensionBuilder)
@@ -147,9 +150,11 @@ module RbPlusPlus
 
           node.includes << hpp_include
 
+          node.includes = get_includes_for(node)
+
           node.body = [
             "void #{register_func}(#{register_func_prototype}) {",
-            node.body,
+            get_body_for(node),
             "}"
           ]
         end
@@ -159,6 +164,27 @@ module RbPlusPlus
         end
       end
 
+      def get_includes_for(node)
+        return node.includes if node.is_a?(Builders::ModuleBuilder)
+
+        includes = 
+          node.builders.inject([]) do |memo, inner|
+            memo << get_includes_for(inner) unless inner.is_a?(Builders::ModuleBuilder)
+            memo
+          end
+        node.includes + includes.flatten
+      end
+
+      def get_body_for(node)
+        return node.body if node.is_a?(Builders::ModuleBuilder)
+
+        body = 
+          node.builders.inject([]) do |memo, inner|
+            memo << get_body_for(inner) unless inner.is_a?(Builders::ModuleBuilder)
+            memo
+          end
+        node.body + body.flatten
+      end
 
     end
   end

@@ -156,4 +156,10 @@ context "Director proxy generation" do
     h.process_workers(5).should.equal 40
   end
 
+  specify "multiple files writer properly handles directors and nested nodes" do
+    assert defined?(Worker::ZeeEnum)
+    assert defined?(Worker::ZeeEnum::VALUE)
+    Worker::ZeeEnum::VALUE.to_i.should.equal 4
+  end
+
 end

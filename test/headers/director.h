@@ -13,6 +13,10 @@ namespace director {
     public:
       virtual ~Worker() {  }
 
+      enum ZeeEnum {
+        VALUE = 4
+      };
+
       int getNumber() { return 12; }
 
       virtual int doSomething(int num) { return num * 4; }
