@@ -133,7 +133,14 @@ module RbGCCXML
     # If so, then rb++ will generate a proxy class to handle 
     # the message routing as needed.
     def needs_director?
-      [methods].flatten.select {|m| m.virtual? }.length > 0
+      !!cache[:build_director] #[methods].flatten.select {|m| m.virtual? }.length > 0
+    end
+
+    # Until all the kinks of the director code generation can be
+    # worked out, rb++ must be told which classes to build
+    # directors for. Simply call this method on the class to do so
+    def director
+      cache[:build_director] = true
     end
 
     private

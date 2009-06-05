@@ -10,6 +10,14 @@ context "Director proxy generation" do
         e.sources full_dir("headers/director.h")
 
         node = e.namespace "director"
+
+        # As director is pretty complicated to get right 
+        # automatically for now, we force-specify which 
+        # classes to have directors set on.
+        %w(Worker MultiplyWorker BadNameClass VirtualWithArgs NoConstructor VBase VOne VTwo).each do |k|
+          node.classes(k).director
+        end
+
         node.classes("Worker").methods("doProcessImpl").default_return_value(0)
 
         klass = node.classes("BadNameClass")
