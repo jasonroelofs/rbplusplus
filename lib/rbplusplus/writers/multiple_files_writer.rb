@@ -152,6 +152,8 @@ module RbPlusPlus
 
           node.includes = get_includes_for(node)
 
+          node.declarations = get_decls_for(node)
+
           node.body = [
             "void #{register_func}(#{register_func_prototype}) {",
             get_body_for(node),
@@ -184,6 +186,17 @@ module RbPlusPlus
             memo
           end
         node.body + body.flatten
+      end
+
+      def get_decls_for(node)
+        return node.declarations if node.is_a?(Builders::ModuleBuilder)
+
+        declarations = 
+          node.builders.inject([]) do |memo, inner|
+            memo << get_decls_for(inner) unless inner.is_a?(Builders::ModuleBuilder)
+            memo
+          end
+        node.declarations + declarations.flatten
       end
 
     end
