@@ -29,6 +29,8 @@ namespace classes {
       float value2;
       string value3;
 
+      string shouldBeTransformed;
+
       const int const_var;
   };
 

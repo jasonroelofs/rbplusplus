@@ -163,6 +163,8 @@ module RbPlusPlus
         [node.variables.find(:access => :public)].flatten.each do |var|
           next if var.ignored? || var.moved?
 
+          var_name = Inflector.underscore(var.name)
+
           # Setter, only if it isn't const
           if !var.cpp_type.const?
             method_name = "wrap_#{node.qualified_name.functionize}_#{var.name}_set"
@@ -170,7 +172,7 @@ module RbPlusPlus
             declarations << "\tself->#{var.name} = val;"
             declarations << "}"
 
-            body << "\t#{self.rice_variable}.define_method(\"#{var.name}=\", &#{method_name});"
+            body << "\t#{self.rice_variable}.define_method(\"#{var_name}=\", &#{method_name});"
           end
 
           # Getter
@@ -179,7 +181,7 @@ module RbPlusPlus
           declarations << "\treturn self->#{var.name};"
           declarations << "}"
 
-          body << "\t#{self.rice_variable}.define_method(\"#{var.name}\", &#{method_name});"
+          body << "\t#{self.rice_variable}.define_method(\"#{var_name}\", &#{method_name});"
         end
       end
 

@@ -74,10 +74,13 @@ context "Extension with wrapped classes" do
     a.value1 = 10
     a.value2 = 15.5
     a.value3 = "This is a value!"
+    a.should_be_transformed = "TRANSFORM"
 
     a.value1.should.equal 10
     a.value2.should.be.close 15.5, 0.01
     a.value3.should.equal "This is a value!"
+
+    a.should_be_transformed.should.equal "TRANSFORM"
   end
 
   specify "const variables are exported as read-only" do
