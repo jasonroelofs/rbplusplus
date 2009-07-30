@@ -205,7 +205,7 @@ module RbPlusPlus
       end
 
       # Builds up a string containing arguments.
-      #  <tt>include_self</tt>: Boolean on whether to include the type information in the list.
+      #  <tt>include_type</tt>: Boolean on whether to include the type information in the list.
       #  <tt>with_self</tt>:    Boolean on whether the list should include the explicit self.
       #
       def function_arguments_list(function, include_type = false, with_self = false)
@@ -231,8 +231,8 @@ module RbPlusPlus
         function_arguments_list(*args).join(",")
       end
 
-      # Compatibility with Rice 1.0.1's explicit self requirement, build a quick
-      # wrapper that includes a self and discards it, forwarding the call as needed.
+      # Build a wrapper function to be used in liue of the direct qualified name of the
+      # method. This is used in method overload definitions.
       #
       # Returns: the name of the wrapper function
       def build_function_wrapper(function, append = "")
@@ -243,7 +243,7 @@ module RbPlusPlus
         returns = "" if return_type == "void"
         returns ||= "return"
 
-        declarations << "#{return_type} #{wrapper_func}(#{function_arguments_string(function, true, true)}) {"
+        declarations << "#{return_type} #{wrapper_func}(#{function_arguments_string(function, true)}) {"
         declarations << "\t#{returns} #{function.qualified_name}(#{function_arguments_string(function)});"
         declarations << "}"
 

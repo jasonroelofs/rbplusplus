@@ -43,7 +43,8 @@ module RbPlusPlus
                                Logger.info "Building callback wrapper for #{func.qualified_name}"
                                build_function_callback_wrapper(func, fp, func_append)
                              else
-                               func.special_qualified_name || build_function_wrapper(func, func_append)
+                               wrap_name = funcs.size > 1 ? build_function_wrapper(func, func_append) : func.qualified_name
+                               func.special_qualified_name || wrap_name
                              end
 
               if func.return_type.const? || func.const?

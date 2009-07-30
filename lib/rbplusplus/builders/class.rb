@@ -210,13 +210,14 @@ module RbPlusPlus
 
             method_append = methods.length == 1 ? "" : "_#{i}"
 
-            if method.static?
-              rice_method = "define_singleton_method"
-              wrapped_name = build_function_wrapper(method, method_append)
-            else
-              rice_method = "define_method"
-              wrapped_name = build_method_wrapper(node, method, method_append)
-            end
+            wrapped_name = 
+              if method.static?
+                rice_method = "define_singleton_method"
+                methods.length > 1 ? build_function_wrapper(method, method_append) : method.qualified_name
+              else
+                rice_method = "define_method"
+                build_method_wrapper(node, method, method_append)
+              end
 
             method_name = "#{Inflector.underscore(method.name)}"
             method_name += method_append unless method.renamed?
