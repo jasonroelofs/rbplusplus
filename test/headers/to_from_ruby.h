@@ -66,12 +66,12 @@ namespace to_from_ruby {
       }
   };
   
-  inline const TemplateClass<int> &getTemplate() {
-    return *(new TemplateClass<int>(1));
+  inline const TemplateClass<int>* getTemplate() {
+    return new TemplateClass<int>(1);
   }
   
-  inline const TemplateClass<int> &getTemplate(int overload) {
-    return *(new TemplateClass<int>(overload));
+  inline const TemplateClass<int>* getTemplate(int overload) {
+    return new TemplateClass<int>(overload);
   }
 }
 
