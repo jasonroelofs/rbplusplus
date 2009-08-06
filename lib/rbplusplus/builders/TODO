@@ -1,0 +1,52 @@
+Going to take the builder structure in the exact opposite direction than it has been.
+Like Py++, every complete chunk of C++ code will be a node in the code tree.
+
+There are two main types of nodes to work with: definition and exposing. Definition nodes deal
+with writing out C++ code to wrap or otherwise convert the C++ API into something wrappable.
+Exposing nodes write out the Rice code that exposes the C++ into Ruby.
+
+Extension 
+  : Top level node, there will only ever be one of these
+
+Module 
+  : Defines a Ruby module, can have anything in it except Exception nodes
+
+Class
+  : Defines a class, can include many different nodes
+
+Global Function
+  : Define a function that gets added to Kernel. Only used under Extension
+
+Method
+  : Defines a method on a Class or Module
+
+Singleton Method
+  : Define a singleton method (class method) on a Class or Module
+
+Module Function
+  : Define a method on a Module
+
+Wrapped Method
+  : There are a few cases where using just the method doesn't work and we have to build a C-style wrapper around
+    a given method. This node is the wrapper function. Possibly used by any method anywhere.
+
+Enumeration
+  : Define an enumeration under any Extension, Module, or Class
+
+Variable
+  : Define an i-var on a class
+
+Global Variable
+  : Define a global variable on an Extension or Module
+
+Constant
+  : Define a Constant value on any Extension, Module, or Class
+
+Director
+  : This one's a doozy. Needs to build a complete proxy class on top of an class to be wrapped. The use of a Director
+    will end up replacing all declaration calls for the class, along with building code for the DIrectory proxy class and 
+    all of the virtual methods it needs to redefine
+
+Director Method
+  : This node handles the individual method definitions inside a Director Class
+
