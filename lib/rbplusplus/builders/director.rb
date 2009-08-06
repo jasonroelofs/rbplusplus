@@ -232,7 +232,7 @@ module RbPlusPlus
               wrapped_name = "#{@director_name}::#{method.rbgccxml_name}"
             elsif method.static?
               rice_method = "define_singleton_method"
-              wrapped_name = build_function_wrapper(method, method_append)
+              methods.length > 1 ? build_function_wrapper(method, method_append) : method.qualified_name
             else
               rice_method = "define_method"
               wrapped_name = build_method_wrapper(node, method, method_append)
