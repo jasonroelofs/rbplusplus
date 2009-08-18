@@ -39,6 +39,8 @@ module RbPlusPlus
         # Let nodes build their code, splitting up code blocks into
         # includes, declarations, and registrations, 
         # then wrap it up in our own template
+        registrations.unshift("extern \"C\"", "void Init_#{@name}() {")
+        registrations << "}"        
       end
 
       private

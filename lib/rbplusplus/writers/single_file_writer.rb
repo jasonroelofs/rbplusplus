@@ -5,8 +5,8 @@ module RbPlusPlus
     class SingleFileWriter < Base
 
       def write
-        puts "Processing: #{builder.inspect}"
         process_code(builder)
+        builder.write
 
 #        if Builders::TypesManager.prototypes.length > 0
 #          builder.declarations << Builders::TypesManager.prototypes
@@ -21,7 +21,9 @@ module RbPlusPlus
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 
         File.open(cpp_file, "w+") do |cpp|
-          cpp.puts builder.write
+          cpp.puts builder.includes.join("\n")
+          cpp.puts builder.declarations.join("\n")
+          cpp.puts builder.registrations.join("\n")
         end
       end
 
