@@ -21,12 +21,16 @@ module RbPlusPlus
 
   module Builders
     autoload :Base, "rbplusplus/builders/base"
-    autoload :ClassBuilder, "rbplusplus/builders/class"
-    autoload :DirectorBuilder, "rbplusplus/builders/director"
-    autoload :ExtensionBuilder, "rbplusplus/builders/extension"
-    autoload :ModuleBuilder, "rbplusplus/builders/module"
-    autoload :EnumerationBuilder, "rbplusplus/builders/enumeration"
-    autoload :TypesManager, "rbplusplus/builders/types_manager"
+    autoload :ExtensionNode, "rbplusplus/builders/extension"
+    autoload :GlobalFunctionNode, "rbplusplus/builders/global_function"
+    autoload :IncludeNode, "rbplusplus/builders/include"
+
+#    autoload :ClassBuilder, "rbplusplus/builders/class"
+#    autoload :DirectorBuilder, "rbplusplus/builders/director"
+#    autoload :ExtensionBuilder, "rbplusplus/builders/extension"
+#    autoload :ModuleBuilder, "rbplusplus/builders/module"
+#    autoload :EnumerationBuilder, "rbplusplus/builders/enumeration"
+#    autoload :TypesManager, "rbplusplus/builders/types_manager"
   end
 
   module Writers
