@@ -194,10 +194,9 @@ module RbPlusPlus
 
       Logger.info "Beginning code generation"
 
-      @builder = Builders::ExtensionBuilder.new(@name, @node || @parser)
-      Builders::Base.additional_includes  = @options[:includes]
-      Builders::Base.sources              = @sources
-      @builder.modules = @modules
+      @builder = Builders::ExtensionNode.new(@name, @node || @parser, @modules)
+#      Builders::Base.additional_includes  = @options[:includes]
+#      Builders::Base.sources              = @sources
       @builder.build
 
       Logger.info "Code generation complete"
