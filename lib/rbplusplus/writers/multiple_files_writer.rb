@@ -21,7 +21,7 @@ module RbPlusPlus
         FileUtils.mkdir_p @build_dir
 
         # Write out files
-        write_to_from_ruby
+#        write_to_from_ruby
         _write_node(builder)
 
         # Done with writing, commence diff checking

@@ -5,22 +5,23 @@ module RbPlusPlus
     class SingleFileWriter < Base
 
       def write
+        puts "Processing: #{builder.inspect}"
         process_code(builder)
 
-        if Builders::TypesManager.prototypes.length > 0
-          builder.declarations << Builders::TypesManager.prototypes
-        end
-
-        if Builders::TypesManager.body.length > 0
-          # Handle to_from_ruby constructions
-          builder.declarations << Builders::TypesManager.body
-        end
+#        if Builders::TypesManager.prototypes.length > 0
+#          builder.declarations << Builders::TypesManager.prototypes
+#        end
+#
+#        if Builders::TypesManager.body.length > 0
+#          # Handle to_from_ruby constructions
+#          builder.declarations << Builders::TypesManager.body
+#        end
 
         filename = builder.name
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 
         File.open(cpp_file, "w+") do |cpp|
-          cpp.puts builder.to_s
+          cpp.puts builder.write
         end
       end
 
@@ -30,15 +31,17 @@ module RbPlusPlus
       # and push all the code from children up to the parent, 
       # ending up with all the code in the top-level builder
       def process_code(builder)
-        builder.builders.each do |b|
-          process_code(b)
+        if builder.has_children?
+          builder.nodes.each do |b|
+            process_code(b)
+          end
         end
 
         return unless builder.parent
 
         builder.parent.includes << builder.includes
-        builder.parent.body << builder.body
         builder.parent.declarations << builder.declarations
+        builder.parent.registrations << builder.registrations
       end
 
     end
