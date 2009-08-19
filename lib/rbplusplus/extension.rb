@@ -210,8 +210,8 @@ module RbPlusPlus
       process_other_source_files
       
       # Create the code
-      writer_class = @writer_mode == :multiple ? Writers::MultipleFilesWriter : Writers::SingleFileWriter
-      writer_class.new(@builder, @working_dir).write
+#      writer_class = @writer_mode == :multiple ? Writers::MultipleFilesWriter : Writers::SingleFileWriter
+      Writers::SingleFileWriter.new(@builder, @working_dir).write
 
       # Create the extconf.rb
       extconf = Writers::ExtensionWriter.new(@builder, @working_dir)
