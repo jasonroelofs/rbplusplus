@@ -25,14 +25,16 @@ module RbPlusPlus
           nodes << build_global_functions
 
           # Enumerations
-          nodes << build_enumerations
+#          nodes << build_enumerations
           
           # Classes
-          nodes << build_classes
+#          nodes << build_classes
           
           # Modules
-          nodes << build_modules
+#          nodes << build_modules
         end
+
+        nodes.flatten!
       end
 
       def write
@@ -41,17 +43,19 @@ module RbPlusPlus
         # then wrap it up in our own template
         registrations.unshift("extern \"C\"", "void Init_#{@name}() {")
         registrations << "}"        
+
+        registrations.flatten!
       end
 
       private
 
       # Build up method nodes for the functions to be wrapped
       # in the Kernel (global) namespace for this extension
-      def global_functions
-        @code.functions.each do |func|
+      def build_global_functions
+        @code.functions.map do |func|
           node = GlobalFunctionNode.new(self, func)
           node.build
-          nodes << node
+          node
         end
       end
 
