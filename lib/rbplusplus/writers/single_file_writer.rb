@@ -21,9 +21,9 @@ module RbPlusPlus
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 
         File.open(cpp_file, "w+") do |cpp|
-          cpp.puts builder.includes.join("\n")
-          cpp.puts builder.declarations.join("\n")
-          cpp.puts builder.registrations.join("\n")
+          cpp.puts builder.includes.flatten.uniq.join("\n")
+          cpp.puts builder.declarations.flatten.join("\n")
+          cpp.puts builder.registrations.flatten.join("\n")
         end
       end
 
@@ -41,6 +41,7 @@ module RbPlusPlus
 
         return unless builder.parent
 
+        builder.write
         builder.parent.includes << builder.includes
         builder.parent.declarations << builder.declarations
         builder.parent.registrations << builder.registrations
