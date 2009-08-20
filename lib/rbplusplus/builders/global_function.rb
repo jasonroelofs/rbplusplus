@@ -4,11 +4,6 @@ module RbPlusPlus
     # Expose a global function
     class GlobalFunctionNode < Base
 
-      def initialize(parent, code)
-        super(code)
-        @parent = parent
-      end
-
       def build
         nodes << IncludeNode.new(self, "rice/global_function.hpp", :system)
         nodes << IncludeNode.new(self, code.file)

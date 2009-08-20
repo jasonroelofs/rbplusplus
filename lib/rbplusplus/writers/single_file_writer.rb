@@ -21,7 +21,8 @@ module RbPlusPlus
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 
         File.open(cpp_file, "w+") do |cpp|
-          cpp.puts builder.includes.flatten.uniq.join("\n")
+          # TODO code list management a little higher up me thinks
+          cpp.puts builder.includes.flatten.compact.uniq.join("\n")
           cpp.puts builder.declarations.flatten.join("\n")
           cpp.puts builder.registrations.flatten.join("\n")
         end
@@ -33,6 +34,8 @@ module RbPlusPlus
       # and push all the code from children up to the parent, 
       # ending up with all the code in the top-level builder
       def process_code(builder)
+#        puts "Processing builder #{builder}"
+#        puts "Has children? #{builder.nodes.length}"
         if builder.has_children?
           builder.nodes.each do |b|
             process_code(b)

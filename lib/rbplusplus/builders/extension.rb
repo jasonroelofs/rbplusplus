@@ -16,22 +16,13 @@ module RbPlusPlus
       end
 
       def build
-        # Top-level Includes
-        nodes << IncludeNode.new(self, "rice/global_function.hpp", :system)
-
         # Make sure we ignore anything from the :: namespace
         if @code.name != "::"
-          # Top-level methods
-          nodes << build_global_functions
-
-          # Enumerations
-#          nodes << build_enumerations
+#          build_modules
           
-          # Classes
-#          nodes << build_classes
-          
-          # Modules
-#          nodes << build_modules
+          build_global_functions
+          build_enumerations
+#          build_classes
         end
 
         nodes.flatten!
@@ -52,10 +43,35 @@ module RbPlusPlus
       # Build up method nodes for the functions to be wrapped
       # in the Kernel (global) namespace for this extension
       def build_global_functions
-        @code.functions.map do |func|
-          node = GlobalFunctionNode.new(self, func)
+        @code.functions.each do |func|
+          node = GlobalFunctionNode.new(func, self)
           node.build
-          node
+          nodes << node
+        end
+      end
+
+      # Wrap up enumerations for this node.
+      # Anonymous enumerations are a special case. C++ doesn't
+      # see them as a seperate type and instead are just "scoped" constants,
+      # so we have to wrap them as such, constants.
+      def build_enumerations
+        @code.enumerations.each do |enum|
+          next if enum.ignored? || enum.moved? || !enum.public? 
+
+          if enum.anonymous?
+            # So for each value of this enumeration, 
+            # expose it as a constant
+            enum.values.each do |value|
+              node = ConstNode.new(value, self)
+              node.build
+              nodes << node
+            end
+          else
+            node = EnumerationNode.new(enum, self)
+            node.build
+            nodes << node
+          end
+
         end
       end
 

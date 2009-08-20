@@ -32,8 +32,9 @@ module RbPlusPlus
       # List of children nodes
       attr_accessor :nodes
 
-      def initialize(code) 
+      def initialize(code, parent = nil) 
         @code = code
+        @parent = parent
         @includes = []
         @declarations = []
         @registrations = []

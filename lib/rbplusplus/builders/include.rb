@@ -9,9 +9,8 @@ module RbPlusPlus
     class IncludeNode < Base
 
       def initialize(parent, path, type = :local)
-        super(nil)
+        super(nil, parent)
 
-        @parent = parent
         @path = path
         @type = type
       end
@@ -21,12 +20,9 @@ module RbPlusPlus
       end
 
       def write
-        includes << 
-          if @type == :local
-            "#include \"#{@path}\""
-          else
-            "#include <#{@path}>"
-          end
+        if @path
+          includes << (@type == :local ? "#include \"#{@path}\"" : "#include <#{@path}>")
+        end
       end
 
     end

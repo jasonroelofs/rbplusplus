@@ -24,6 +24,8 @@ module RbPlusPlus
     autoload :ExtensionNode, "rbplusplus/builders/extension"
     autoload :GlobalFunctionNode, "rbplusplus/builders/global_function"
     autoload :IncludeNode, "rbplusplus/builders/include"
+    autoload :EnumerationNode, "rbplusplus/builders/enumeration"
+    autoload :ConstNode, "rbplusplus/builders/const"
 
 #    autoload :ClassBuilder, "rbplusplus/builders/class"
 #    autoload :DirectorBuilder, "rbplusplus/builders/director"
