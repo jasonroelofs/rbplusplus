@@ -67,15 +67,6 @@ module RbPlusPlus
 
       protected
 
-      # Get the code prefix using parent's rice variable, or just
-      # return the default that's passed in.
-      # 
-      # @See EnumerationNode for an example of usage
-      def parent_prefix_or(default)
-        puts "Parent of #{self} is #{self.parent}"
-        self.parent.rice_variable ? "#{parent.rice_variable}." : default
-      end
-
       # Wrap up enumerations for this node.
       # Anonymous enumerations are a special case. C++ doesn't
       # see them as a seperate type and instead are just "scoped" constants,
