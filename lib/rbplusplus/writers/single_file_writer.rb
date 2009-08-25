@@ -4,9 +4,16 @@ module RbPlusPlus
     # one single file
     class SingleFileWriter < Base
 
+      def initialize(builder, working_dir)
+        super
+
+        @includes = []
+        @declarations = []
+        @registrations = []
+      end
+
       def write
         process_code(builder)
-        builder.write
 
 #        if Builders::TypesManager.prototypes.length > 0
 #          builder.declarations << Builders::TypesManager.prototypes
@@ -21,10 +28,12 @@ module RbPlusPlus
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 
         File.open(cpp_file, "w+") do |cpp|
-          # TODO code list management a little higher up me thinks
-          cpp.puts builder.includes.flatten.compact.uniq.join("\n")
-          cpp.puts builder.declarations.flatten.join("\n")
-          cpp.puts builder.registrations.flatten.join("\n")
+
+          cpp.puts @includes.flatten.compact.uniq.sort.reverse.join("\n")
+          cpp.puts @declarations.flatten.compact.join("\n")
+          cpp.puts @registrations.flatten.compact.join("\n")
+          cpp.puts "}" # Yeah, need to figure this one out
+
         end
       end
 
@@ -34,20 +43,17 @@ module RbPlusPlus
       # and push all the code from children up to the parent, 
       # ending up with all the code in the top-level builder
       def process_code(builder)
-#        puts "Processing builder #{builder}"
-#        puts "Has children? #{builder.nodes.length}"
+        builder.write
+
+        @includes << builder.includes
+        @declarations << builder.declarations
+        @registrations << builder.registrations
+
         if builder.has_children?
           builder.nodes.each do |b|
             process_code(b)
           end
         end
-
-        return unless builder.parent
-
-        builder.write
-        builder.parent.includes << builder.includes
-        builder.parent.declarations << builder.declarations
-        builder.parent.registrations << builder.registrations
       end
 
     end

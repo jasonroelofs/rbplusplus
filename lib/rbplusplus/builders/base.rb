@@ -32,6 +32,12 @@ module RbPlusPlus
       # List of children nodes
       attr_accessor :nodes
 
+      # The Rice variable name for this node
+      attr_accessor :rice_variable
+
+      # The type of the rice_variable
+      attr_accessor :rice_variable_type
+
       def initialize(code, parent = nil) 
         @code = code
         @parent = parent
@@ -58,6 +64,43 @@ module RbPlusPlus
       def write
         raise "Nodes must implement #write"
       end
+
+      protected
+
+      # Get the code prefix using parent's rice variable, or just
+      # return the default that's passed in.
+      # 
+      # @See EnumerationNode for an example of usage
+      def parent_prefix_or(default)
+        puts "Parent of #{self} is #{self.parent}"
+        self.parent.rice_variable ? "#{parent.rice_variable}." : default
+      end
+
+      # Wrap up enumerations for this node.
+      # Anonymous enumerations are a special case. C++ doesn't
+      # see them as a seperate type and instead are just "scoped" constants,
+      # so we have to wrap them as such, constants.
+      def build_enumerations
+        self.code.enumerations.each do |enum|
+          next if enum.ignored? || enum.moved? || !enum.public? 
+
+          if enum.anonymous?
+            # So for each value of this enumeration, 
+            # expose it as a constant
+            enum.values.each do |value|
+              node = ConstNode.new(value, self)
+              node.build
+              nodes << node
+            end
+          else
+            node = EnumerationNode.new(enum, self)
+            node.build
+            nodes << node
+          end
+
+        end
+      end
+
 
     end
 

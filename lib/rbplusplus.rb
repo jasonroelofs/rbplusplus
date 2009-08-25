@@ -26,6 +26,7 @@ module RbPlusPlus
     autoload :IncludeNode, "rbplusplus/builders/include"
     autoload :EnumerationNode, "rbplusplus/builders/enumeration"
     autoload :ConstNode, "rbplusplus/builders/const"
+    autoload :ModuleNode, "rbplusplus/builders/module"
 
 #    autoload :ClassBuilder, "rbplusplus/builders/class"
 #    autoload :DirectorBuilder, "rbplusplus/builders/director"
