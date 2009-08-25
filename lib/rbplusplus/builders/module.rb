@@ -18,9 +18,6 @@ module RbPlusPlus
       end
 
       def build
-        self.rice_variable_type = "Rice::Module"
-        self.rice_variable = "rb_m#{@name}"
-
         # Make sure we ignore anything from the :: namespace
         if self.code.name != "::"
           build_modules
@@ -33,6 +30,9 @@ module RbPlusPlus
       end
 
       def write
+        self.rice_variable_type = "Rice::Module"
+        self.rice_variable = "rb_m#{@name}"
+
         registrations << "#{rice_variable_type} #{rice_variable} = " \
                          "Rice::define_module(\"#{@name}\");"
       end

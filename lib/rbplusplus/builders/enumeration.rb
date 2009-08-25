@@ -7,12 +7,12 @@ module RbPlusPlus
       def build
         nodes << IncludeNode.new(self, "rice/Enum.hpp", :system)
         nodes << IncludeNode.new(self, code.file)
-
-        self.rice_variable_type = "Rice::Enum<#{code.qualified_name}>"
-        self.rice_variable = "rb_e#{code.name}"
       end
 
       def write
+        self.rice_variable_type = "Rice::Enum<#{code.qualified_name}>"
+        self.rice_variable = "rb_e#{code.name}"
+
         second = parent.rice_variable ? ", #{parent.rice_variable}" : ""
 
         registrations << "#{rice_variable_type} #{rice_variable} = " \
