@@ -17,7 +17,8 @@ class_methods_encapsulate_test.rb
 
 class_methods_test.rb
 
-compiling_test.rb
+** compiling_test.rb
+ - Need auto-gen of to_/from_ruby for const& types
 
 constructors_test.rb
 
@@ -26,6 +27,7 @@ custom_code_test.rb
 director_test.rb
 
 * enumerations_test.rb
+ - Need to implement classes before continuing
 
 extension_test.rb
 
@@ -35,7 +37,7 @@ function_pointers_classes_test.rb
 
 function_pointer_test.rb
 
-* functions_test.rb
+*** functions_test.rb
 
 modules_test.rb
 
