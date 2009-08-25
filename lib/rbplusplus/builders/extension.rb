@@ -14,9 +14,14 @@ module RbPlusPlus
         super(name, code, modules, nil)
       end
 
+      def add_includes(includes)
+        includes.each do |inc|
+          nodes << IncludeNode.new(self, inc)
+        end
+      end
+
       def build
         super
-
         self.rice_variable_type = nil
         self.rice_variable = nil
       end
