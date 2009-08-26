@@ -11,7 +11,7 @@ module RbPlusPlus
     class ExtensionNode < ModuleNode
 
       def initialize(name, code, modules)
-        super(name, code, modules, nil)
+        super(nil, name, code, modules, nil)
       end
 
       def add_includes(includes)

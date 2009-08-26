@@ -29,7 +29,7 @@ director_test.rb
 * enumerations_test.rb
  - Need to implement classes before continuing
 
-extension_test.rb
+*** extension_test.rb
 
 file_writers_test.rb
 
@@ -39,7 +39,8 @@ function_pointer_test.rb
 
 *** functions_test.rb
 
-modules_test.rb
+* modules_test.rb
+ - Needs classes
 
 nested_test.rb
 
@@ -48,8 +49,6 @@ overloading_test.rb
 struct_test.rb
 
 subclass_test.rb
-
-test_helper.rb
 
 to_from_ruby_test.rb
 
