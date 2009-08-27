@@ -30,7 +30,7 @@ module RbPlusPlus
 
       private
 
-      def build_module_functions
+      def with_module_functions
         @code.functions.each do |func|
           node = GlobalFunctionNode.new(func, self)
           node.build

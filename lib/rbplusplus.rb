@@ -27,13 +27,12 @@ module RbPlusPlus
     autoload :EnumerationNode, "rbplusplus/builders/enumeration"
     autoload :ConstNode, "rbplusplus/builders/const"
     autoload :ModuleNode, "rbplusplus/builders/module"
+    autoload :ClassNode, "rbplusplus/builders/class"
 
-#    autoload :ClassBuilder, "rbplusplus/builders/class"
-#    autoload :DirectorBuilder, "rbplusplus/builders/director"
-#    autoload :ExtensionBuilder, "rbplusplus/builders/extension"
-#    autoload :ModuleBuilder, "rbplusplus/builders/module"
-#    autoload :EnumerationBuilder, "rbplusplus/builders/enumeration"
-#    autoload :TypesManager, "rbplusplus/builders/types_manager"
+    autoload :ClassHelpers, "rbplusplus/builders/helpers/class"
+    autoload :EnumerationHelpers, "rbplusplus/builders/helpers/enumeration"
+    autoload :ModuleHelpers, "rbplusplus/builders/helpers/module"
+
   end
 
   module Writers

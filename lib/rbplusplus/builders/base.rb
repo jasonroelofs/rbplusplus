@@ -67,32 +67,14 @@ module RbPlusPlus
 
       protected
 
-      # Wrap up enumerations for this node.
-      # Anonymous enumerations are a special case. C++ doesn't
-      # see them as a seperate type and instead are just "scoped" constants,
-      # so we have to wrap them as such, constants.
-      def build_enumerations
-        self.code.enumerations.each do |enum|
-          next if enum.ignored? || enum.moved? || !enum.public? 
-
-          if enum.anonymous?
-            # So for each value of this enumeration, 
-            # expose it as a constant
-            enum.values.each do |value|
-              node = ConstNode.new(value, self)
-              node.build
-              nodes << node
-            end
-          else
-            node = EnumerationNode.new(enum, self)
-            node.build
-            nodes << node
-          end
-
-        end
+      # Turn a string that contains a qualified C++ name into a
+      # string that works as a C++ variable. e.g.
+      #  
+      #   MyClass::MyEnum => MyClass_MyEnum
+      #
+      def as_variable(name)
+        name.gsub(/::/, "_")
       end
-
-
     end
 
   end
