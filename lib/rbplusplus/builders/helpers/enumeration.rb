@@ -8,20 +8,16 @@ module RbPlusPlus
       # so we have to wrap them as such, constants.
       def with_enumerations
         self.code.enumerations.each do |enum|
-          next if enum.ignored? || enum.moved? || !enum.public? 
+          next if do_not_wrap?(enum)
 
           if enum.anonymous?
             # So for each value of this enumeration, 
             # expose it as a constant
             enum.values.each do |value|
-              node = ConstNode.new(value, self)
-              node.build
-              nodes << node
+              add_child ConstNode.new(value, self)
             end
           else
-            node = EnumerationNode.new(enum, self)
-            node.build
-            nodes << node
+            add_child EnumerationNode.new(enum, self)
           end
 
         end

@@ -11,7 +11,7 @@ Broken
 
 allocation_strategies_test.rb
 
-classes_test.rb
+* classes_test.rb
 
 class_methods_encapsulate_test.rb
 
