@@ -9,8 +9,8 @@ module RbPlusPlus
       end
 
       def write
-        registrations << 'Rice::Module(rb_mKernel).const_set("%s", to_ruby((int)%s));' %
-                            [code.name, code.qualified_name]
+        prefix = parent.rice_variable ? "#{parent.rice_variable}." : "Rice::Module(rb_mKernel)."
+        registrations << "#{prefix}const_set(\"#{code.name}\", to_ruby((int)#{code.qualified_name}));"
       end
 
     end
