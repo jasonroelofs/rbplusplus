@@ -27,7 +27,7 @@ module RbPlusPlus
       def build
         with_modules
 
-        nodes << IncludeNode.new(self, "rice/Module.hpp", :system)
+        add_child IncludeNode.new(self, "rice/Module.hpp", :system)
 
         # Make sure we ignore anything from the :: namespace
         if self.code && self.code.name != "::"

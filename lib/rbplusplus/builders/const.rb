@@ -5,7 +5,7 @@ module RbPlusPlus
     class ConstNode < Base
 
       def build
-        nodes << IncludeNode.new(self, code.file)
+        add_child IncludeNode.new(self, code.file)
       end
 
       def write

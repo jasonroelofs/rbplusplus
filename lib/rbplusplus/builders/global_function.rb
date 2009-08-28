@@ -5,8 +5,8 @@ module RbPlusPlus
     class GlobalFunctionNode < Base
 
       def build
-        nodes << IncludeNode.new(self, "rice/global_function.hpp", :system)
-        nodes << IncludeNode.new(self, code.file)
+        add_child IncludeNode.new(self, "rice/global_function.hpp", :system)
+        add_child IncludeNode.new(self, code.file)
       end
 
       def write

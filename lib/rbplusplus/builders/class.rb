@@ -7,9 +7,9 @@ module RbPlusPlus
       include EnumerationHelpers
 
       def build
-        nodes << IncludeNode.new(self, "rice/Class.hpp", :system)
-        nodes << IncludeNode.new(self, "rice/Data_Type.hpp", :system)
-        nodes << IncludeNode.new(self, code.file)
+        add_child IncludeNode.new(self, "rice/Class.hpp", :system)
+        add_child IncludeNode.new(self, "rice/Data_Type.hpp", :system)
+        add_child IncludeNode.new(self, code.file)
 
         with_enumerations
         with_classes

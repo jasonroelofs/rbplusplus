@@ -5,8 +5,8 @@ module RbPlusPlus
     class EnumerationNode < Base
 
       def build
-        nodes << IncludeNode.new(self, "rice/Enum.hpp", :system)
-        nodes << IncludeNode.new(self, code.file)
+        add_child IncludeNode.new(self, "rice/Enum.hpp", :system)
+        add_child IncludeNode.new(self, code.file)
       end
 
       def write

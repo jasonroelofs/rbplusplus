@@ -16,7 +16,7 @@ module RbPlusPlus
 
       def add_includes(includes)
         includes.each do |inc|
-          nodes << IncludeNode.new(self, inc)
+          add_child IncludeNode.new(self, inc)
         end
       end
 
@@ -32,9 +32,7 @@ module RbPlusPlus
 
       def with_module_functions
         @code.functions.each do |func|
-          node = GlobalFunctionNode.new(func, self)
-          node.build
-          nodes << node
+          add_child GlobalFunctionNode.new(func, self)
         end
       end
 
