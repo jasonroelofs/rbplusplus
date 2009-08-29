@@ -91,6 +91,7 @@ namespace enums {
         return ret;
       }
 
+      /*
       MyEnum getAnEnum(std::string message) const {
         MyEnum e;
 
@@ -104,6 +105,7 @@ namespace enums {
         
         return e;
       }
+      */
   };
 }
 
