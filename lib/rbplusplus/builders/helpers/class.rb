@@ -10,6 +10,7 @@ module RbPlusPlus
         end
       end
 
+      # Wrap any constructors for this class
       def with_constructors
         self.code.constructors.find(:access => :public).each do |constructor|
           next if do_not_wrap?(constructor)
@@ -21,6 +22,7 @@ module RbPlusPlus
         end
       end
 
+      # Wrap up any class constants
       def with_constants
         self.code.constants.find(:access => :public).each do |const|
           next if do_not_wrap?(const)
@@ -28,10 +30,21 @@ module RbPlusPlus
         end
       end
 
+      # Expose the public variables for this class
       def with_variables
       end
 
+      # Wrap up all public methods
       def with_methods
+        self.code.methods.find(:access => :public).each do |method|
+          next if do_not_wrap?(method)
+
+          if method.static?
+            add_child StaticMethodNode.new(method, self)
+          else
+            add_child MethodNode.new(method, self)
+          end
+        end
       end
 
     end
