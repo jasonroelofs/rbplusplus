@@ -43,8 +43,13 @@ module RbPlusPlus
         self.rice_variable_type = "Rice::Module"
         self.rice_variable = "rb_m#{as_variable(@module.qualified_name)}"
 
-        registrations << "#{rice_variable_type} #{rice_variable} = " \
-                         "Rice::define_module(\"#{@name}\");"
+        prefix = "#{rice_variable_type} #{rice_variable} = "
+
+        if parent.rice_variable
+          registrations << "#{prefix} Rice::define_module_under(#{parent.rice_variable}, \"#{@name}\");"
+        else
+          registrations << "#{prefix} Rice::define_module(\"#{@name}\");"
+        end
       end
     end
 
