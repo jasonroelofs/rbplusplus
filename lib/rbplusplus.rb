@@ -30,6 +30,7 @@ module RbPlusPlus
     autoload :ClassNode, "rbplusplus/builders/class"
     autoload :ConstructorNode, "rbplusplus/builders/constructor"
     autoload :MethodNode, "rbplusplus/builders/method"
+    autoload :ModuleFunctionNode, "rbplusplus/builders/module_function"
     autoload :StaticMethodNode, "rbplusplus/builders/static_method"
     autoload :InstanceVariableNode, "rbplusplus/builders/instance_variable"
 
