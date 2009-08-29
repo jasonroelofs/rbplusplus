@@ -11,10 +11,14 @@ module RbPlusPlus
       end
 
       def with_constructors
-#        self.code.constructors.find(:access => :public).each do |constructor|
-#          next if do_not_wrap?(constructor)
-#          add_child ConstructorNode.new(constructor, self)
-#        end
+        self.code.constructors.find(:access => :public).each do |constructor|
+          next if do_not_wrap?(constructor)
+
+          # Ignore the generated copy constructor
+          next if constructor.attributes[:artificial] && constructor.arguments.length == 1
+
+          add_child ConstructorNode.new(constructor, self)
+        end
       end
 
       def with_constants
