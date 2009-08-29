@@ -31,6 +31,7 @@ module RbPlusPlus
     autoload :ConstructorNode, "rbplusplus/builders/constructor"
     autoload :MethodNode, "rbplusplus/builders/method"
     autoload :StaticMethodNode, "rbplusplus/builders/static_method"
+    autoload :InstanceVariableNode, "rbplusplus/builders/instance_variable"
 
     autoload :ClassHelpers, "rbplusplus/builders/helpers/class"
     autoload :EnumerationHelpers, "rbplusplus/builders/helpers/enumeration"

@@ -32,6 +32,11 @@ module RbPlusPlus
 
       # Expose the public variables for this class
       def with_variables
+        self.code.variables.find(:access => :public).each do |var|
+          next if do_not_wrap?(var)
+
+          add_child InstanceVariableNode.new(var, self)
+        end
       end
 
       # Wrap up all public methods
