@@ -2,9 +2,12 @@ module RbPlusPlus
   module Builders
     module ClassHelpers
 
-      # Build up any classes under this module
+      # Build up any classes or structs under this module
       def with_classes
-        self.code.classes.each do |klass|
+        [
+          self.code.classes, 
+          self.code.structs
+        ].flatten.each do |klass|
           next if do_not_wrap?(klass)
           add_child ClassNode.new(klass, self)
         end
