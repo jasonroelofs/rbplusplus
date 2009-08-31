@@ -22,7 +22,6 @@ allocation_strategies_test.rb
  - Need auto-gen of to_/from_ruby for const& types
 
 * constructors_test.rb
- - Hmm, it passes. It shouldn't yet
 
 custom_code_test.rb
 
