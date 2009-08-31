@@ -7,7 +7,7 @@ module RbPlusPlus
       # see them as a seperate type and instead are just "scoped" constants,
       # so we have to wrap them as such, constants.
       def with_enumerations
-        self.code.enumerations.each do |enum|
+        [self.code.enumerations].flatten.each do |enum|
           next if do_not_wrap?(enum)
 
           if enum.anonymous?

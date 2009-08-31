@@ -15,24 +15,21 @@ allocation_strategies_test.rb
   - Needs the reverse-typedef lookup system reimplemented
 
 * class_methods_encapsulate_test.rb
- - Update rbgccxml to allow #each on single nodes. Helps w/ chaining
 
-* class_methods_test.rb
- - Update rbgccxml to allow #each on single nodes. Helps w/ chaining
+*** class_methods_test.rb
 
 ** compiling_test.rb
  - Need auto-gen of to_/from_ruby for const& types
 
 * constructors_test.rb
- - Update rbgccxml to allow #each on single nodes. Helps w/ chaining
+ - Hmm, it passes. It shouldn't yet
 
 custom_code_test.rb
 
 director_test.rb
 
 ** enumerations_test.rb
- - Proper const return handling
- - Update rbgccxml to allow #each on single nodes. Helps w/ chaining
+ - Proper const return handling (commented out)
 
 *** extension_test.rb
 
@@ -46,18 +43,14 @@ function_pointer_test.rb
 
 *** modules_test.rb
 
-* nested_test.rb
- - Update rbgccxml to allow #each on single nodes. Helps w/ chaining
+*** nested_test.rb
 
 overloading_test.rb
 
-* struct_test.rb
- - Update rbgccxml to allow #each on single nodes. Helps w/ chaining
+*** struct_test.rb
 
 * subclass_test.rb
- - Update rbgccxml to allow #each on single nodes. Helps w/ chaining
 
 to_from_ruby_test.rb
 
 * wrap_as_test.rb
- - Update rbgccxml to allow #each on single nodes. Helps w/ chaining
