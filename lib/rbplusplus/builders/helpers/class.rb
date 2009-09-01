@@ -15,7 +15,19 @@ module RbPlusPlus
 
       # Wrap any constructors for this class
       def with_constructors
-        [self.code.constructors].flatten.each do |constructor|
+        # Ignore constructors on classes that have pure virtual methods,
+        # as they aren't constructable
+        return if self.code.pure_virtual?
+
+        to_use = self.code._get_constructor 
+
+        if to_use.nil? && self.code.constructors.length > 1
+          Logger.warn :multiple_constructors, "#{self.code.qualified_name} has multiple constructors. " +
+            "While the extension will probably compile, Rice only supports one constructor, " +
+            "please use #use_contructor to select which one to use."
+        end
+
+        [to_use || self.code.constructors].flatten.each do |constructor|
           next if do_not_wrap?(constructor)
 
           # Ignore the generated copy constructor

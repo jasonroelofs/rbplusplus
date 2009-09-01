@@ -129,6 +129,12 @@ module RbGCCXML
       !!cache[:disable_typedef_lookup]
     end
 
+    # Is this class a pure virtual class?
+    # TODO Move this into rbgccxml?
+    def pure_virtual?
+      [methods].flatten.select {|m| m.virtual? }.length > 0
+    end
+
     # Does this class have virtual methods (especially pure virtual?)
     # If so, then rb++ will generate a proxy class to handle 
     # the message routing as needed.
