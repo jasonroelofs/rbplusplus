@@ -5,7 +5,7 @@ module RbPlusPlus
       # Build up any classes or structs under this module
       def with_classes
         [
-          self.code.classes, 
+          self.code.classes,
           self.code.structs
         ].flatten.each do |klass|
           next if do_not_wrap?(klass)
@@ -19,7 +19,7 @@ module RbPlusPlus
         # as they aren't constructable
         return if self.code.pure_virtual?
 
-        to_use = self.code._get_constructor 
+        to_use = self.code._get_constructor
 
         if to_use.nil? && self.code.constructors.length > 1
           Logger.warn :multiple_constructors, "#{self.code.qualified_name} has multiple constructors. " +
@@ -58,6 +58,12 @@ module RbPlusPlus
       def with_methods
         [self.code.methods].flatten.each do |method|
           next if do_not_wrap?(method)
+
+          # Ignore methods that have non-public arguments anywhere
+          if !method.arguments.empty? && !method.arguments.select {|a| !a.cpp_type.base_type.public?}.empty?
+            Logger.info "Ignoring method #{method.qualified_name} due to non-public argument type(s)"
+            next
+          end
 
           if method.static?
             add_child StaticMethodNode.new(method, self)

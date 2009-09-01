@@ -14,14 +14,14 @@ allocation_strategies_test.rb
 ** classes_test.rb
   - Needs the reverse-typedef lookup system reimplemented
 
-* class_methods_encapsulate_test.rb
+*** class_methods_encapsulate_test.rb
 
 *** class_methods_test.rb
 
 ** compiling_test.rb
  - Need auto-gen of to_/from_ruby for const& types
 
-* constructors_test.rb
+*** constructors_test.rb
 
 custom_code_test.rb
 
