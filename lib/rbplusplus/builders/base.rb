@@ -73,7 +73,7 @@ module RbPlusPlus
       #   MyClass::MyEnum => MyClass_MyEnum
       #
       def as_variable(name)
-        name.gsub(/::/, "_").gsub(/[<>]/, "_")
+        name.gsub(/::/, "_").gsub(/[<>]/, "_").gsub("*", "_ptr_")
       end
 
       # Should this node be wrapped as it is or has the user
