@@ -132,7 +132,7 @@ module RbGCCXML
     # Is this class a pure virtual class?
     # TODO Move this into rbgccxml?
     def pure_virtual?
-      [methods].flatten.select {|m| m.virtual? }.length > 0
+      [methods].flatten.select {|m| m.purely_virtual? }.length > 0
     end
 
     # Does this class have virtual methods (especially pure virtual?)
