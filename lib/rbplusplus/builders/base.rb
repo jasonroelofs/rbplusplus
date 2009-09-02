@@ -78,11 +78,21 @@ module RbPlusPlus
         # up sorted farther down the list
         @nodes =
           @nodes.sort_by do |a|
-            a.is_a?(ClassNode) ? a.code.superclasses.length : 0
+            a.is_a?(ClassNode) ? superclass_count(a.code) : 0
           end
       end
 
       protected
+
+      # Count the heirarchy depth of a given class node
+      def superclass_count(node)
+        count = 0
+        n = node
+        while n = n.superclass
+          count += 1
+        end
+        count
+      end
 
       # Turn a string that contains a qualified C++ name into a
       # string that works as a C++ variable. e.g.
