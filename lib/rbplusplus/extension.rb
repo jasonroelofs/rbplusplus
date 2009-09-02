@@ -197,6 +197,7 @@ module RbPlusPlus
       @builder = Builders::ExtensionNode.new(@name, @node || @parser, @modules)
       @builder.add_includes @options[:includes]
       @builder.build
+      @builder.sort
 
       Logger.info "Code generation complete"
     end

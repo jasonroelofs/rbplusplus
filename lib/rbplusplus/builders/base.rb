@@ -65,6 +65,23 @@ module RbPlusPlus
         raise "Nodes must implement #write"
       end
 
+      # Once building is done, the resulting node tree needs to be sorted according
+      # to subclass / superclass definitions. Like anything with C++, Rice needs to
+      # know about base classes before it can build sub classes. We go through
+      # each node's children, sorting them according to this.
+      def sort
+        @nodes.each { |n| n.sort }
+
+        # sort_by lets us build an array of numbers that Ruby then uses
+        # to sort the list. Our method here is to simply specify the
+        # depth a given class is in a heirarchy, as bigger numbers end
+        # up sorted farther down the list
+        @nodes =
+          @nodes.sort_by do |a|
+            a.is_a?(ClassNode) ? a.code.superclasses.length : 0
+          end
+      end
+
       protected
 
       # Turn a string that contains a qualified C++ name into a
