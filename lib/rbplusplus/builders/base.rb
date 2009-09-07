@@ -115,6 +115,35 @@ module RbPlusPlus
         nodes << node
       end
 
+      # Any node can also have a typedef. There are cases where it's
+      # much better to use a typedef instead of the original fully qualified
+      # name, for example deep template definitions (say, any STL structures).
+      # This method will look for the best Typedef to use for this node and will
+      #
+      # @returns [the name of the node, and the node's fully qualified name] or nil
+      def find_typedef
+        found = last_found = self.code
+
+        if !self.code._disable_typedef_lookup?
+          while found
+            last_found = found
+            typedef = RbGCCXML::XMLParsing.find(:node_type => "Typedef", :type => found.attributes["id"])
+
+            # Some typedefs have the access attribute, some don't. We want those without the attribute
+            # and those with the access="public". For this reason, we can't put :access => "public" in the
+            # query above.
+            found = (typedef && typedef.public?) ? typedef : nil
+          end
+        end
+
+        if last_found != self.code
+          Logger.debug("Found typedef #{last_found.qualified_name} for #{self.code.qualified_name}")
+          [last_found.name, last_found.qualified_name]
+        else
+          nil
+        end
+      end
+
     end
 
   end

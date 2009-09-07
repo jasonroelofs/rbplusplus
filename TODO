@@ -11,8 +11,7 @@ Broken
 
 allocation_strategies_test.rb
 
-** classes_test.rb
-  - Needs the reverse-typedef lookup system reimplemented
+*** classes_test.rb
 
 *** class_methods_encapsulate_test.rb
 
