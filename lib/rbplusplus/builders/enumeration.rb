@@ -7,12 +7,14 @@ module RbPlusPlus
       def build
         add_child IncludeNode.new(self, "rice/Enum.hpp", :system)
         add_child IncludeNode.new(self, code.file)
-      end
 
-      def write
         self.rice_variable_type = "Rice::Enum<#{code.qualified_name}>"
         self.rice_variable = "rb_e#{code.name}"
 
+        Logger.info "Wrapping enumeration #{code.qualified_name}"
+      end
+
+      def write
         second = parent.rice_variable ? ", #{parent.rice_variable}" : ""
 
         registrations << "#{rice_variable_type} #{rice_variable} = " \
