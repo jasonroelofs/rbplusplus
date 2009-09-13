@@ -33,6 +33,7 @@ module RbPlusPlus
     autoload :ModuleFunctionNode, "rbplusplus/builders/module_function"
     autoload :StaticMethodNode, "rbplusplus/builders/static_method"
     autoload :InstanceVariableNode, "rbplusplus/builders/instance_variable"
+    autoload :AllocationStrategyNode, "rbplusplus/builders/allocation_strategy"
 
     autoload :ClassHelpers, "rbplusplus/builders/helpers/class"
     autoload :EnumerationHelpers, "rbplusplus/builders/helpers/enumeration"

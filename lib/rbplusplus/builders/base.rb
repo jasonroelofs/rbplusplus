@@ -32,6 +32,11 @@ module RbPlusPlus
       # List of children nodes
       attr_accessor :nodes
 
+      # List of children nodes that generate code that the entire extension
+      # needs to be able to read. Code that fits here includes any auto-generated
+      # to_/from_ruby and any Allocation Strategies
+      attr_accessor :global_nodes
+
       # The Rice variable name for this node
       attr_accessor :rice_variable
 
@@ -45,6 +50,7 @@ module RbPlusPlus
         @declarations = []
         @registrations = []
         @nodes = []
+        @global_nodes = []
       end
 
       # Does this builder node have child nodes?
@@ -113,6 +119,12 @@ module RbPlusPlus
       def add_child(node)
         node.build
         nodes << node
+      end
+
+      # Add a node to the "globals" list. See the declaration of global_nodes
+      def add_global_child(node)
+        node.build
+        global_nodes << node
       end
 
       # Any node can also have a typedef. There are cases where it's
