@@ -6,7 +6,12 @@ context "Extension with overloaded methods" do
     Extension.new "overload" do |e|
       e.sources full_dir("headers/overload.h")
       node = e.namespace "overload"
-      node.classes("Mathy").methods("times")[0].wrap_as("times")
+      mathy = node.classes("Mathy")
+      mathy.methods("times")[0].wrap_as("times")
+
+      mathy.use_constructor(
+        mathy.constructors.find(:arguments => [:int])
+      )
     end
 
     require 'overload'
@@ -28,7 +33,6 @@ context "Extension with overloaded methods" do
     should.not.raise NameError do
       math.nothing_0
       math.nothing_1(1)
-      math.self_0.class.should == math.self_1.class
     end
 
   end

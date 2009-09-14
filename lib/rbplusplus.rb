@@ -67,4 +67,5 @@ require 'rbplusplus/transformers/function'
 require 'rbplusplus/transformers/class'
 require 'rbplusplus/transformers/module'
 require 'rbplusplus/transformers/method'
+require 'rbplusplus/transformers/namespace'
 
