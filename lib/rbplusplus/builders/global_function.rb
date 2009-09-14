@@ -2,16 +2,14 @@ module RbPlusPlus
   module Builders
 
     # Expose a global function
-    class GlobalFunctionNode < Base
+    class GlobalFunctionNode < MethodBase
 
       def build
         add_child IncludeNode.new(self, "rice/global_function.hpp", :system)
         add_child IncludeNode.new(self, code.file)
-      end
 
-      def write
-        ruby_name = Inflector.underscore(code.name)
-        registrations << "Rice::define_global_function(\"#{ruby_name}\", &#{code.qualified_name});"
+        self.prefix = "Rice::"
+        self.rice_method = "define_global_function"
       end
 
     end

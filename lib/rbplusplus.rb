@@ -21,6 +21,7 @@ module RbPlusPlus
 
   module Builders
     autoload :Base, "rbplusplus/builders/base"
+    autoload :MethodBase, "rbplusplus/builders/method_base"
     autoload :ExtensionNode, "rbplusplus/builders/extension"
     autoload :GlobalFunctionNode, "rbplusplus/builders/global_function"
     autoload :IncludeNode, "rbplusplus/builders/include"

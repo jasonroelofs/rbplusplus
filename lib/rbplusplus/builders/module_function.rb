@@ -2,15 +2,12 @@ module RbPlusPlus
   module Builders
 
     # Wrap up a method on a Module as a module_function
-    class ModuleFunctionNode < Base
+    class ModuleFunctionNode < MethodBase
 
       def build
         add_child IncludeNode.new(self, code.file)
-      end
 
-      def write
-        ruby_name = Inflector.underscore(code.name)
-        registrations << "#{parent.rice_variable}.define_module_function(\"#{ruby_name}\", &#{code.qualified_name});"
+        self.rice_method = "define_module_function"
       end
 
     end

@@ -2,14 +2,10 @@ module RbPlusPlus
   module Builders
 
     # Wrap up a static method on a class
-    class StaticMethodNode < Base
+    class StaticMethodNode < MethodBase
 
       def build
-      end
-
-      def write
-        ruby_name = Inflector.underscore(code.name)
-        registrations << "#{parent.rice_variable}.define_singleton_method(\"#{ruby_name}\", &#{code.qualified_name});"
+        self.rice_method = "define_singleton_method"
       end
 
     end

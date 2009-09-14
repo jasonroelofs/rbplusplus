@@ -2,14 +2,10 @@ module RbPlusPlus
   module Builders
 
     # Wrap up an indivitual method
-    class MethodNode < Base
+    class MethodNode < MethodBase
 
       def build
-      end
-
-      def write
-        ruby_name = Inflector.underscore(code.name)
-        registrations << "#{parent.rice_variable}.define_method(\"#{ruby_name}\", &#{code.qualified_name});"
+        self.rice_method = "define_method"
       end
 
     end
