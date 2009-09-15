@@ -8,6 +8,9 @@ module RbPlusPlus
         add_child IncludeNode.new(self, "rice/Enum.hpp", :system)
         add_child IncludeNode.new(self, code.file)
 
+        # See ClassNode
+        add_global_child ConstConverterNode.new(self.code, self)
+
         self.rice_variable_type = "Rice::Enum<#{code.qualified_name}>"
         self.rice_variable = "rb_e#{code.name}"
 

@@ -20,6 +20,10 @@ module RbPlusPlus
 
         check_allocation_strategies
 
+        # For now, build a const& type converter for this type
+        # TODO Remove this once we figure out how to put it in Rice directly
+        add_global_child ConstConverterNode.new(self.code, self)
+
         @short_name, @qualified_name = find_typedef || [code.name, code.qualified_name]
 
         Logger.info "Wrapping class #{@qualified_name}"

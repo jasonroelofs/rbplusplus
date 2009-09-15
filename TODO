@@ -17,8 +17,7 @@ Broken
 
 *** class_methods_test.rb
 
-** compiling_test.rb
- - Need auto-gen of to_/from_ruby for const& types
+*** compiling_test.rb
 
 *** constructors_test.rb
 
@@ -26,8 +25,7 @@ Broken
 
 director_test.rb
 
-** enumerations_test.rb
- - Proper const return handling (commented out)
+*** enumerations_test.rb
 
 *** extension_test.rb
 
