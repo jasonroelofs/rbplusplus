@@ -47,6 +47,6 @@ function_pointer_test.rb
 
 *** subclass_test.rb
 
-to_from_ruby_test.rb
+*** to_from_ruby_test.rb
 
 * wrap_as_test.rb
