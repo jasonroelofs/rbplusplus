@@ -19,15 +19,6 @@ module RbPlusPlus
       def write
         process_code(builder)
 
-#        if Builders::TypesManager.prototypes.length > 0
-#          builder.declarations << Builders::TypesManager.prototypes
-#        end
-#
-#        if Builders::TypesManager.body.length > 0
-#          # Handle to_from_ruby constructions
-#          builder.declarations << Builders::TypesManager.body
-#        end
-
         filename = builder.name
         cpp_file = File.join(working_dir, "#{filename}.rb.cpp")
 
@@ -55,18 +46,30 @@ module RbPlusPlus
         @declarations << builder.declarations
         @registrations << builder.registrations
         
-        builder.global_nodes.each do |g|
-          g.write
-          @includes << g.includes
-          @global_hpp << g.declarations
-          @global_cpp << g.registrations
-        end
+        process_globals(builder)
 
         if builder.has_children?
           builder.nodes.each do |b|
             process_code(b)
           end
         end
+      end
+
+      def process_globals(builder)
+        builder.global_nodes.each do |g|
+          process_global_node(g)
+        end
+      end
+
+      def process_global_node(node)
+        node.write
+        node.nodes.each do |n|
+          process_global_node(n)
+        end
+
+        @includes << node.includes
+        @global_hpp << node.declarations
+        @global_cpp << node.registrations
       end
 
     end
