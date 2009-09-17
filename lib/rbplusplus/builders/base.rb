@@ -88,6 +88,11 @@ module RbPlusPlus
           end
       end
 
+      # Proxy method for writers
+      def qualified_name
+        self.code.qualified_name
+      end
+
       protected
 
       # Count the heirarchy depth of a given class node

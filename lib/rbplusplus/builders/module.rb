@@ -24,6 +24,10 @@ module RbPlusPlus
         @modules = modules
       end
 
+      def qualified_name
+        self.module.qualified_name
+      end
+
       def build
         with_modules
 

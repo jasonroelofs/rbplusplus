@@ -14,6 +14,10 @@ module RbPlusPlus
         super(nil, name, code, modules, nil)
       end
 
+      def qualified_name
+        name
+      end
+
       def add_includes(includes)
         includes.each do |inc|
           add_child IncludeNode.new(self, inc)
