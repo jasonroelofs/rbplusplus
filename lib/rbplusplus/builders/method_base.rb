@@ -27,10 +27,74 @@ module RbPlusPlus
       #
       # Thanks to Py++ for the appropriate C++ syntax for this.
       def write
-        ruby_name = Inflector.underscore(code.name)
+        @ruby_name = Inflector.underscore(code.name)
+
         self.prefix ||= "#{self.parent.rice_variable}."
         self.suffix ||= ""
 
+        if self.code.arguments.size == 1 && (fp = self.code.arguments[0].cpp_type.base_type).is_a?(RbGCCXML::FunctionType)
+          wrap_with_function_pointer(fp)
+        else
+          wrap_normal_method
+        end
+      end
+
+      protected
+
+      # Handling methods that take function pointers takes a lot of extra custom code.
+      #  - Need a method that acts as the proxy between C and the Ruby proc
+      #  - Need a method that gets wrapped into Ruby to handle type conversions
+      #
+      def wrap_with_function_pointer(func_pointer)
+        Logger.info "Building callback wrapper for #{self.code.qualified_name}"
+
+        base_name = as_variable(self.code.qualified_name)
+        return_type = func_pointer.return_type.to_cpp
+        proxy_method_name = "do_yield_on_#{base_name}"
+
+        callback_arguments = []
+        callback_values = [func_pointer.arguments.length]
+
+        func_pointer.arguments.each_with_index do |arg, i|
+          callback_arguments << "#{arg.to_cpp} arg#{i}"
+          callback_values << "to_ruby(arg#{i}).value()"
+        end
+
+        # Build the method that acts as the Proc -> C func pointer proxy (the callback)
+        block_var_name = "_block_for_#{base_name}"
+        declarations << "VALUE #{block_var_name};"
+        declarations << "#{return_type} #{proxy_method_name}(#{callback_arguments.join(", ")}) {"
+
+        funcall = "rb_funcall(#{block_var_name}, rb_intern(\"call\"), #{callback_values.join(", ")})"
+        if return_type == "void"
+          declarations << "#{funcall};"
+        else
+          declarations << "return from_ruby<#{return_type} >(#{funcall});"
+        end
+
+        declarations << "}"
+
+        if self.parent.is_a?(ClassNode)
+          arg = "#{self.parent.qualified_name} *self"
+          callee = "self->#{self.code.qualified_name}"
+        else
+          arg = ""
+          callee = "#{self.code.qualified_name}"
+        end
+
+        wrapper_func = "wrap_for_callback_#{base_name}"
+
+        # Build the wrapper method that gets exposed to Ruby
+        declarations << "VALUE #{wrapper_func}(#{arg}) {"
+        declarations << "\t#{block_var_name} = rb_block_proc();"
+        declarations << "\t#{callee}(&#{proxy_method_name});"
+        declarations << "\treturn Qnil;"
+        declarations << "}"
+
+        registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", &#{wrapper_func});"
+      end
+
+      def wrap_normal_method
         usage_ref = "#{self.code.name}_func_type"
 
         if self.code.static?
@@ -49,7 +113,7 @@ module RbPlusPlus
         registrations << "{"
 
         registrations << "typedef #{self.code.return_type.to_cpp} ( #{method_ref} )( #{arguments} );"
-        registrations << "#{self.prefix}#{self.rice_method}(\"#{ruby_name + self.suffix}\", #{usage_ref}( &#{code.qualified_name} ));"
+        registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", #{usage_ref}( &#{code.qualified_name} ));"
 
         registrations << "}"
       end
