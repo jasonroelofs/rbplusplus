@@ -12,12 +12,13 @@ module RbPlusPlus
       end
 
       def build
-        add_child IncludeNode.new(self, "rice/Allocation_Strategies.hpp", :system)
       end
 
       def write
+        includes << "#include <rice/Allocation_Strategies.hpp>"
+
         node_name = self.code.qualified_name
-        code = <<-END 
+        code = <<-END
 namespace Rice {
   template<>
   struct Default_Allocation_Strategy< #{node_name} > {
