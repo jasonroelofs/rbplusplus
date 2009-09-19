@@ -41,12 +41,12 @@ module RbPlusPlus
         end
 
         nodes.flatten!
+
+        self.rice_variable_type = "Rice::Module"
+        self.rice_variable = "rb_m#{as_variable(self.qualified_name)}"
       end
 
       def write
-        self.rice_variable_type = "Rice::Module"
-        self.rice_variable = "rb_m#{as_variable(@module.qualified_name)}"
-
         prefix = "#{rice_variable_type} #{rice_variable} = "
 
         if parent.rice_variable

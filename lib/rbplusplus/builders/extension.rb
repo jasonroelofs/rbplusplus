@@ -24,6 +24,12 @@ module RbPlusPlus
         end
       end
 
+      def build
+        super
+        self.rice_variable = nil
+        self.rice_variable_type = nil
+      end
+
       def write
         # Let nodes build their code, splitting up code blocks into
         # includes, declarations, and registrations,
