@@ -42,6 +42,7 @@ module RbPlusPlus
 
       def with_module_functions
         @code.functions.each do |func|
+          next if do_not_wrap?(func)
           add_child GlobalFunctionNode.new(func, self)
         end
       end
