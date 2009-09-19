@@ -37,7 +37,7 @@ module RbPlusPlus
       protected
 
       # What we do here is to go through the builder heirarchy
-      # and push all the code from children up to the parent, 
+      # and push all the code from children up to the parent,
       # ending up with all the code in the top-level builder
       def process_code(builder)
         builder.write
@@ -45,31 +45,18 @@ module RbPlusPlus
         @includes << builder.includes
         @declarations << builder.declarations
         @registrations << builder.registrations
-        
-        process_globals(builder)
 
-        if builder.has_children?
-          builder.nodes.each do |b|
-            process_code(b)
-          end
-        end
-      end
-
-      def process_globals(builder)
+        # Process the globals
         builder.global_nodes.each do |g|
-          process_global_node(g)
-        end
-      end
-
-      def process_global_node(node)
-        node.write
-        node.nodes.each do |n|
-          process_global_node(n)
+          g.write
+          @includes << g.includes
+          @global_hpp << g.declarations
+          @global_cpp << g.registrations
         end
 
-        @includes << node.includes
-        @global_hpp << node.declarations
-        @global_cpp << node.registrations
+        builder.nodes.each do |b|
+          process_code(b)
+        end
       end
 
     end
