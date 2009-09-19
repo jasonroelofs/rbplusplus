@@ -32,7 +32,7 @@ module RbPlusPlus
 
         Logger.info "Wrapping class #{@qualified_name}"
 
-        self.rice_variable = "rb_c#{as_variable(@short_name)}"
+        self.rice_variable = "rb_c#{@short_name.as_variable}"
         self.rice_variable_type = "Rice::Data_Type< #{@qualified_name} >"
 
         supers = self.code.superclasses(:public)

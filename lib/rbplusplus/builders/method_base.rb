@@ -48,7 +48,7 @@ module RbPlusPlus
       def wrap_with_function_pointer(func_pointer)
         Logger.info "Building callback wrapper for #{self.code.qualified_name}"
 
-        base_name = as_variable(self.code.qualified_name)
+        base_name = self.code.qualified_name.as_variable
         return_type = func_pointer.return_type.to_cpp
         proxy_method_name = "do_yield_on_#{base_name}"
 

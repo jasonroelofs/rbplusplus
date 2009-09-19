@@ -122,7 +122,7 @@ module RbPlusPlus
 
         def initialize(node, parent)
           @node = node
-          @base_name = as_variable(node.qualified_name)
+          @base_name = node.qualified_name.as_variable
 
           @header = parent ? "_#{@base_name}.rb.hpp" : nil
           @source = parent ? "_#{@base_name}.rb.cpp" : "#{@base_name}.cpp"
@@ -254,10 +254,6 @@ module RbPlusPlus
               cpp.puts "}"
             end
           end
-        end
-
-        def as_variable(name)
-          name.gsub(/::/, "_").gsub(/[<>]/, "_").gsub("*", "_ptr_")
         end
 
       end

@@ -55,7 +55,7 @@ class String #:nodoc:
   # Functionize attempts to rename a string in a cpp function friendly way.
   #
   # vector<float>::x => vector_float__x
-  def functionize
+  def as_variable
     gsub("::","_").gsub(/[ ,<>]/, "_").gsub("*", "Ptr")
   end
 end

@@ -105,15 +105,6 @@ module RbPlusPlus
         count
       end
 
-      # Turn a string that contains a qualified C++ name into a
-      # string that works as a C++ variable. e.g.
-      #
-      #   MyClass::MyEnum => MyClass_MyEnum
-      #
-      def as_variable(name)
-        name.gsub(/::/, "_").gsub(/[<>]/, "_").gsub("*", "_ptr_")
-      end
-
       # Should this node be wrapped as it is or has the user
       # specified something else for this node?
       def do_not_wrap?(node)
