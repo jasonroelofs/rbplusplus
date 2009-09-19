@@ -6,6 +6,10 @@ module RbPlusPlus
       include ClassHelpers
       include EnumerationHelpers
 
+      def qualified_name
+        @qualified_name || self.code.qualified_name
+      end
+
       def build
         add_child IncludeNode.new(self, "rice/Class.hpp", :system)
         add_child IncludeNode.new(self, "rice/Data_Type.hpp", :system)
@@ -95,7 +99,7 @@ module RbPlusPlus
         has_public_destructor = self.code.destructor && self.code.destructor.public?
 
         if !has_public_constructor || !has_public_destructor
-          add_global_child AllocationStrategyNode.new(self, 
+          add_global_child AllocationStrategyNode.new(self,
                             self.code, has_public_constructor, has_public_destructor)
         end
       end
