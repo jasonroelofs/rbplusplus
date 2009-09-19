@@ -95,13 +95,13 @@ module RbPlusPlus
       end
 
       def wrap_normal_method
-        usage_ref = "#{self.code.name}_func_type"
+        parts = "#{self.code.qualified_name}".split("::")
+        usage_ref = "#{parts[-1]}_func_type"
 
-        if self.code.static?
+        if self.code.static? || self.code.as_instance_method?
           method_ref = "*#{usage_ref}"
         else
-          parts = "#{self.code.qualified_name}_func_type".split("::")
-          method_ref = [parts[0..-2], "*#{parts[-1]}"].flatten.join("::")
+          method_ref = [parts[0..-2], "*#{usage_ref}"].flatten.join("::")
         end
 
         arguments =

@@ -1,6 +1,8 @@
 #ifndef __UGLY_H__
 #define __UGLY_H__
 
+namespace UI {
+
 /*
 Mapping should work for:
 ruby:
@@ -91,13 +93,6 @@ namespace DMath {
   }
 }
 
-struct C_STRUCT_Quaternion {
-  public:
-    int i() {
-      return -1;
-    }
-};
-
 namespace I_LEARN_C {
     inline int mod(int a, int b) {
       return a%b;
@@ -111,5 +106,7 @@ namespace I_LEARN_C {
       
     };
 } 
+
+}
 
 #endif

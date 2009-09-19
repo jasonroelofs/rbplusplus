@@ -18,8 +18,8 @@ module RbGCCXML
     end
 
     # Specifies that this node has been included somewhere else
-    def moved=(val)
-      cache[:moved] = val
+    def moved_to=(val)
+      cache[:moved_to] = val
     end
 
     # Change what the name of this node will be when wrapped into Ruby
@@ -28,9 +28,9 @@ module RbGCCXML
       self
     end
 
-    # Returns true if the node has been moved
-    def moved?
-      !!cache[:moved]
+    # Where has this node moved to?
+    def moved_to
+      cache[:moved_to]
     end
 
     # Has this node been renamed

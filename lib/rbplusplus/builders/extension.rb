@@ -10,9 +10,13 @@ module RbPlusPlus
     # different function handling and code generation.
     class ExtensionNode < ModuleNode
 
+      attr_reader :additional_includes
+
       def initialize(name, code, modules)
         self.name = name
         self.modules = modules
+
+        @additional_includes = []
 
         super(code, nil)
       end
@@ -22,6 +26,7 @@ module RbPlusPlus
       end
 
       def add_includes(includes)
+        @additional_includes << includes
         includes.each do |inc|
           add_child IncludeNode.new(self, inc)
         end

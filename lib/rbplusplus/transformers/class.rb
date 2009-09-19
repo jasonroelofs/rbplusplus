@@ -25,7 +25,7 @@ module RbGCCXML
         cache[:methods] ||= []
         cache[:methods] << val
       end
-      val.moved = true 
+      val.moved_to = self
     end
     
     alias_method :node_classes, :classes

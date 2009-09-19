@@ -31,9 +31,9 @@ director_test.rb
 
 *** file_writers_test.rb
 
-function_pointers_classes_test.rb
+*** function_pointers_classes_test.rb
 
-function_pointer_test.rb
+*** function_pointer_test.rb
 
 *** functions_test.rb
 
@@ -49,4 +49,4 @@ function_pointer_test.rb
 
 *** to_from_ruby_test.rb
 
-* wrap_as_test.rb
+*** wrap_as_test.rb

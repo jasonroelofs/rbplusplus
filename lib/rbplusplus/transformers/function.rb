@@ -18,7 +18,7 @@ module RbGCCXML
     end
 
     # For Class#needs_director?
-    def virtual?
+    def purely_virtual?
       false
     end
   end

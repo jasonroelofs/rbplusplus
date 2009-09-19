@@ -65,22 +65,27 @@ module RbPlusPlus
 
         @file_writers = []
         @global_writer = RbppCustomFileWriter.new
+        @globals_handled = []
 
         new_file_for(self.builder)
         process_globals(self.builder)
+
+        @global_writer.with_includes(self.builder.additional_includes)
+        @global_writer.write(@build_dir)
 
         # Write out from the bottom up, makes sure that children file writers
         # update their parents as needed
         @file_writers.each do |fw|
           fw.write(@build_dir)
         end
-
-        @global_writer.write(@build_dir)
       end
 
       def process_globals(node)
         # Process the globals
         node.global_nodes.each do |g|
+          next if @globals_handled.include?(node.qualified_name)
+          @globals_handled << node.qualified_name
+
           @global_writer << g
         end
 
@@ -229,7 +234,8 @@ module RbPlusPlus
               end
             end
 
-            cpp.puts "#include \"_rbpp_custom.rb.hpp\""
+            custom_name = "_rbpp_custom.rb.hpp"
+            cpp.puts "#include \"#{custom_name}\"" if File.exists?(File.join(@build_dir, custom_name))
 
             if (decls = @declarations.flatten.compact).any?
               cpp.puts "", decls.join("\n"), ""
@@ -266,18 +272,28 @@ module RbPlusPlus
           @source = "_#{@base_name}.rb.cpp"
           @nodes = []
           @needs_closing = false
+          @additional_includes = []
+        end
+
+        def with_includes(includes)
+          @additional_includes =
+            includes.flatten.inject([]) do |memo, incl|
+              memo << "#include \"#{incl}\""; memo
+            end
         end
 
         protected
 
         def write_header
+          return unless @registrations.flatten.compact.any?
+
           include_guard = "__RICE_GENERATED_#{@base_name}_HPP__"
 
           File.open(File.join(@build_dir, @header), "w+") do |hpp|
             hpp.puts "#ifndef #{include_guard}"
             hpp.puts "#define #{include_guard}"
 
-            if (incls = @includes.flatten.compact).any?
+            if (incls = [@includes, @additional_includes].flatten.compact).any?
               hpp.puts "", incls.uniq.sort.reverse.join("\n"), ""
             end
 
@@ -290,6 +306,10 @@ module RbPlusPlus
 
           @declarations = []
           @includes = []
+        end
+
+        def write_source
+          super if @registrations.flatten.compact.any?
         end
 
       end

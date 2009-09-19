@@ -147,6 +147,8 @@ module RbPlusPlus
         end
       end
 
+      @options[:includes] += [*dirs]
+
       @sources = Dir.glob dirs
       Logger.info "Parsing #{@sources.inspect}"
       @parser = RbGCCXML.parse(dirs, parser_options)

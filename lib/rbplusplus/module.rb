@@ -75,7 +75,7 @@ module RbPlusPlus
         raise "Cannot use #{self.class}#includes for type '#{obj.class}'"
       end
 
-      node.moved = true
+      node.moved_to = self
     end
 
     # Make sure to add to the node.functions any functions specifically
