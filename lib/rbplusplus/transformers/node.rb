@@ -47,7 +47,7 @@ module RbGCCXML
       rbgccxml_name
     end
 
-    private
+    protected
 
     # Get this node's settings cache
     def cache

@@ -10,22 +10,20 @@ module RbPlusPlus
       # Has a name
       attr_accessor :name
 
-      # Link to the Module as defined by the user
-      attr_accessor :module
-
       # And needs to specially handle any other nexted modules
       attr_accessor :modules
 
-      def initialize(node, name, code, modules, parent = nil)
-        super(code, parent)
+      # Node is the RbModule object, it proxies any unknown calls
+      # off to it's internal Node object
+      def initialize(code, parent = nil)
+        super
 
-        @module = node
-        @name = name
-        @modules = modules
+        @name ||= code.name
+        @modules ||= code.modules
       end
 
       def qualified_name
-        self.module.qualified_name
+        self.code.qualified_name
       end
 
       def build

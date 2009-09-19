@@ -20,10 +20,10 @@ module RbGCCXML
     def includes(val)
       if (val.is_a?(RbGCCXML::Struct) || val.is_a?(RbGCCXML::Class))
         cache[:classes] ||= []
-        cache[:classes] << RbPlusPlus::NodeReference.new(val)
+        cache[:classes] << val
       else
         cache[:methods] ||= []
-        cache[:methods] << RbPlusPlus::NodeReference.new(val)
+        cache[:methods] << val
       end
       val.moved = true 
     end

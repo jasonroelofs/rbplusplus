@@ -11,7 +11,10 @@ module RbPlusPlus
     class ExtensionNode < ModuleNode
 
       def initialize(name, code, modules)
-        super(nil, name, code, modules, nil)
+        self.name = name
+        self.modules = modules
+
+        super(code, nil)
       end
 
       def qualified_name

@@ -4,8 +4,8 @@ module RbPlusPlus
 
       # Build up any user-defined modules for this node
       def with_modules
-        self.modules.each do |m|
-          add_child ModuleNode.new(m, m.name, m.node, m.modules, self)
+        self.modules.each do |mod|
+          add_child ModuleNode.new(mod, self)
         end
       end
 
