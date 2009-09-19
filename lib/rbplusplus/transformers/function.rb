@@ -17,24 +17,6 @@ module RbGCCXML
       !!cache[:as_method]
     end
 
-    # Use this method to designate calling a different function
-    # when the ruby method is requested
-    #
-    # TODO Is this really necessary?
-    def calls(method_name)
-      cache[:special_qualified_name] = method_name
-      self
-    end
-
-    def special_qualified_name
-      cache[:special_qualified_name]
-    end
-
-    alias_method :method_qualified_name, :qualified_name
-    def qualified_name #:nodoc:
-      cache[:special_qualified_name] || method_qualified_name
-    end
-
     # For Class#needs_director?
     def virtual?
       false
