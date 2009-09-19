@@ -136,7 +136,7 @@ context "Compiler settings" do
       e.build
       e.write
 
-      file = full_dir("generated/external.rb.cpp")
+      file = full_dir("generated/external.cpp")
       contents = File.read(file)
       contents.should.match(%r(headers/external_mapping_rice.h))
     end

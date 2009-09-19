@@ -6,7 +6,6 @@ context "Extension with constructors out the whazoo" do
     Extension.new "constructors" do |e|
       e.sources full_dir("headers/constructors.h")
       node = e.namespace "constructors"
-      e.writer_mode :single
 
 
       node.classes("DoubleStringHolder").use_constructor(

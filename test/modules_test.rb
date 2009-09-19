@@ -17,8 +17,6 @@ context "Extension with modules" do
             full_dir("headers/Adder.cpp")
           ]
 
-#        e.writer_mode :single
-
         e.module "Empty" do |m|
         end
 

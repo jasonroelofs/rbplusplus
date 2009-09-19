@@ -29,7 +29,7 @@ director_test.rb
 
 *** extension_test.rb
 
-file_writers_test.rb
+*** file_writers_test.rb
 
 function_pointers_classes_test.rb
 
