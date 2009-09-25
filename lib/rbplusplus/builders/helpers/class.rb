@@ -33,7 +33,11 @@ module RbPlusPlus
           # Ignore the generated copy constructor
           next if constructor.attributes[:artificial] && constructor.arguments.length == 1
 
-          add_child ConstructorNode.new(constructor, self)
+          if @director
+            @director.wrap_constructor constructor
+          else
+            add_child ConstructorNode.new(constructor, self)
+          end
         end
       end
 
@@ -51,25 +55,6 @@ module RbPlusPlus
           next if do_not_wrap?(var)
 
           add_child InstanceVariableNode.new(var, self)
-        end
-      end
-
-      # Wrap up all public methods
-      def with_methods
-        [self.code.methods].flatten.each do |method|
-          next if do_not_wrap?(method)
-
-          # Ignore methods that have non-public arguments anywhere
-          if !method.arguments.empty? && !method.arguments.select {|a| !a.cpp_type.base_type.public?}.empty?
-            Logger.info "Ignoring method #{method.qualified_name} due to non-public argument type(s)"
-            next
-          end
-
-          if method.static?
-            add_child StaticMethodNode.new(method, self)
-          else
-            add_child MethodNode.new(method, self)
-          end
         end
       end
 

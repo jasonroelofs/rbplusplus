@@ -133,6 +133,8 @@ module RbPlusPlus
           @source = parent ? "_#{@base_name}.rb.cpp" : "#{@base_name}.cpp"
           @parent = parent
 
+          @require_custom = false
+
           @needs_closing = true
 
           register_with_parent if @parent
@@ -209,6 +211,9 @@ module RbPlusPlus
             hpp.puts "#define #{include_guard}"
             hpp.puts
 
+            custom_name = "_rbpp_custom.rb.hpp"
+            hpp.puts "#include \"#{custom_name}\"" if File.exists?(File.join(@build_dir, custom_name))
+
             if @register_method
               hpp.puts "#{@register_method}(#{parent_signature});"
             end
@@ -228,14 +233,16 @@ module RbPlusPlus
               cpp.puts "", "#include \"#{@header}\"", ""
             end
 
+            if @require_custom
+              custom_name = "_rbpp_custom.rb.hpp"
+              cpp.puts "#include \"#{custom_name}\"" if File.exists?(File.join(@build_dir, custom_name))
+            end
+
             if @register_includes
               @register_includes.each do |i|
                 cpp.puts i
               end
             end
-
-            custom_name = "_rbpp_custom.rb.hpp"
-            cpp.puts "#include \"#{custom_name}\"" if File.exists?(File.join(@build_dir, custom_name))
 
             if (decls = @declarations.flatten.compact).any?
               cpp.puts "", decls.join("\n"), ""
@@ -273,6 +280,7 @@ module RbPlusPlus
           @nodes = []
           @needs_closing = false
           @additional_includes = []
+          @require_custom = true
         end
 
         def with_includes(includes)

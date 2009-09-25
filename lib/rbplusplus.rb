@@ -29,6 +29,7 @@ module RbPlusPlus
     autoload :ConstNode, "rbplusplus/builders/const"
     autoload :ModuleNode, "rbplusplus/builders/module"
     autoload :ClassNode, "rbplusplus/builders/class"
+    autoload :DirectorNode, "rbplusplus/builders/director"
     autoload :ConstructorNode, "rbplusplus/builders/constructor"
     autoload :MethodNode, "rbplusplus/builders/method"
     autoload :ModuleFunctionNode, "rbplusplus/builders/module_function"
