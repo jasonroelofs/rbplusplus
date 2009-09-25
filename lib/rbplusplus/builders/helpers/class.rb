@@ -17,21 +17,32 @@ module RbPlusPlus
       def with_constructors
         # Ignore constructors on classes that have pure virtual methods,
         # as they aren't constructable
-        return if self.code.pure_virtual?
+        return if !@director && self.code.pure_virtual?
 
         to_use = self.code._get_constructor
 
-        if to_use.nil? && self.code.constructors.length > 1
+        real_constructors = [self.code.constructors].flatten.select {|c| !c.attributes[:artificial]}
+
+        if real_constructors.empty?
+          real_constructors = self.code.constructors
+        else
+          ignore_artificial = true
+        end
+
+        if to_use.nil? && real_constructors.length > 1
           Logger.warn :multiple_constructors, "#{self.code.qualified_name} has multiple constructors. " +
             "While the extension will probably compile, Rice only supports one constructor, " +
             "please use #use_contructor to select which one to use."
         end
 
-        [to_use || self.code.constructors].flatten.each do |constructor|
+        # First, lets see if we have any non-generated constructors
+
+        [to_use || real_constructors].flatten.each do |constructor|
           next if do_not_wrap?(constructor)
 
-          # Ignore the generated copy constructor
-          next if constructor.attributes[:artificial] && constructor.arguments.length == 1
+          if constructor.attributes[:artificial]
+            next if ignore_artificial || constructor.arguments.length == 1
+          end
 
           if @director
             @director.wrap_constructor constructor
