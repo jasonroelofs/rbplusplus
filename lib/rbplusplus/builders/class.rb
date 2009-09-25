@@ -51,11 +51,11 @@ module RbPlusPlus
 
         unless @director
           check_allocation_strategies
-
-          # For now, build a const& type converter for this type
-          # TODO Remove this once we figure out how to put it in Rice directly
-          add_global_child ConstConverterNode.new(self.code, self)
         end
+
+        # For now, build a const& type converter for this type
+        # TODO Remove this once we figure out how to put it in Rice directly
+        add_global_child ConstConverterNode.new(self.code, self)
       end
 
       def write
