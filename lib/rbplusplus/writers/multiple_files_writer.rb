@@ -130,7 +130,7 @@ module RbPlusPlus
           @base_name = node.qualified_name.as_variable
 
           @header = parent ? "_#{@base_name}.rb.hpp" : nil
-          @source = parent ? "_#{@base_name}.rb.cpp" : "#{@base_name}.cpp"
+          @source = parent ? "_#{@base_name}.rb.cpp" : "#{@base_name}.rb.cpp"
           @parent = parent
 
           @require_custom = false

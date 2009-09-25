@@ -34,7 +34,7 @@ context "Multiple file writer (default)" do
       _classes_ShouldFindMe.rb.cpp
       _rbpp_custom.rb.hpp
       _rbpp_custom.rb.cpp
-      adder.cpp
+      adder.rb.cpp
     ).each do |wants|
       assert_not_nil files.find {|got| File.basename(got) == wants }, "Didn't find #{wants}"
     end
