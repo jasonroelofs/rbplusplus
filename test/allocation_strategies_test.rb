@@ -13,6 +13,11 @@ context "Allocation Strategies" do
     end
   end
 
+  # The test here is simple because if the allocation
+  # strategies aren't properly defined, the extension
+  # won't even compile. GCC will complain about trying to
+  # instantiate an object with a non-public constructor
+  # and it all dies.
   specify "properly figures out what allocation to do" do
     assert_nothing_raised LoadError  do
       require 'alloc_strats'

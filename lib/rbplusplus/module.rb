@@ -39,6 +39,9 @@ module RbPlusPlus
       @name = name
       @parser = parser
       @modules = []
+      @wrapped_functions = []
+      @wrapped_classes = []
+      @wrapped_structs = []
 
       block.call(self) if block
     end
@@ -57,6 +60,43 @@ module RbPlusPlus
       m = RbModule.new(name, @parser, &block)
       m.parent = self
       @modules << m
+    end
+
+    # Add an RbGCCXML::Node to this module. This Node can be a
+    # Function, Class or Struct and will get wrapped accordingly
+    def includes(node)
+      if node.is_a?(RbGCCXML::Function)
+        @wrapped_functions << node
+      elsif node.is_a?(RbGCCXML::Class)
+        @wrapped_classes << node
+      elsif node.is_a?(RbGCCXML::Struct)
+        @wrapped_structs << node
+      else
+        raise "Cannot use #{self.class}#includes for type '#{obj.class}'"
+      end
+
+      node.moved_to = self
+    end
+
+    # Make sure to add to the node.functions any functions specifically
+    # given to this module
+    def functions(*args)
+      [node ? node.functions(*args) : [], @wrapped_functions].flatten
+    end
+
+    # As with #functions, add to node.classes any classes / structs that
+    # have been explicitly given to this module.
+    def classes(*args)
+      [node ? node.classes(*args) : [], @wrapped_classes].flatten
+    end
+
+    # See #clases and #functions
+    def structs(*args)
+      [node ? node.structs(*args) : [], @wrapped_structs].flatten
+    end
+
+    def enumerations(*args)
+      node ? node.enumerations(*args) : []
     end
 
     # Get the fully nested name of this module

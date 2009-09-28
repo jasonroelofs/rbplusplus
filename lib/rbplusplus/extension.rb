@@ -147,6 +147,8 @@ module RbPlusPlus
         end
       end
 
+      @options[:includes] += [*dirs]
+
       @sources = Dir.glob dirs
       Logger.info "Parsing #{@sources.inspect}"
       @parser = RbGCCXML.parse(dirs, parser_options)
@@ -194,11 +196,10 @@ module RbPlusPlus
 
       Logger.info "Beginning code generation"
 
-      @builder = Builders::ExtensionBuilder.new(@name, @node || @parser)
-      Builders::Base.additional_includes  = @options[:includes]
-      Builders::Base.sources              = @sources
-      @builder.modules = @modules
+      @builder = Builders::ExtensionNode.new(@name, @node || @parser, @modules)
+      @builder.add_includes @options[:includes]
       @builder.build
+      @builder.sort
 
       Logger.info "Code generation complete"
     end

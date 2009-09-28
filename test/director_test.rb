@@ -5,14 +5,14 @@ context "Director proxy generation" do
   def setup
     if !defined?(@@director_built)
       super
-      @@director_built = true 
+      @@director_built = true
       Extension.new "director" do |e|
         e.sources full_dir("headers/director.h")
 
         node = e.namespace "director"
 
-        # As director is pretty complicated to get right 
-        # automatically for now, we force-specify which 
+        # As director is pretty complicated to get right
+        # automatically for now, we force-specify which
         # classes to have directors set on.
         %w(Worker MultiplyWorker BadNameClass VirtualWithArgs NoConstructor VBase VOne VTwo).each do |k|
           node.classes(k).director
@@ -76,7 +76,7 @@ context "Director proxy generation" do
       def process(num)
         num + 8
       end
-    end    
+    end
 
     w = MyAwesomeWorker.new
     w.do_process(3).should.equal 10
@@ -134,10 +134,10 @@ context "Director proxy generation" do
     v1.method_one.should.equal "methodOne"
 
     should.raise NotImplementedError do
-      v1.method_two 
+      v1.method_two
     end
-    should.raise NotImplementedError do 
-      v1.method_three 
+    should.raise NotImplementedError do
+      v1.method_three
     end
 
     v2.method_one.should.equal "methodOne"

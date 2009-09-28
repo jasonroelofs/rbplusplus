@@ -27,7 +27,6 @@ namespace function_pointers {
 
   void setCallbackReturns(ReturnCallback cb) { returnCallback = cb; }
   int callCallbackReturns(int in) { return returnCallback(in); }
-
 }
 
 #endif

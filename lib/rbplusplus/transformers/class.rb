@@ -20,12 +20,12 @@ module RbGCCXML
     def includes(val)
       if (val.is_a?(RbGCCXML::Struct) || val.is_a?(RbGCCXML::Class))
         cache[:classes] ||= []
-        cache[:classes] << RbPlusPlus::NodeReference.new(val)
+        cache[:classes] << val
       else
         cache[:methods] ||= []
-        cache[:methods] << RbPlusPlus::NodeReference.new(val)
+        cache[:methods] << val
       end
-      val.moved = true 
+      val.moved_to = self
     end
     
     alias_method :node_classes, :classes
@@ -127,6 +127,12 @@ module RbGCCXML
 
     def _disable_typedef_lookup?
       !!cache[:disable_typedef_lookup]
+    end
+
+    # Is this class a pure virtual class?
+    # TODO Move this into rbgccxml?
+    def pure_virtual?
+      [methods].flatten.select {|m| m.purely_virtual? }.length > 0
     end
 
     # Does this class have virtual methods (especially pure virtual?)

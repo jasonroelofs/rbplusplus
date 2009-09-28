@@ -51,6 +51,7 @@ namespace to_from_ruby {
   
   /* template tests */
   
+  /*
   template<class T>
   class TemplateClass {
     T val;
@@ -73,6 +74,7 @@ namespace to_from_ruby {
   inline const TemplateClass<int>* getTemplate(int overload) {
     return new TemplateClass<int>(overload);
   }
+  */
 }
 
 #endif 

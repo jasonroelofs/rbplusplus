@@ -92,5 +92,21 @@ context "Extension with wrapped classes" do
 
     a.const_var.should.equal 14
   end
+
+  specify "can subclass a wrapped class and go from there" do
+    class MyAdder < Adder
+      def add_integers(a, b)
+        a * b
+      end
+
+      def add_strings(a, b)
+        super(a, b) + "woot"
+      end
+    end
+
+    a = MyAdder.new
+    a.add_integers(3, 7).should.equal 21
+    a.add_strings("piz", "owned").should.equal "pizownedwoot"
+  end
 end
 

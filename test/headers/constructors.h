@@ -10,10 +10,14 @@ namespace constructors {
     private:
       std::string one, two;
     public:
+
       DoubleStringHolder(std::string one, std::string two) {
         this->one = one;
         this->two = two;
       }
+
+      DoubleStringHolder() { }
+
       inline std::string getOne() {
         return this->one;
       }
