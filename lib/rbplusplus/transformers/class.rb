@@ -116,19 +116,6 @@ module RbGCCXML
       cache[:wrappings] || []
     end
 
-    # In some cases, the automatic typedef lookup of rb++ can end up
-    # doing the wrong thing (for example, it can take a normal class
-    # and end up using the typedef for stl::container<>::value_type).
-    # Flag a given class as ignoring this typedef lookup if this
-    # situation happens.
-    def disable_typedef_lookup
-      cache[:disable_typedef_lookup] = true
-    end
-
-    def _disable_typedef_lookup?
-      !!cache[:disable_typedef_lookup]
-    end
-
     # Is this class a pure virtual class?
     # TODO Move this into rbgccxml?
     def pure_virtual?

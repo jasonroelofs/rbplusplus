@@ -126,13 +126,15 @@ module RbPlusPlus
       # Any node can also have a typedef. There are cases where it's
       # much better to use a typedef instead of the original fully qualified
       # name, for example deep template definitions (say, any STL structures).
-      # This method will look for the best Typedef to use for this node and will
+      # This method will look for the best Typedef to use for this node.
+      # This lookup can be disabled on a per-node basis by calling node.disable_typedef_lookup,
+      # as there are cases where the typedef search works against the parsed code.
       #
-      # @returns [the name of the node, and the node's fully qualified name] or nil
-      def find_typedef
-        found = last_found = self.code
+      # @returns the typedef node found or the node passed in (self.code by default)
+      def find_typedef(node = self.code)
+        found = last_found = node
 
-        if !self.code._disable_typedef_lookup?
+        if !node._disable_typedef_lookup?
           while found
             last_found = found
             typedef = RbGCCXML::XMLParsing.find(:node_type => "Typedef", :type => found.attributes["id"])
@@ -144,13 +146,14 @@ module RbPlusPlus
           end
         end
 
-        if last_found != self.code
-          Logger.debug("Found typedef #{last_found.qualified_name} for #{self.code.qualified_name}")
-          [last_found.name, last_found.qualified_name]
-        else
-          nil
+        if last_found != node
+          Logger.debug("Found typedef #{last_found.qualified_name} for #{node.qualified_name}")
         end
+
+        last_found
       end
+
+      alias find_typedef_for find_typedef
 
     end
 

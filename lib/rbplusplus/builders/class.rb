@@ -15,7 +15,9 @@ module RbPlusPlus
         add_child IncludeNode.new(self, "rice/Data_Type.hpp", :system)
         add_child IncludeNode.new(self, code.file)
 
-        @short_name, @qualified_name = find_typedef || [code.name, code.qualified_name]
+        typedef = find_typedef
+
+        @short_name, @qualified_name = typedef ? [typedef.name, typedef.qualified_name] : [code.name, code.qualified_name]
 
         Logger.info "Wrapping class #{@qualified_name}"
 

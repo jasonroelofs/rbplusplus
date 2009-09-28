@@ -110,9 +110,11 @@ module RbPlusPlus
             memo
           end.join(", ")
 
+        return_type = find_typedef_for(self.code.return_type).to_cpp
+
         registrations << "{"
 
-        registrations << "typedef #{self.code.return_type.to_cpp} ( #{method_ref} )( #{arguments} );"
+        registrations << "typedef #{return_type} ( #{method_ref} )( #{arguments} );"
         registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", #{usage_ref}( &#{code.qualified_name} ));"
 
         registrations << "}"
