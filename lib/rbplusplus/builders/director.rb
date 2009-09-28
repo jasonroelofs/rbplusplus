@@ -107,7 +107,6 @@ module RbPlusPlus
           end
 
           def_arguments = def_arguments.length == 0 ? "" : def_arguments.join(", ")
-          call_arguments = call_arguments.length == 0 ? "" : call_arguments.join(", ")
 
           reverse = ""
           up_or_raise = 
@@ -118,11 +117,11 @@ module RbPlusPlus
               if method.purely_virtual?
                 "raisePureVirtual()"
               else
-                "#{return_call} this->#{method.qualified_name}(#{call_arguments})"
+                "#{return_call} this->#{method.qualified_name}(#{call_arguments.join(", ")})"
               end
             end
 
-          call_down = "getSelf().call(\"#{ruby_name}\"#{call_arguments == "" ? "" : ", "}#{call_arguments})"
+          call_down = "getSelf().call(\"#{ruby_name}\"#{call_arguments.empty? ? "" : ", "}#{call_arguments.map {|a| "to_ruby(#{a})" }.join(", ")})"
           call_down = "return from_ruby< #{return_type} >( #{call_down} )" if return_type != "void"
 
           const = method.const? ? "const" : ""
