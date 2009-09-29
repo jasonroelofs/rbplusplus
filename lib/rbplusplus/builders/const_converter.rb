@@ -5,6 +5,7 @@ module RbPlusPlus
     class ConstConverterNode < Base
 
       def build
+        Logger.debug("Building const converter for #{self.code.qualified_name}")
       end
 
       def write
@@ -12,7 +13,12 @@ module RbPlusPlus
 
         # Various reasons we don't want to generate this:
         # Rice already handles it
-        return if full_name =~ /std::string/
+        if full_name =~ /std::string/
+          Logger.debug("Not building const converter for #{full_name}")
+          return
+        end
+
+        Logger.debug("Writing out const converter for #{full_name}")
 
         includes << "#include <rice/Object.hpp>"
         includes << "#include <rice/Data_Object.hpp>"

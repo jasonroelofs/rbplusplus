@@ -83,9 +83,8 @@ module RbPlusPlus
       def process_globals(node)
         # Process the globals
         node.global_nodes.each do |g|
-          next if @globals_handled.include?(node.qualified_name)
-          @globals_handled << node.qualified_name
-
+          next if @globals_handled.include?(g.qualified_name)
+          @globals_handled << g.qualified_name
           @global_writer << g
         end
 

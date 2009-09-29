@@ -132,6 +132,8 @@ module RbPlusPlus
       #
       # @returns the typedef node found or the node passed in (self.code by default)
       def find_typedef(node = self.code)
+        return node if node.is_a?(RbGCCXML::FundamentalType)
+
         found = last_found = node
 
         if !node._disable_typedef_lookup?
@@ -146,9 +148,11 @@ module RbPlusPlus
           end
         end
 
-        if last_found != node
-          Logger.debug("Found typedef #{last_found.qualified_name} for #{node.qualified_name}")
-        end
+        # TODO This needs to be handled better. ReferenceType nodes are messing things up.
+        # Probably need to nix the ReferenceType#== method
+#        if last_found != node
+#          Logger.debug("Found typedef #{last_found.qualified_name} for #{node.qualified_name}")
+#        end
 
         last_found
       end
