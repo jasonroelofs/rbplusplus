@@ -84,7 +84,7 @@ process, immediate syntax is also available
   ...
   e.build    # => Generates the C++ code
   e.write    # => Writes out to files
-  e.compile  # => Compiles into an extension
+  e.compile  # => Compiles the extension
 
 Please note the ##build ##write and ##compile methods. These are required for an extension to be
 built. These calls are made automatically in Block Mode. See the RbPlusPlus::Extension class
@@ -147,8 +147,8 @@ the basic usage above. There are many different features available to help defin
 
 === Modules
 
-An extension can include 0..n modules in which code will be wrapped. Any given module needs to be given
-a ##namespace call. This defines which C++ code will be wrapped into this module.
+An extension can include modules in which code will be wrapped. Any given module needs to be given
+a ##namespace call. This specifies which C++ code will be wrapped into this module.
 
   Extension.new "extension" do |e|
     e.sources ...
@@ -172,7 +172,8 @@ it gets wrapped.
 
 Often times you will want to ignore a method on an object, a whole class, or a whole namespace even.  This
 can be useful if the function you wish to ignore takes a 'void *' as an argument, or for a variety of other
-reasons.
+reasons. 
+
 You can tell rb++ which namespaces/classes/methods to ignore very easily:
 
   Extension.new "extension" do |e|
@@ -182,7 +183,7 @@ You can tell rb++ which namespaces/classes/methods to ignore very easily:
     node.classes("Shape").methods("registerCallback").ignore  # Ignore the method Shape::registerCallback
   end
 
-You can also ignore a whole query result with the same notation:
+You can also ignore a whole set of query results with the same notation:
 
 
   Extension.new "extension" do |e|
@@ -194,7 +195,7 @@ You can also ignore a whole query result with the same notation:
 ==== Including
 
 If a C++ library has a certain class in an undesired namespace, or a certain function with undesired visibility
-you can easily fix this by using the declarative 'include'.
+you can easily fix this by using the declarative ##includes.
 
   Extension.new "extension" do |e|
     e.sources ...
@@ -202,7 +203,9 @@ you can easily fix this by using the declarative 'include'.
 
     e.module "Physics" do |m|
       m.module "Math" do |math|
-        #moves each class to Physics::Math
+        # Moves each class in ::PhysicsMath to Physics::Math.
+        # Not the best example but gets the point across. The proper
+        # way to do this is to do math.namespace "PhysicsMath" here
         node.classes.each do |c|
           math.includes c
         end
@@ -219,7 +222,7 @@ the classes will only exist in Physics::Math and not PhysicsMath
 Sometimes C++ libraries implement certain architectures that are nice to have in C++, but are terrible in Ruby.  For
 example, many older libraries in C++ start name their classes with a "C#{class}".
 
-In order to rectify this you use the #wrap_as method to rename the node:
+In order to rectify this you use the ##wrap_as method to rename the node:
 
   Extension.new "extension" do |e|
     e.sources ...
@@ -237,12 +240,12 @@ kind of wrapping is also trivially easy in rb++. Say you have the function:
     return a%b;
   }
 
-and you want to add it to your Math class:
+and you want to add it to your Math class as an instance method using ##as_instance_method:
 
   mod = node.functions("mod")
   node.classes("Math").includes mod.as_instance_method
 
-Please note the #as_instance_method. You now have Math#mod in your extension
+  ----
 
   require 'extension'
 
@@ -262,10 +265,15 @@ or by querying according to the arguments of the constructor(s) you want to igno
 
   node.classes("MyClass").constructors.find(:arguments => [nil,  nil]) # ignore constructors with 2 arguments
 
+Contrary to ignoring a constructor, you can also expliclty tell rb++ which constructor to use:
+
+  my_class = node.classes("MyClass")
+  my_class.use_constructor my_class.constructors[0]
+
 === Method overloading
 
-Method overloading is supported, but not by Rice.  Therefore all overloaded methods are wrapped in the order
-that they are presented to gccxml.  For example:
+Method overloading not currently supported in Rice, thus rb++ has a workaround built in. 
+All overloaded methods are wrapped in the order that they are presented to gccxml.  For example:
 
   class System {
     public:
@@ -274,7 +282,7 @@ that they are presented to gccxml.  For example:
     inline void puts() { puts(""); }
   };
 
-can be used by default in rb++ like so:
+Will be exposed by default like so:
 
   s = System.new
   s.puts_0("Hello world")
@@ -282,7 +290,7 @@ can be used by default in rb++ like so:
 
 You can, however, rename them as you see fit if you tell rb++ how, for example:
 
-  puts_methods = node.classes("System").methods("puts")  # Gives 2 puts methods back
+  puts_methods = node.classes("System").methods("puts")
   puts_methods[0].wrap_as("puts")
 
 After doing this you can use the methods as follows:
@@ -311,7 +319,7 @@ can only be invoked with 2 arguments.  If you are having problems with this, ple
 
 By default, rb++ will write out the extension in multiple files, following the convention of
 
-  extension_name.cpp
+  extension_name.rb.cpp
   _ClassName.rb.hpp
   _ClassName.rb.cpp
   _ModuleName_ClassName.rb.hpp
@@ -319,7 +327,7 @@ By default, rb++ will write out the extension in multiple files, following the c
   ...
 
 This is done to prevent obscenely long compile times, super large code files, or uncompilable extensions due to
-system limitations (e.g. RAM) that are common with big SWIG projects.
+system limitations (e.g. RAM) that are common problems with big SWIG projects.
 
 Rb++ can also write out the extension code in a single file (extension_name.cpp) with Extension#writer_mode
 
