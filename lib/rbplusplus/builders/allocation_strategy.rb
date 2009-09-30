@@ -11,6 +11,11 @@ module RbPlusPlus
         @public_destructor = has_public_destructor
       end
 
+      # Used by MultipleFileWriter to only wrap a given type once.
+      def qualified_name
+        "#{self.code.qualified_name}_AllocStrat"
+      end
+
       def build
       end
 

@@ -4,6 +4,11 @@ module RbPlusPlus
     # Handles code generation for to_ruby converters for const& types
     class ConstConverterNode < Base
 
+      # Used by MultipleFileWriter to only wrap a given type once.
+      def qualified_name
+        "#{self.code.qualified_name}_ConstConverter"
+      end
+
       def build
         Logger.debug("Building const converter for #{self.code.qualified_name}")
       end
