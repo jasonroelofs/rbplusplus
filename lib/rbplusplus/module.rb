@@ -72,7 +72,7 @@ module RbPlusPlus
       elsif node.is_a?(RbGCCXML::Struct)
         @wrapped_structs << node
       else
-        raise "Cannot use #{self.class}#includes for type '#{obj.class}'"
+        raise "Cannot use #{self.class}#includes for type '#{node.class}'"
       end
 
       node.moved_to = self
