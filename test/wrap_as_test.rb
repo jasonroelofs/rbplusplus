@@ -85,15 +85,13 @@ context "Ugly interfaces cleaner" do
     end
 
     should.not.raise NoMethodError do
-      UI::Modulus.mod(3,2).should == 1
+      UI::Modulus.mod(3,2).should.equal 1
     end
 
-    should.raise TypeError do
-      UI::Modulus.new.method_mod(2)
-    end
+    UI::Modulus.new.method_mod(4, 3).should.equal 1
 
     should.not.raise NoMethodError do
-      UI::Math::divide(2,1).should == 2
+      UI::Math::divide(2,1).should.equal 2
     end
 
     should.raise TypeError do
