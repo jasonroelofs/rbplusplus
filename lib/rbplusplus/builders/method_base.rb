@@ -104,18 +104,23 @@ module RbPlusPlus
           method_ref = [parts[0..-2], "*#{usage_ref}"].flatten.join("::")
         end
 
-        arguments =
-          self.code.arguments.inject([]) do |memo, arg|
-            memo << "#{arg.cpp_type.to_cpp} #{arg.name}"
-            memo
-          end.join(", ")
+        default_arguments = []
+        arguments = []
+
+        self.code.arguments.each do |arg|
+          arguments << arg.to_cpp
+          default_arguments << "Rice::Arg(\"#{arg.name}\")#{arg.value ? " = (#{arg.cpp_type.to_cpp})#{arg.value}" : "" }"
+        end
 
         return_type = find_typedef_for(self.code.return_type).to_cpp
 
+        def_args = default_arguments.any? ? ", (#{default_arguments.join(", ")})" : ""
+
         registrations << "{"
 
-        registrations << "typedef #{return_type} ( #{method_ref} )( #{arguments} );"
-        registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", #{usage_ref}( &#{code.qualified_name} ));"
+        registrations << "typedef #{return_type} ( #{method_ref} )( #{arguments.join(", ")} );"
+        registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", " +
+                          "#{usage_ref}( &#{code.qualified_name} )#{def_args});"
 
         registrations << "}"
       end
