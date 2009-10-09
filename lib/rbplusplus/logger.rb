@@ -4,8 +4,29 @@ module RbPlusPlus
   # Can be configured to ignore certain warning messages.
   class Logger
     class << self
+
+      # Tell the logger to print out every message it gets
+      def verbose=(val)
+        @@verbose = val
+      end
+
+      # Tell the logger to be a little quieter
+      def quiet=(val)
+        @@quiet = val
+      end
+
+      def verbose?
+        @@verbose = false unless defined?(@@verbose)
+        @@verbose
+      end
+
+      def quiet?
+        @@quiet = false unless defined?(@@quiet)
+        @@quiet
+      end
+
       def info(msg)
-        $stdout.puts "(INFO) #{msg}"
+        $stdout.puts "(INFO) #{msg}" unless quiet?
       end
 
       def warn(type, msg)
@@ -13,7 +34,7 @@ module RbPlusPlus
       end
 
       def debug(msg)
-        $stdout.puts "(DEBUG) #{msg}"
+        $stdout.puts "(DEBUG) #{msg}" if verbose?
       end
 
       def error(msg)

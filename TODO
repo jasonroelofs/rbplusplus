@@ -3,7 +3,6 @@ Parts to move into rbgccxml:
 - Class purely_virtual? (check the abstract attribute)
 - Namespace#methods ?
 
-More command line arguments:
- - Debugging (-v?) to show (DEBUG) messages, only (INFO) and (WARNING) by default
- - Silent (-q -s?) to just not print anything out
- - Hide Warnings (-W ?) Warnings are there for a reason, but I can see people wanting to ignore them
+Move documentation to YARD?
+
+Use sdoc?

@@ -1,3 +1,5 @@
+require 'optparse'
+
 module RbPlusPlus
 
   # This is the starting class for Rb++ wrapping. All Rb++ projects start with this
@@ -70,6 +72,8 @@ module RbPlusPlus
       }
 
       @node = nil
+
+      parse_command_line
 
       if requesting_console?
         block.call(self) if block
@@ -240,9 +244,38 @@ module RbPlusPlus
 
     protected
 
+    # Read any command line arguments and process them
+    def parse_command_line
+      OptionParser.new do |opts|
+        opts.banner = "Usage: ruby #{$0} [options]"
+
+        opts.on_head("-h", "--help", "Show this help message") do
+          puts opts
+          exit
+        end
+
+        opts.on("-v", "--verbose", "Show all progress messages (INFO, DEBUG, WARNING, ERROR)") do 
+          Logger.verbose = true
+        end
+
+        opts.on("-q", "--quiet", "Only show WARNING and ERROR messages") do
+          Logger.quiet = true
+        end
+
+        opts.on("--console", "Open up a console to query the source via rbgccxml") do
+          @requesting_console = true
+        end
+
+        opts.on("--clean", "Force a complete clean and rebuild of this extension") do
+          @force_rebuild = true
+        end
+
+      end.parse!
+    end
+
     # Check ARGV to see if someone asked for "console"
     def requesting_console?
-      ARGV[0] == "console"
+      @requesting_console
     end
 
     # Start up a new IRB console session giving the user access
@@ -257,7 +290,7 @@ module RbPlusPlus
     # and if it does exist, clean it out
     def prepare_working_dir
       FileUtils.mkdir_p @working_dir unless File.directory?(@working_dir)
-      FileUtils.rm_rf Dir["#{@working_dir}/*"] if ARGV.include?("clean")
+      FileUtils.rm_rf Dir["#{@working_dir}/*"] if @force_rebuild #ARGV.include?("clean")
     end
 
     # Make sure that any files or globs of files in :include_source_files are copied into the working
