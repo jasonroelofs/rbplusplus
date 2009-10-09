@@ -40,6 +40,8 @@ module RbPlusPlus
             if method.virtual? && !wrapped_names.include?(method.name)
               @methods_wrapped << method
               wrapped_names << method.name
+
+              add_child DirectorMethodNode.new(method, self.parent, self)
             end
           end
           klass = klass.superclass
@@ -102,7 +104,8 @@ module RbPlusPlus
           def_arguments = []
           call_arguments = []
           method.arguments.each do |a|
-            def_arguments << "#{a.cpp_type.to_cpp} #{a.name}"
+            def_arg = a.value ? " = #{a.value}" : ""
+            def_arguments << "#{a.cpp_type.to_cpp} #{a.name}#{def_arg}"
             call_arguments << a.name
           end
 
@@ -134,9 +137,6 @@ module RbPlusPlus
           declarations << "#{call_down};"
           declarations << "}"
           declarations << "}"
-
-          # And expose the Rice registration
-          registrations << "#{self.parent.rice_variable}.define_method(\"#{ruby_name}\", &#{@name}::#{cpp_name});"
         end
 
         declarations << "};"

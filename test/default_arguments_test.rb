@@ -34,36 +34,36 @@ context "Default arguments properly exposed" do
     Inner.module_do(5, 5, 5).should.equal 15
   end
 
-#  specify "class instance methods" do
-#    tester = Tester.new
-#    tester.concat("this", "that").should.equal "this-that"
-#    tester.concat("this", "that", ";").should.equal "this;that"
-#  end
-#
-#  specify "class static methods" do
-#    Tester.build("base").should.equal "basebasebase"
-#    Tester.build("woot", 5).should.equal "wootwootwootwootwoot"
-#  end
-#
-#  specify "director methods" do
-#    d = Directed.new
-#    d.virtual_do(3).should.equal 30
-#    d.virtual_do(3, 9).should.equal 27
-#
-#    class MyD < Directed
-#      def virtual_do(x, y = 10)
-#        super(x * 3, y)
-#      end
-#    end
-#
-#    myd = MyD.new
-#    myd.virtual_do(10).should.equal 300
-#  end
-#
-#  specify "throw argument error on bad types" do
-#    should.raise ArgumentError do
-#      global_to(1, "three")
-#    end
-#  end
+  specify "class instance methods" do
+    tester = Tester.new
+    tester.concat("this", "that").should.equal "this-that"
+    tester.concat("this", "that", ";").should.equal "this;that"
+  end
+
+  specify "class static methods" do
+    Tester.build("base").should.equal "basebasebase"
+    Tester.build("woot", 5).should.equal "wootwootwootwootwoot"
+  end
+
+  specify "director methods" do
+    d = Directed.new
+    d.virtual_do(3).should.equal 30
+    d.virtual_do(3, 9).should.equal 27
+
+    class MyD < Directed
+      def virtual_do(x, y = 10)
+        super(x * 3, y)
+      end
+    end
+
+    myd = MyD.new
+    myd.virtual_do(10).should.equal 300
+  end
+
+  specify "throw argument error on bad types" do
+    should.raise TypeError do
+      global_do(1, "three")
+    end
+  end
 
 end

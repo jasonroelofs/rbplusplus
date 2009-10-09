@@ -39,6 +39,11 @@ module RbPlusPlus
         end
       end
 
+      # This method should return the full C++ path to the method you're exposing
+      def code_path
+        self.code.qualified_name
+      end
+
       protected
 
       # Handling methods that take function pointers takes a lot of extra custom code.
@@ -120,7 +125,7 @@ module RbPlusPlus
 
         registrations << "typedef #{return_type} ( #{method_ref} )( #{arguments.join(", ")} );"
         registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", " +
-                          "#{usage_ref}( &#{code.qualified_name} )#{def_args});"
+                          "#{usage_ref}( &#{code_path} )#{def_args});"
 
         registrations << "}"
       end

@@ -28,14 +28,10 @@ namespace default_args {
 
       // Class static methods
       static std::string build(std::string base, int times = 3) {
-        cout << "Base is " << base << endl;
-        cout << "Times is " << times << endl;
         std::string out = "";
         for(int i = 0; i < times; i++) {
           out += base;
         }
-
-        cout << "REturning: " << out << endl;
         return out;
       }
   };
