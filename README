@@ -1,8 +1,10 @@
 == What is rb++?
 
-Rb++ makes it almost trivially easy to create Ruby extensions for any C
-or C++ library / code. In the simplest of cases, there is no need to ever
-touch C, everything is done in a very simple and clean Ruby API.
+Rb++ makes it almost trivially easy to create Ruby extensions for any C++
+C++ library. In the simplest of cases, there is no need to ever
+touch C++, everything is done in a very simple and clean Ruby API.
+
+For wrapping plain C libraries, I highly recommend FFI: http://github.com/ffi/ffi
 
 Note: For those familiar with py++, the similarities are minimal.
 Outside of the purpose of both libraries, rb++ was built from scratch to
