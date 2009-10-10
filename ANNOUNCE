@@ -1,6 +1,6 @@
 = What is rb++ / rbgccxml?
 
-For anyone who wants an alternative to SWIG for generating Ruby extensions from C++ header files, look no further. 
+For anyone who wants an alternative to SWIG for generating Ruby extensions for C++ libraries, look no further.
 
 == Project
 
@@ -18,15 +18,15 @@ The stack includes three libraries: rb++, rbgccxml, and gccxml_gem and will inst
 
 == rb++
 
-Rb++ makes it almost trivially easy to create Ruby extensions for any C or C++ library / code. In the simplest of cases, there is no need to ever touch C, everything is done in a very simple and clean Ruby API.
+Rb++ makes it almost trivially easy to create Ruby extensions for C++ library. In the simplest of cases, there is no need to ever touch C++, everything is done in a very simple and clean Ruby API.
 
 == rbgccxml
 
-RbGCCXML allows one to easily parse out and query C++ code. This library uses GCC-XML to parse out the C++ code into XML, and then Hpricot to parse and query that XML.
+RbGCCXML allows one to easily parse out and query C / C++ code. This library uses GCC-XML to parse out the C / C++ code into XML, and then libxml-ruby to parse and query that XML.
 
 == gccxml_gem
 
-GCC-XML (www.gccxml.org) is an application that takes takes the parse tree of G++ and constructs a very parsable and queryable XML file with all related information. 
+GCC-XML (www.gccxml.org) is an application that takes takes the parse tree of C / C++ and constructs a very parsable and queryable XML file with all related information.
 
 The third part of the stack is this gem that includes a binary build of GCC-XML for your platform, to make it trivially easy to install. Platforms currently supported are:
 
@@ -36,9 +36,9 @@ The third part of the stack is this gem that includes a binary build of GCC-XML 
 
 == Requirements
 
-* rice (http://rice.rubyforge.org) - The C++ interface for Ruby
-* hpricot (http://code.whytheluckystiff.net/hpricot/) - Does the XML parsing
-* test/spec - For running the tests
+* rice (http://rice.rubyforge.org)
+* libxml-ruby (http://libxml.rubyforge.org/)
+* test/spec
 
 == Code
 
@@ -54,6 +54,6 @@ Released under the MIT licence.
 
 For those familiar with py++ / pygccxml, the similarities are in function only. Rb++ / rbgccxml were written from scratch to take advantage of the Ruby language to it's fullest.
 
-Bugs, patches, feature requests, et al should be posted to the project's tracker.
+Bugs, patches, feature requests, et al should be posted to the corresponding project's Issues page on github.
 
 Discussion can be here or the project's rubyforge forums.
