@@ -6,3 +6,8 @@ Parts to move into rbgccxml:
 Move documentation to YARD?
 
 Use sdoc?
+
+Logging:
+ - Method overloads, wrap what a method is getting named as
+ - More detail into the writing, multiple and single file writers
+ - More debug messages in the building process

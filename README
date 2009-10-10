@@ -27,16 +27,7 @@ Everything is installed with a simple line:
 
 == The Project
 
-For bug reports, patch submissions, project annoucements and downloads, visit rb++'s rubyforge
-project page at:
-
-http://www.rubyforge.org/projects/rbplusplus
-
-Feel free to post help request, hints, or general ideas on the forums.
-
 Rb++'s source is in a git repository hosted on github:
-
-Project page:
 
 http://github.com/jameskilton/rbgplusplus/tree/master
 
@@ -53,10 +44,9 @@ All rb++ projects start off with the Extension class:
 
   Extension.new "extension_name"
 
-The one requirement on the C++ code for rb++ to easily handle it, is that the code that's
-to be wrapped is in its own namespace. If the code to be wrapped is in the global namespace,
-then you should build a seperate header file that includes all the files to be wrapped
-inside of a namespace:
+Rb++ has one requirement on the C++ code: it must be wrapped in a namespace. If the code
+you're trying to wrap is not in it's own namespace, please build a seperate header file that
+wraps everything in a namespace as such:
 
   namespace to_wrap {
     #include "file1.h"
@@ -70,8 +60,7 @@ syntax for more control over the whole process.
 
 === Block Mode
 
-For basic reading and wrapping needs, the block syntax makes rb++ very easy to write and
-read
+For most extension wrapping needs, Block Mode takes care of automating everything that it can:
 
   Extension.new "extension" do |e|
     ...
@@ -89,14 +78,14 @@ process, immediate syntax is also available
   e.compile  # => Compiles the extension
 
 Please note the ##build ##write and ##compile methods. These are required for an extension to be
-built. These calls are made automatically in Block Mode. See the RbPlusPlus::Extension class
-for more details.
+built and must be called in this order. These calls are made automatically in Block Mode.
+See the RbPlusPlus::Extension class for more details.
 
 == Basic Usage
 
-For the most basic usage, where there are C++ header files to wrap and it's simple enough
-to not need extra processing, there are only two required calls: Extension.sources and
-Extension.namespace. Extension.sources has a few ways to be called (and is much the same as RbGCCXML.parse):
+For the most basic usage, there are only two required calls: Extension.sources and
+Extension.namespace. Extension.sources has a few ways to be called
+(which takes most the same parameters as RbGCCXML.parse):
 
   # A single header file
   Extension.new "extension" do |e|
@@ -118,29 +107,40 @@ Extension.namespace. Extension.sources has a few ways to be called (and is much 
     e.sources ["/path/to/*.h", "/elsewhere/*.hpp"]
   end
 
-One special method that's also required in the Immediate Mode is Extension#working_dir=. This
-specifies where rb++ will put the generated code. In Block Mode, the default is to put the code
-in __FILE__/generated, but as rb++ cannot ascertain the __FILE__ information without a block,
-it will need to be stated explicitly. Use this method in Block Mode if the default location does
-not work.
-
-  e = Extension.new "extension"
-  e.working_dir = "/path/to/generate/files/"
-
-The last required method is Extension#namespace. As mentioned above, all extensions
-are built from code in a given C++ namespace. That namespace needs to be specified before
-Rb++ will start any processing
+Once your sources are defined, you need to tell rb++ the name of the namespace from which
+code needs to be wrapped. This is done using the #namespace command in one of two different
+situations:
 
   # Wrap all code under the 'to_wrap' namespace
   Extension.new "extension" do |e|
     e.namespace "to_wrap"
   end
 
-There is one place where Extension#namespace isn't exactly required: when you'll be wrapping up
-the C++ code soley in other Ruby modules to be contained in the extension.
+When wrapping code under ruby modules, you specify which namespace should be wrapped into
+which module as so:
 
-The general rule is this: <b>If you want C++ code wrapped, you must use Extension#namespace to specify
-which code should go where</b>.
+  # Wrap all code under the 'to_wrap' namespace
+  Extension.new "extension" do |e|
+    e.module "ExtMod" do |m|
+      m.namespace "to_wrap"
+    end
+
+    e.module "Util" do |m|
+      m.namespace "to_wrap_util"
+    end
+  end
+
+The general rule is this: If you want C++ code wrapped, you must use Extension#namespace to specify
+where your C++ code will get wrapped.
+
+When working in Immediate Mode, there is one more required method after ##sources and ##namespace:
+##working_dir=, which you use to specify which directory to write out the Rice source code.
+When using Block Mode, rb++ can figure out a good default working directory due to __FILE__ on the
+block's binding. Without this block, rb++ is clueless and must be told where it's working directory
+should be:
+
+  e = Extension.new "extension"
+  e.working_dir = "/path/to/generate/files/"
 
 == More Detailed Usage
 
@@ -149,8 +149,9 @@ the basic usage above. There are many different features available to help defin
 
 === Modules
 
-An extension can include modules in which code will be wrapped. Any given module needs to be given
-a ##namespace call. This specifies which C++ code will be wrapped into this module.
+An extension can include modules in which code will be wrapped. Any given module needs to either be given
+a ##namespace call or be directly given code nodes to wrap using Module#includes.
+This specifies which C++ code will be wrapped into this module.
 
   Extension.new "extension" do |e|
     e.sources ...
@@ -170,11 +171,11 @@ When dealing with such problems -- code that just won't adhere to a wrappable fo
 of manipulation routines for controlling exactly what gets wrapped, where it gets wrapped, and how
 it gets wrapped.
 
-==== Excluding / Ignoring
+==== Ignoring
 
 Often times you will want to ignore a method on an object, a whole class, or a whole namespace even.  This
 can be useful if the function you wish to ignore takes a 'void *' as an argument, or for a variety of other
-reasons. 
+reasons.
 
 You can tell rb++ which namespaces/classes/methods to ignore very easily:
 
@@ -190,14 +191,13 @@ You can also ignore a whole set of query results with the same notation:
 
   Extension.new "extension" do |e|
     ...
-    node.methods.find(:all, :name => "free").ignore           # Ignores all class methods named 'free'
+    node.methods.find(:all, :name => "free").ignore           # Ignores all instance methods named 'free'
     ...
   end
 
 ==== Including
 
-If a C++ library has a certain class in an undesired namespace, or a certain function with undesired visibility
-you can easily fix this by using the declarative ##includes.
+For more control over exactly where a given piece of C++ code will be wrapped, use Module#includes:
 
   Extension.new "extension" do |e|
     e.sources ...
@@ -217,14 +217,13 @@ you can easily fix this by using the declarative ##includes.
   end
 
 Note that when you include something in a module it is moved from it's original location.  In the example above
-the classes will only exist in Physics::Math and not PhysicsMath
+the classes will only exist in Physics::Math and will no longer show up in the global space.
 
 ==== Renaming
 
-Sometimes C++ libraries implement certain architectures that are nice to have in C++, but are terrible in Ruby.  For
-example, many older libraries in C++ start name their classes with a "C#{class}".
-
-In order to rectify this you use the ##wrap_as method to rename the node:
+Sometimes C++ libraries implement certain architectures that are nice to have in C++, but are terrible in Ruby, 
+or standards in Ruby aren't possible in C++ (func?, func=, func!). For this reason, every node can be renamed using
+the #wrap_as method:
 
   Extension.new "extension" do |e|
     e.sources ...
@@ -233,16 +232,19 @@ In order to rectify this you use the ##wrap_as method to rename the node:
     node.classes("CShape").methods("hasCollided").wrap_as("collided?")
   end
 
+Note: <b>rb++ automatically underscores all method names and CamelCases all class names that haven't been 
+otherwise changed with ##wrap_as</b>.
+
 ==== Function / Method Conversions
 
-C++ APIs can also sometimes put as global functions functionality you want contained in a class or module. This
+C++ APIs can also sometimes expose global functionality you want contained in a class or module. This
 kind of wrapping is also trivially easy in rb++. Say you have the function:
 
   inline int mod(int a, int b) {
     return a%b;
   }
 
-and you want to add it to your Math class as an instance method using ##as_instance_method:
+and you want to add it to your Math class as an instance method. Simple, use ##as_instance_method and ##includes:
 
   mod = node.functions("mod")
   node.classes("Math").includes mod.as_instance_method
@@ -272,9 +274,11 @@ Contrary to ignoring a constructor, you can also expliclty tell rb++ which const
   my_class = node.classes("MyClass")
   my_class.use_constructor my_class.constructors[0]
 
+Rb++ will print out a (WARNING) for each class affected by this.
+
 === Method overloading
 
-Method overloading not currently supported in Rice, thus rb++ has a workaround built in. 
+Method overloading not currently supported in Rice, thus rb++ has a workaround built in.
 All overloaded methods are wrapped in the order that they are presented to gccxml.  For example:
 
   class System {
@@ -301,19 +305,8 @@ After doing this you can use the methods as follows:
   s.puts("Hello World")
   s.puts_1
 
-=== Methods with optional arguments
-
-Rice does not currently support default arguments.  Right now they are all required.  For example:
-
-  int times(int a=0, int b=0) {
-    return a*b;
-  }
-
-can only be invoked with 2 arguments.  If you are having problems with this, please consult the rb++ forum.
-
-=== Additional notes
-
-* Method / function names are underscored by default. So <tt>YourClass::doSomething</tt> becomes <tt>YourClass#do_something</tt>
+As of right now, there isn't a specific way to say "use this method as the default name", you need to
+make sure you ##wrap_as the method you want to stay the same and let the others get the suffix.
 
 == Misc Options
 
@@ -334,13 +327,13 @@ system limitations (e.g. RAM) that are common problems with big SWIG projects.
 Rb++ can also write out the extension code in a single file (extension_name.cpp) with Extension#writer_mode
 
   Extension.new "extension" do |e|
-    e.writer_mode :single
+    e.writer_mode :single # :multiple is the default
   end
 
 === Compilation options
 
-rb++ takes care of setting up the extension to be properly compiled, but sometimes certain
-compiler options can't be deduced. rb++ has options to specify library paths (-L), libraries (-l),
+Rb++ takes care of setting up the extension to be properly compiled, but sometimes certain
+compiler options can't be deduced. Rb++ has options to specify library paths (-L), libraries (-l),
 and include paths (-I) to add to the compilation lines, as well as just adding your own flags
 directly to the command line. These are options on Extension.sources
 
@@ -352,9 +345,27 @@ directly to the command line. These are options on Extension.sources
       :cxxflags => *flags,            # For those flags that don't match the above three
       :ldflags => *flags,             # For extra linking flags that don't match the above
       :includes => *files,            # For when there are header files that need to be included into the
-                                      #   compilation but *don't* get parsed out and wrapped
+                                      #   compilation but *don't* get parsed and wrapped
       :include_source_files => *files # A list of source files that will get copied into working_dir and
                                       #   compiled with the extension
+      :include_source_dir => dir      # Specify a directory. Rb++ will build up a list of :includes and
+                                      #   :include_source_files based on the files in this directory
   end
 
-Any compiler errors and the full build log will be found in rbpp_compile.log.
+=== Command Line Arguments
+
+Rb++ exposes a few command line arguments to your wrapper script that allow more find-grained control
+over running your script. These options are:
+
+  Usage: ruby build_noise.rb [options]
+    -h, --help                       Show this help message
+    -v, --verbose                    Show all progress messages (INFO, DEBUG, WARNING, ERROR)
+    -q, --quiet                      Only show WARNING and ERROR messages
+        --console                    Open up a console to query the source via rbgccxml
+        --clean                      Force a complete clean and rebuild of this extension
+
+=== Logging
+
+All logging is simply sent straight to STDOUT except (ERROR) messages which are sent to STDERR. 
+
+Compilation logs are found in [working_dir]/rbpp_compile.log.
