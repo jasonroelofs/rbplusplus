@@ -115,16 +115,10 @@ module RbGCCXML
       cache[:wrappings] || []
     end
 
-    # Is this class a pure virtual class?
-    # TODO Move this into rbgccxml?
-    def pure_virtual?
-      [methods].flatten.select {|m| m.purely_virtual? }.length > 0
-    end
-
     # Does this class have virtual methods (especially pure virtual?)
     # If so, then rb++ will generate a proxy class to handle 
     # the message routing as needed.
-    def needs_director?
+    def needs_director? #:nodoc:
       !!cache[:build_director] #[methods].flatten.select {|m| m.virtual? }.length > 0
     end
 
