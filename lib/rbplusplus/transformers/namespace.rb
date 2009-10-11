@@ -1,8 +1,9 @@
 module RbGCCXML
   class Namespace < Node
 
-    # TODO: Should this be put in rbgccxml?
-    def methods(*args)
+    # For easy compatibility between #methods
+    # and #functions in the builder system
+    def methods(*args) #:nodoc:
       self.functions(*args)
     end
 

@@ -261,7 +261,7 @@ module RbPlusPlus
               end
             end
 
-            # TODO I really need a better way of handling this
+            # I really need a better way of handling this
             if @needs_closing
               cpp.puts "}"
             end

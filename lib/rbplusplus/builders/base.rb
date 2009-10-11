@@ -148,12 +148,6 @@ module RbPlusPlus
           end
         end
 
-        # TODO This needs to be handled better. ReferenceType nodes are messing things up.
-        # Probably need to nix the ReferenceType#== method
-#        if last_found != node
-#          Logger.debug("Found typedef #{last_found.qualified_name} for #{node.qualified_name}")
-#        end
-
         last_found
       end
 
