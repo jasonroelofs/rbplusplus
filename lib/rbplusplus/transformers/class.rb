@@ -49,7 +49,7 @@ module RbGCCXML
       cache[:use_superclass] = node
     end
 
-    def _get_superclass
+    def _get_superclass #:nodoc:
       cache[:use_superclass]
     end
 
@@ -63,7 +63,7 @@ module RbGCCXML
       cache[:use_constructor] = node
     end
 
-    def _get_constructor
+    def _get_constructor #:nodoc:
       cache[:use_constructor]
     end
 
@@ -74,8 +74,7 @@ module RbGCCXML
     #
     # The Declaration:
     #   This is the actual custom code you write. It may need to take
-    #   a pointer to the class type as the first parameter (or if this
-    #   is a singleton method, give it Rice::Object self)
+    #   a pointer to the class type as the first parameter
     #   and follow with that any parameters you want. 
     #
     # The Wrapping
@@ -95,7 +94,7 @@ module RbGCCXML
     #   END
     #   wrapping = "<class>.define_method(\"get_custom_attribute_int\", &RenderTarget_getCustomAttributeInt);"
     #
-    #   rt.add_custom_code(decl, wrapping)
+    #   ogre.classes("RenderTarget").add_custom_code(decl, wrapping)
     #
     # This method works as an aggregator, so feel free to use it any number
     # of times for a class, it won't clobber any previous uses.
@@ -108,11 +107,11 @@ module RbGCCXML
       cache[:wrappings] << wrapping
     end
 
-    def _get_custom_declarations
+    def _get_custom_declarations #:nodoc:
       cache[:declarations] || []
     end
 
-    def _get_custom_wrappings
+    def _get_custom_wrappings #:nodoc:
       cache[:wrappings] || []
     end
 

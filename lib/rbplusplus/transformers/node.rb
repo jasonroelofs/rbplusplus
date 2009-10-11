@@ -56,10 +56,9 @@ module RbGCCXML
       cache[:disable_typedef_lookup] = true
     end
 
-    def _disable_typedef_lookup?
+    def _disable_typedef_lookup? #:nodoc:
       !!cache[:disable_typedef_lookup]
     end
-
 
     protected
 
