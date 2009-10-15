@@ -2,42 +2,37 @@ require 'optparse'
 
 module RbPlusPlus
 
-  # This is the starting class for Rb++ wrapping. All Rb++ projects start with this
-  # class:
+  # This is the starting class for Rb++ wrapping. All Rb++ projects start as such:
   #   
   #   Extension.new "extension_name" do |e|
   #     ...
   #   end
   #
-  # "extension_name" is what the resulting Ruby library will be named; thus in your ruby code
-  # you will have
+  # where "extension_name" is what the resulting Ruby library will be named.
   #
-  #   require "extension_name"
-  #
-  # It is recommended that you use the block format of this class's initializer.
-  # If you want more fine-grained control of the whole process, don't use
-  # the block format. Instead you should do the following:
+  # For most cases, the block format will work. If you need more detailed control
+  # over the code generation process, you can use an immediate mode:
   #
   #   e = Extension.new "extension_name"
   #   ...
   #
   # The following calls are required in both formats:
   #
-  #   #sources - The directory / array / name of C++ header files to parse. 
+  #   e.sources - The directory / array / name of C++ header files to parse. 
   #   
   # In the non-block format, the following calls are required:
   #
-  #   #working_dir - Specify the directory where the code will be generated. This needs
+  #   e.working_dir - Specify the directory where the code will be generated. This needs
   #   to be a full path.
   #
-  # In the non-block format, you need to manually fire the different steps of the
-  # code generation process, and in this order:
+  # In immediate mode, you must to manually fire the different steps of the
+  # code generation process in this order:
   #
-  #   #build - Fires the code generation process
+  #   e.build - Fires the code generation process
   #
-  #   #write - Writes out the generated code into files
+  #   e.write - Writes out the generated code into files
   #
-  #   #compile - Compiles the generated code into a Ruby extension. 
+  #   e.compile - Compiles the generated code into a Ruby extension. 
   #   
   class Extension
 
@@ -54,7 +49,9 @@ module RbPlusPlus
     attr_accessor :options
 
     # Create a new Ruby extension with a given name. This name will be
-    # the module built into the extension. 
+    # the actual name of the extension, e.g. you'll have name.so and you will
+    # call require 'name' when using your new extension.
+    #
     # This constructor can be standalone or take a block. 
     def initialize(name, &block)
       @name = name
@@ -102,6 +99,7 @@ module RbPlusPlus
     # * <tt>:include_source_dir</tt> - A combination option for reducing duplication, this option will 
     #   query the given directory for source files, adding all to <tt>:include_source_files</tt> and 
     #   adding all h/hpp files to <tt>:includes</tt> 
+    #
     def sources(dirs, options = {})
       parser_options = {}
 
@@ -167,7 +165,7 @@ module RbPlusPlus
     # class, enums, etc to be globally available to Ruby (aka not in it's own
     # module)
     #
-    # For now, to get access to the underlying RbGCCXML query system, save the
+    # To get access to the underlying RbGCCXML query system, save the
     # return value of this method:
     #
     #   node = namespace "lib::to_wrap"
@@ -185,9 +183,11 @@ module RbPlusPlus
       m
     end
 
-    # How should we write out the source code? This can be one of two modes:
+    # Specify the mode with which to write out code files. This can be one of two modes:
+    #
     # * <tt>:multiple</tt> (default) - Each class and module gets it's own set of hpp/cpp files
     # * <tt>:single</tt> - Everything gets written to a single file
+    #
     def writer_mode(mode)
       raise "Unknown writer mode #{mode}" unless [:multiple, :single].include?(mode)
       @writer_mode = mode
@@ -227,7 +227,7 @@ module RbPlusPlus
     end
 
     # Compile the extension.
-    # This will create an rbpp_compile.log file in @working_dir. View this
+    # This will create an rbpp_compile.log file in +working_dir+. View this
     # file to see the full compilation process including any compiler
     # errors / warnings.
     def compile
