@@ -1,12 +1,16 @@
 = What is rb++ / rbgccxml?
 
-For anyone who wants an alternative to SWIG for generating Ruby extensions for C++ libraries, look no further.
+Rb++, rbgccxml, and rice compose a suite of tools that make wrapping C++ libraries into
+Ruby extensions as simple as possible. This is built as a replacement for SWIG-Ruby.
 
 == Project
 
 Documentation: http://rbplusplus.rubyforge.org
 
-Project Page: http://rubyforge.org/projects/rbplusplus
+Project Pages:
+
+  rb++:     http://github.com/jameskilton/rbplusplus
+  rbgccxml: http://github.com/jameskilton/rbgccxml
 
 == Installation
 
@@ -14,7 +18,7 @@ This single command will grab the whole stack needed for rb++ to work.
 
   gem install rbplusplus
 
-The stack includes three libraries: rb++, rbgccxml, and gccxml_gem and will install rice
+The stack includes four libraries: rb++, rbgccxml, gccxml_gem, and rice
 
 == rb++
 
@@ -28,25 +32,23 @@ RbGCCXML allows one to easily parse out and query C / C++ code. This library use
 
 GCC-XML (www.gccxml.org) is an application that takes takes the parse tree of C / C++ and constructs a very parsable and queryable XML file with all related information.
 
-The third part of the stack is this gem that includes a binary build of GCC-XML for your platform, to make it trivially easy to install. Platforms currently supported are:
+This gem includes a binary build of GCC-XML for supported platforms, to make it trivially easy to install. Platforms currently supported are:
 
 * Linux 32 & 64 bit
 * Mac OS X
-* Windows 32-bit via Cygwin
+* Windows via Cygwin
 
-== Requirements
+== Rice
 
-* rice (http://rice.rubyforge.org)
+The Ruby Interface for C++ Extensions, it provides a C++ API for working with ruby. More information
+available at its project page:
+
+  http://rice.rubyforge.org
+
+== Other Libraries
+
 * libxml-ruby (http://libxml.rubyforge.org/)
 * test/spec
-
-== Code
-
-All code is hosted at github
-
-rb++: http://github.com/jameskilton/rbplusplus/tree/master
-rbgccxml: http://github.com/jameskilton/rbgccxml/tree/master
-gccxml_gem: http://github.com/jameskilton/gccxml_gem/tree/master
 
 == Notes
 
@@ -55,5 +57,3 @@ Released under the MIT licence.
 For those familiar with py++ / pygccxml, the similarities are in function only. Rb++ / rbgccxml were written from scratch to take advantage of the Ruby language to it's fullest.
 
 Bugs, patches, feature requests, et al should be posted to the corresponding project's Issues page on github.
-
-Discussion can be here or the project's rubyforge forums.
