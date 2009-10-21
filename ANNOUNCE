@@ -3,6 +3,40 @@
 Rb++, rbgccxml, and rice compose a suite of tools that make wrapping C++ libraries into
 Ruby extensions as simple as possible. This is built as a replacement for SWIG-Ruby.
 
+== What's New
+
+rb++:
+  - Core builder and writer systems rewritten to be much cleaner and easier to work with
+  - Functions with Callbacks
+  - Automatic Typedef lookup of argument and return types
+  - Class constants
+  - Class instance variables
+  - Auto generation of allocation strategies
+  - Wrapping anonymous enumerations as constants
+  - Command line arguments: --clean, --console, -v, -q
+  - Caching to speed up parsing and building phases
+  - Rice::Director
+  - Exposing Default arguments
+
+rbgccxml:
+  - 1.9 compatible!
+  - Switched parsing from hpricot to libxml-ruby
+  - ArrayTypes
+  - FunctionType (function pointers)
+  - Class consts and instance variables
+  - Node#to_s => Node#to_cpp
+  - Node#file_name => Node#file
+  - Arguments have values
+
+plus numerous tweaks, bug fixes, etc. See the commit log for all the details. There have been
+a lot of API changes in both libraries since the last release.
+
+== Notes
+
+rbgccxml is 1.9 compatible, however, rb++ is not because Rice is not quite there.
+
+rb++ is also not functional on Windows at this time, would appreciate it if someone wanted to look into this, otherwise I'm going to wait for the One-Click team to finish their work on buildling Ruby with mingw.
+
 == Project
 
 Documentation: http://rbplusplus.rubyforge.org
