@@ -14,10 +14,8 @@ Rbgccxml is released under the "MIT Licence":http://github.com/jameskilton/rbgcc
 
 h3. Installation
 
-<pre>
-  gem sources --add http://gemcutter.org
-  gem install rbgccxml
-</pre>
+gem sources --add http://gemcutter.org
+gem install rbgccxml
 
 h3. Documentation
 
