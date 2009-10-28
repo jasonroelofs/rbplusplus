@@ -66,4 +66,10 @@ context "Default arguments properly exposed" do
     end
   end
 
+  # See MethodBase#fix_enumeration_value
+  specify "properly handle incomplete enums in default values" do
+    modify(1).should.equal 11
+    modify(1, Ops::ADD).should.equal 11
+    modify(1, Ops::REMOVE).should.equal -9
+  end
 end

@@ -114,7 +114,19 @@ module RbPlusPlus
 
         self.code.arguments.each do |arg|
           arguments << arg.to_cpp
-          default_arguments << "Rice::Arg(\"#{arg.name}\")#{arg.value ? " = (#{arg.cpp_type.to_cpp})#{arg.value}" : "" }"
+
+          default_value =
+            if arg.value
+              if (base_type = arg.cpp_type.base_type).is_a?(RbGCCXML::Enumeration)
+                " = #{fix_enumeration_value(base_type, arg.value)}"
+              else
+                " = (#{arg.cpp_type.to_cpp})#{arg.value}"
+              end
+            else
+              ""
+            end
+
+          default_arguments << "Rice::Arg(\"#{arg.name}\")#{default_value}"
         end
 
         return_type = find_typedef_for(self.code.return_type).to_cpp
@@ -128,6 +140,24 @@ module RbPlusPlus
                           "#{usage_ref}( &#{code_path} )#{def_args});"
 
         registrations << "}"
+      end
+
+      # See http://www.gccxml.org/Bug/view.php?id=9234
+      #
+      # Basically due to inconsistencies within gcc, GCC-XML parses default arguments
+      # with having enumeration values exactly as they are in the code. This means
+      # that if the C++ doesn't fully namespace the enumeration, extension compilation
+      # will fail because g++ can't find the enumeration.
+      #
+      # We work around this by checking if the argument is an Enumeration (above), then
+      # grabbing the appropriate EnumValue and printing it out
+      def fix_enumeration_value(enum, default_value)
+        found =
+          enum.values.select do |enum_value|
+            enum_value.name == default_value
+          end.first
+
+        found.qualified_name
       end
 
     end

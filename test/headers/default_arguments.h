@@ -21,7 +21,7 @@ namespace default_args {
     public:
       Tester() { }
 
-      // Class methods 
+      // Class methods
       std::string concat(std::string value1, std::string value2, const char* with = "-") {
         return value1 + std::string(with) + value2;
       }
@@ -43,7 +43,25 @@ namespace default_args {
         return x * y;
       }
   };
-  
+
+  enum Ops {
+    ADD,
+    REMOVE
+  };
+
+  int modify(int value, Ops by = ADD) {
+    switch(by) {
+      case ADD:
+        return value + 10;
+        break;
+      case REMOVE:
+        return value - 10;
+        break;
+    }
+    return value;
+  }
+
+
 }
 
 #endif // __DEFAULT_ARGS_H__
