@@ -150,14 +150,18 @@ module RbPlusPlus
       # will fail because g++ can't find the enumeration.
       #
       # We work around this by checking if the argument is an Enumeration (above), then
-      # grabbing the appropriate EnumValue and printing it out
+      # grabbing the appropriate EnumValue and printing it out.
+      #
+      # Of course, there could be times we don't want to do this and just use the actual
+      # default value. See default_arguments_test and headers/default_arguments.h
+      # for an example.
       def fix_enumeration_value(enum, default_value)
         found =
           enum.values.select do |enum_value|
             enum_value.name == default_value
           end.first
 
-        found.qualified_name
+        found ? found.qualified_name : default_value
       end
 
     end

@@ -45,8 +45,8 @@ namespace default_args {
   };
 
   enum Ops {
-    ADD,
-    REMOVE
+    ADD    = 0,
+    REMOVE = 1
   };
 
   int modify(int value, Ops by = ADD) {
@@ -58,6 +58,11 @@ namespace default_args {
         return value - 10;
         break;
     }
+    return value;
+  }
+
+  // Seen in Ogre3D
+  int modify2(int value, Ops* by = 0) {
     return value;
   }
 

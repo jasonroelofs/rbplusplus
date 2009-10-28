@@ -72,4 +72,11 @@ context "Default arguments properly exposed" do
     modify(1, Ops::ADD).should.equal 11
     modify(1, Ops::REMOVE).should.equal -9
   end
+
+  # Ogre does this to handle some weird pass-back-enum-that-signals-error (Ogre::Frustum::isVisible)
+  specify "properly handle incomplete enums arguments with straight integer default values" do
+    modify2(1).should.equal 1
+    modify2(1, Ops::ADD).should.equal 1
+    modify2(1, Ops::REMOVE).should.equal 1
+  end
 end
