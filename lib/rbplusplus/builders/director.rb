@@ -115,7 +115,7 @@ module RbPlusPlus
           up_or_raise = 
             if method.default_return_value
               reverse = "!"
-              "return #{method.default_return_value};"
+              "return #{method.default_return_value}"
             else
               if method.purely_virtual?
                 "raisePureVirtual()"
@@ -129,14 +129,19 @@ module RbPlusPlus
 
           const = method.const? ? "const" : ""
 
+          # Write out the virtual method that forwards calls into Ruby
           declarations << ""
-          declarations << "#{return_type} #{cpp_name}(#{def_arguments}) #{const} {"
-          declarations << "if(#{reverse}callIsFromRuby(\"#{ruby_name}\")) {"
-          declarations << "#{up_or_raise};"
-          declarations << "} else {"
+          declarations << "virtual #{return_type} #{cpp_name}(#{def_arguments}) #{const} {"
           declarations << "#{call_down};"
           declarations << "}"
+
+          # Write out the wrapper method that gets exposed to Ruby that handles
+          # going up the inheritance chain
+          declarations << ""
+          declarations << "#{return_type} default_#{cpp_name}(#{def_arguments}) #{const} {"
+          declarations << "#{up_or_raise};"
           declarations << "}"
+          
         end
 
         declarations << "};"

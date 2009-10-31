@@ -11,7 +11,7 @@ module RbPlusPlus
 
       def code_path
         cpp_name = self.code.qualified_name.split("::")[-1]
-        "#{@director.qualified_name}::#{cpp_name}"
+        "#{@director.qualified_name}::default_#{cpp_name}"
       end
 
     end
