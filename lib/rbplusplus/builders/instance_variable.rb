@@ -14,7 +14,7 @@ module RbPlusPlus
         # Setter, only if it isn't const
         if !code.cpp_type.const?
           method_name = "wrap_#{parent_name}_#{code.name}_set"
-          declarations << "void #{method_name}(#{parent.code.qualified_name}* self, #{code.cpp_type.base_type.qualified_name} val) {"
+          declarations << "void #{method_name}(#{parent.code.qualified_name}* self, #{code.cpp_type.to_cpp} val) {"
           declarations << "self->#{code.name} = val;"
           declarations << "}"
 
@@ -23,7 +23,7 @@ module RbPlusPlus
 
         # Getter
         method_name = "wrap_#{parent_name}_#{code.name}_get"
-        declarations << "#{code.cpp_type.base_type.qualified_name} #{method_name}(#{parent.code.qualified_name}* self) {"
+        declarations << "#{code.cpp_type.to_cpp} #{method_name}(#{parent.code.qualified_name}* self) {"
         declarations << "return self->#{code.name};"
         declarations << "}"
 
