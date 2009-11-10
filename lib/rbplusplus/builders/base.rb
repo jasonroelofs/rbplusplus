@@ -148,6 +148,10 @@ module RbPlusPlus
           end
         end
 
+        if node != self.code && last_found != node
+          Logger.debug "Found Typedef #{last_found.qualified_name} for #{node.qualified_name}"
+        end
+
         last_found
       end
 
