@@ -3,6 +3,8 @@ Parts to move into rbgccxml:
 - Class purely_virtual? (check the abstract attribute)
 - Namespace#methods ?
 
+- Handle incomplete="1" definitions
+
 Move documentation to YARD?
 
 Use sdoc?
