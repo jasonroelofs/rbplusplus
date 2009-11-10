@@ -1,6 +1,8 @@
 #ifndef __METHOD_OVERLOAD_H__
 #define __METHOD_OVERLOAD_H__
 
+#include <string>
+
 namespace overload {
   class Mathy {
     public:
@@ -20,6 +22,21 @@ namespace overload {
     }
     void nothing() {}
     void nothing(int x) {}
+
+    /**
+     * Const methods
+     */
+    int constMethod(int x) {
+      return 1;
+    }
+
+    int constMethod(int x) const {
+      return 2;
+    }
+    
+    int constMethod(std::string val) const {
+      return val.size();
+    }
   };
 }
 #endif

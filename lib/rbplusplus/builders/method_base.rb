@@ -133,9 +133,11 @@ module RbPlusPlus
 
         def_args = default_arguments.any? ? ", (#{default_arguments.join(", ")})" : ""
 
+        const = self.code.const? ? " const" : ""
+
         registrations << "{"
 
-        registrations << "typedef #{return_type} ( #{method_ref} )( #{arguments.join(", ")} );"
+        registrations << "typedef #{return_type} ( #{method_ref} )( #{arguments.join(", ")} )#{const};"
         registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", " +
                           "#{usage_ref}( &#{code_path} )#{def_args});"
 

@@ -24,15 +24,22 @@ context "Extension with overloaded methods" do
     end
     
     should.not.raise NameError do
-      math.times.should == 1
-      math.times_1(3).should == 3
-      math.times_2(3,2).should == 6
-      math.times_3(3,2,3).should == 18
+      math.times.should.equal 1
+      math.times_1(3).should.equal 3
+      math.times_2(3,2).should.equal 6
+      math.times_3(3,2,3).should.equal 18
     end
     
     should.not.raise NameError do
       math.nothing_0
       math.nothing_1(1)
+    end
+
+    # Should properly handle const overloads as well
+    should.not.raise NameError do
+      math.const_method_0(1).should.equal 1
+      math.const_method_1(1).should.equal 2
+      math.const_method_2("love").should.equal 4
     end
 
   end
