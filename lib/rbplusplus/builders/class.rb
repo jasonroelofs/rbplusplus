@@ -34,6 +34,7 @@ module RbPlusPlus
           end
         end
 
+        @director = nil
         if self.code.needs_director?
           @director = DirectorNode.new(self.code, self, @qualified_name, @superclass)
           add_child @director

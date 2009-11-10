@@ -128,6 +128,11 @@ module RbPlusPlus
           @node = node
           @base_name = node.qualified_name.as_variable
 
+          @register_method = nil
+          @register_methods = []
+          @register_includes = []
+
+
           @header = parent ? "_#{@base_name}.rb.hpp" : nil
           @source = parent ? "_#{@base_name}.rb.cpp" : "#{@base_name}.rb.cpp"
           @parent = parent
@@ -167,9 +172,6 @@ module RbPlusPlus
         end
 
         def add_register_method(node_name, header)
-          @register_methods ||= []
-          @register_includes ||= []
-
           @register_includes << "#include \"#{header}\""
           @register_methods << "register_#{node_name}(#{has_rice_variable? ? self.rice_variable : ""});"
         end
@@ -280,6 +282,10 @@ module RbPlusPlus
           @needs_closing = false
           @additional_includes = []
           @require_custom = true
+
+          @register_method = nil
+          @register_includes = []
+          @register_methods = []
         end
 
         def with_includes(includes)

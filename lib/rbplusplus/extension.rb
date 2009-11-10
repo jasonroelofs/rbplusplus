@@ -57,6 +57,8 @@ module RbPlusPlus
       @name = name
       @modules = []
       @writer_mode = :multiple
+      @requesting_console = false
+      @force_rebuild = false
 
       @options = {
         :include_paths => [],
@@ -74,6 +76,7 @@ module RbPlusPlus
 
       if requesting_console?
         block.call(self) if block
+        start_console
       elsif block
         build_working_dir(&block)
         block.call(self)
@@ -154,10 +157,6 @@ module RbPlusPlus
       @sources = Dir.glob dirs
       Logger.info "Parsing #{@sources.inspect}"
       @parser = RbGCCXML.parse(dirs, parser_options)
-
-      if requesting_console?
-        start_console
-      end
     end
 
     # Set a namespace to be the main namespace used for this extension.
@@ -290,7 +289,7 @@ module RbPlusPlus
     # and if it does exist, clean it out
     def prepare_working_dir
       FileUtils.mkdir_p @working_dir unless File.directory?(@working_dir)
-      FileUtils.rm_rf Dir["#{@working_dir}/*"] if @force_rebuild #ARGV.include?("clean")
+      FileUtils.rm_rf Dir["#{@working_dir}/*"] if @force_rebuild
     end
 
     # Make sure that any files or globs of files in :include_source_files are copied into the working
