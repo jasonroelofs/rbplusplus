@@ -108,7 +108,10 @@ module RbPlusPlus
       # Should this node be wrapped as it is or has the user
       # specified something else for this node?
       def do_not_wrap?(node)
-        node.ignored? || (node.moved_to && node.moved_to != self.code) || !node.public?
+        node.ignored? ||
+          (node.moved_to && node.moved_to != self.code) ||
+          !node.public? ||
+          (node.is_a?(RbGCCXML::Struct) && node.incomplete?)
       end
 
       # Given a new node, build it and add it to our nodes list

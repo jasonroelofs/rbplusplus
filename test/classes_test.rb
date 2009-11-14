@@ -108,5 +108,9 @@ context "Extension with wrapped classes" do
     a.add_integers(3, 7).should.equal 21
     a.add_strings("piz", "owned").should.equal "pizownedwoot"
   end
+
+  specify "should not wrap incomplete types" do
+    assert !defined?(Forwarder)
+  end
 end
 
