@@ -60,6 +60,12 @@ module RbGCCXML
       !!cache[:disable_typedef_lookup]
     end
 
+    # Is this node an incomplete node?
+    # TODO Move to rbgccxml
+    def incomplete?
+      self["incomplete"] ? self["incomplete"] == "1" : false
+    end
+
     protected
 
     # Get this node's settings cache

@@ -265,6 +265,7 @@ module RbPlusPlus
 
             # I really need a better way of handling this
             if @needs_closing
+              cpp.puts "} RUBY_CATCH" unless @parent
               cpp.puts "}"
             end
           end

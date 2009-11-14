@@ -28,8 +28,10 @@ module RbPlusPlus
           cpp.puts @global_hpp.flatten.compact.join("\n")
           cpp.puts @declarations.flatten.compact.join("\n")
           cpp.puts @global_cpp.flatten.compact.join("\n")
-          cpp.puts @registrations.flatten.compact.join("\n")
-          cpp.puts "}" # Yeah, need to figure this one out
+
+          cpp.puts @registrations.flatten.compact.join("\n\t")
+          cpp.puts "} RUBY_CATCH"
+          cpp.puts "}"
 
         end
       end

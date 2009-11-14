@@ -44,6 +44,7 @@ module RbPlusPlus
         # then wrap it up in our own template
         registrations << "extern \"C\""
         registrations << "void Init_#{@name}() {"
+        registrations << "RUBY_TRY {"
       end
 
       private
