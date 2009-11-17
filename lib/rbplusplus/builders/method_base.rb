@@ -119,8 +119,10 @@ module RbPlusPlus
             if arg.value
               if (base_type = arg.cpp_type.base_type).is_a?(RbGCCXML::Enumeration)
                 " = #{fix_enumeration_value(base_type, arg.value)}"
+              elsif base_type.is_a?(RbGCCXML::FundamentalType)
+                " = (#{arg.cpp_type.base_type.to_cpp})(#{arg.value})"
               else
-                " = (#{arg.cpp_type.to_cpp})#{arg.value}"
+                " = (#{arg.value})"
               end
             else
               ""

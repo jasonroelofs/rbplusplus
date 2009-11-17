@@ -21,9 +21,11 @@ namespace default_args {
     public:
       Tester() { }
 
+      static std::string DEFAULT_WITH;
+
       // Class methods
-      std::string concat(std::string value1, std::string value2, const char* with = "-") {
-        return value1 + std::string(with) + value2;
+      std::string concat(std::string value1, std::string value2, std::string with = default_args::Tester::DEFAULT_WITH) {
+        return value1 + with + value2;
       }
 
       // Class static methods
@@ -35,6 +37,14 @@ namespace default_args {
         return out;
       }
   };
+
+  std::string Tester::DEFAULT_WITH = std::string("-");
+  static std::string KICK_IT = std::string("kick-it");
+
+  // Make sure const and reference types are taken care of properly
+  std::string build_strings(std::string value1, const std::string& with = default_args::KICK_IT) {
+    return value1 + with;
+  }
 
   class Directed {
     public:
