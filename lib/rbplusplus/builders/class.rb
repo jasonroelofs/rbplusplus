@@ -38,8 +38,6 @@ module RbPlusPlus
         if self.code.needs_director?
           @director = DirectorNode.new(self.code, self, @qualified_name, @superclass)
           add_child @director
-
-          @qualified_name = @director.qualified_name
         end
 
         self.rice_variable = "rb_c#{@short_name.as_variable}"
@@ -64,16 +62,9 @@ module RbPlusPlus
       def write
         prefix = "#{rice_variable_type} #{rice_variable} = "
         ruby_name = @short_name
-        expose_class = @qualified_name
         superclass = @superclass.qualified_name if @superclass && !do_not_wrap?(@superclass)
 
-        if @director
-          @director.write_class_registration
-          expose_class = @director.qualified_name
-          superclass = @class_base_type
-        end
-
-        class_names = [expose_class]
+        class_names = [@qualified_name]
         class_names << superclass if superclass
         class_names = class_names.join(",")
 

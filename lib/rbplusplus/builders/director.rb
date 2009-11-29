@@ -52,16 +52,6 @@ module RbPlusPlus
         @constructors << constructor
       end
 
-      def write_class_registration
-        # Need to tell Rice of the base class, while also making sure that if there's a superclass to this class
-        # that we know about it, or attempts to use polymorphism will crash with 'unknown caster for {superclass}
-        class_names = [@class_qualified_name]
-        class_names << @superclass.qualified_name if @superclass && !do_not_wrap?(@superclass)
-        class_names = class_names.join(",")
-
-        self.parent.registrations << "Rice::define_class< #{class_names} >(\"__#{@class_base_name}__\");"
-      end
-
       def write_constructor(constructor = nil)
         args = ["Rice::Object self"]
         types = [@name, "Rice::Object"]
@@ -79,6 +69,8 @@ module RbPlusPlus
         end
 
         declarations << "#{@name}(#{args.join(", ")}) : #{@class_qualified_name}(#{supercall_args.join(", ")}), Rice::Director(self) { }"
+
+        registrations << "#{self.parent.rice_variable}.define_director< #{@name} >();"
         registrations << "#{self.parent.rice_variable}.define_constructor(Rice::Constructor< #{types.join(", ")} >());"
       end
 
