@@ -28,8 +28,9 @@ module RbPlusPlus
 
         if supers.length > 1
           if (@superclass = self.code._get_superclass).nil?
+            @superclass = supers[0]
             Logger.warn :mutiple_superclasses, "#{@qualified_name} has multiple public superclasses. " +
-              "Will use first superclass, which is #{supers[0].qualified_name} "
+              "Will use first superclass, which is #{@superclass.qualified_name} "
               "Please use #use_superclass to specify another superclass as needed."
           end
         end
