@@ -125,6 +125,14 @@ namespace director {
       VBase() { }
       virtual ~VBase() { }
 
+      /**
+       * See that types are registered properly.
+       * Passing a VTwo into this method should work
+       */
+      static std::string process(VBase* base) {
+        return base->methodTwo();
+      } 
+
       virtual std::string methodOne() = 0;
       virtual std::string methodTwo() = 0;
       virtual std::string methodThree() = 0;

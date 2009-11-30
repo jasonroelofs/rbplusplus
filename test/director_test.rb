@@ -170,4 +170,9 @@ context "Director proxy generation" do
     Worker::ZeeEnum::VALUE.to_i.should.equal 4
   end
 
+  specify "inheritance types are registered properly" do
+    two = VTwo.new
+    VBase::process(two).should.equal "methodTwo"
+  end
+
 end
