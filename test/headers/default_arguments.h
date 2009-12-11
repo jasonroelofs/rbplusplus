@@ -42,9 +42,9 @@ namespace default_args {
   static std::string KICK_IT = std::string("kick-it");
 
   // Make sure const and reference types are taken care of properly
-  std::string build_strings(std::string value1, const std::string& with = default_args::KICK_IT) {
-    return value1 + with;
-  }
+  //std::string build_strings(std::string value1, const std::string& with = default_args::KICK_IT) {
+    //return value1 + with;
+  //}
 
   class Directed {
     public:
