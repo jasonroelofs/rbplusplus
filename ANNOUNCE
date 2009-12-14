@@ -1,93 +1,82 @@
-= What is rb++ / rbgccxml?
+What is rb++ / rbgccxml?
 
-Rb++, rbgccxml, and rice compose a suite of tools that make wrapping C++ libraries into
-Ruby extensions as simple as possible. This is built as a replacement for SWIG-Ruby.
+  Rb++, rbgccxml, and rice compose a suite of tools that make wrapping C++ libraries into
+  Ruby extensions as simple as possible. This is built as a replacement for SWIG-Ruby.
 
-== What's New
+What's New
 
-rb++:
-  - Core builder and writer systems rewritten to be much cleaner and easier to work with
-  - Functions with Callbacks
-  - Automatic Typedef lookup of argument and return types
-  - Class constants
-  - Class instance variables
-  - Auto generation of allocation strategies
-  - Wrapping anonymous enumerations as constants
-  - Command line arguments: --clean, --console, -v, -q
-  - Caching to speed up parsing and building phases
-  - Rice::Director
-  - Exposing Default arguments
+  * Full 1.9 support through the entire stack!
+  * MinGW / MSYS build support on Windows.
 
-rbgccxml:
-  - 1.9 compatible!
-  - Switched parsing from hpricot to libxml-ruby
-  - ArrayTypes
-  - FunctionType (function pointers)
-  - Class consts and instance variables
-  - Node#to_s => Node#to_cpp
-  - Node#file_name => Node#file
-  - Arguments have values
+  rb++:
+    * Updated to work with the Rice::Director changes
+    * Fixed a bug where rb++ wasn't using any superclass on classes with multiple superclasses
+    * Generated extension handles exceptions cleaner
+    * Various other small bug fixes and tweaks
 
-plus numerous tweaks, bug fixes, etc. See the commit log for all the details. There have been
-a lot of API changes in both libraries since the last release.
+  rbgccxml:
+    * Switched parsing from libxml-ruby to nokogiri
+    * Fixed crash on encountering <Union>, but no real handling of the type yet.
+    * Fixed a bug with older gcc versions on dealing with anonymous enumerations
 
-== Notes
 
-rbgccxml is 1.9 compatible, however, rb++ is not because Rice is not quite there.
+Project
 
-rb++ is also not functional on Windows at this time, would appreciate it if someone wanted to look into this, otherwise I'm going to wait for the One-Click team to finish their work on buildling Ruby with mingw.
-
-== Project
-
-Documentation: http://rbplusplus.rubyforge.org
-
-Project Pages:
+  Documentation: http://rbplusplus.rubyforge.org
 
   rb++:     http://github.com/jameskilton/rbplusplus
   rbgccxml: http://github.com/jameskilton/rbgccxml
 
-== Installation
 
-This single command will grab the whole stack needed for rb++ to work.
+Installation
 
-  gem install rbplusplus
+  This single command will grab the whole stack needed for rb++ to work.
 
-The stack includes four libraries: rb++, rbgccxml, gccxml_gem, and rice
+    gem install rbplusplus
 
-== rb++
+  The stack includes four libraries: rb++, rbgccxml, gccxml_gem, and rice
 
-Rb++ makes it almost trivially easy to create Ruby extensions for C++ library. In the simplest of cases, there is no need to ever touch C++, everything is done in a very simple and clean Ruby API.
 
-== rbgccxml
+rb++
 
-RbGCCXML allows one to easily parse out and query C / C++ code. This library uses GCC-XML to parse out the C / C++ code into XML, and then libxml-ruby to parse and query that XML.
+  Rb++ makes it almost trivially easy to create Ruby extensions for C++ library.
+  In the simplest of cases, there is no need to ever touch C++, everything is done
+  in a very simple and clean Ruby API.
 
-== gccxml_gem
 
-GCC-XML (www.gccxml.org) is an application that takes takes the parse tree of C / C++ and constructs a very parsable and queryable XML file with all related information.
+rbgccxml
 
-This gem includes a binary build of GCC-XML for supported platforms, to make it trivially easy to install. Platforms currently supported are:
+  RbGCCXML allows one to easily parse out and query C / C++ code.
+  This library uses GCC-XML to parse out the C / C++ code into XML, and then nokogiri
+  to parse and query that XML.
 
-* Linux 32 & 64 bit
-* Mac OS X
-* Windows via Cygwin
 
-== Rice
+gccxml_gem
 
-The Ruby Interface for C++ Extensions, it provides a C++ API for working with ruby. More information
-available at its project page:
+  GCC-XML (www.gccxml.org) is an application that takes takes the parse tree of C / C++
+  and constructs a very parsable and queryable XML file with all related information.
 
-  http://rice.rubyforge.org
+  This gem includes a binary build of GCC-XML for supported platforms,
+  to make it trivially easy to install. Platforms currently supported are:
 
-== Other Libraries
+    * Linux 32 & 64 bit
+    * Mac OS X
+    * Windows via MinGW / MSYS
 
-* libxml-ruby (http://libxml.rubyforge.org/)
-* test/spec
 
-== Notes
+Rice
 
-Released under the MIT licence.
+  The Ruby Interface for C++ Extensions, it provides a C++ API for working with ruby. More information
+  available at its project page:
 
-For those familiar with py++ / pygccxml, the similarities are in function only. Rb++ / rbgccxml were written from scratch to take advantage of the Ruby language to it's fullest.
+    http://rice.rubyforge.org
 
-Bugs, patches, feature requests, et al should be posted to the corresponding project's Issues page on github.
+
+Notes
+
+  Released under the MIT licence.
+
+  For those familiar with py++ / pygccxml, the similarities are in function only.
+  Rb++ / rbgccxml were written from scratch to take advantage of the Ruby language to it's fullest.
+
+  Bugs, patches, feature requests, et al should be posted to the corresponding project's Issues page on github.
