@@ -82,6 +82,7 @@ Extension.new "noise" do |e|
 
     m.module "Module" do |mod|
       node = mod.namespace "module"
+      node.classes("Module").director
     end
   end
 end
@@ -118,7 +119,7 @@ All extensions start with this declaration. The string passed in will be the fin
 e.working_dir = File.join(OGRE_RB_ROOT, "generated", "noise")
 {% endhighlight %}
 
-The Working Directory is the place where all generated code is placed. By default, the Working Directory is "generated", local to the ruby script. In the case that this is not sufficient, such as this wrapper, use this attribute to set another directory. 
+The Working Directory is the place where all generated code is placed. By default, the Working Directory is called "generated", local to the ruby script. In the case that this is not sufficient, such as this wrapper, use this attribute to set another directory. 
 
 Please note that this script uses full directory paths. This is not required, but recommended to prevent confusion or conflicts.
 
@@ -215,7 +216,8 @@ e.module "Noise" do |m|
   end
 
   m.module "Module" do |mod|
-    mod.namespace "module"
+    node = mod.namespace "module"
+    node.classes("Module").director
   end
 end
 {% endhighlight %}
@@ -298,10 +300,13 @@ These methods aren't properly wrapping in Rice due to there being multiple overl
 {% highlight ruby %}
 m.module "Module" do |mod|
   node = mod.namespace "module"
+  node.classes("Module").director
 end
 {% endhighlight %}
 
 This finishes up the wrapper definition, specifying one more Module to create which wraps the code in the "noise::module" namespace.
+
+This also shows how to hook into Rice's Director system. If you are faimilar with SWIG's %director, this is very much the same. For any class that should polymorphically call code from C++ into Ruby, it needs to be given the #director directive. Future versions of this library will be able to automatically find these classes and build all directors as needed.
 
 And that's the entire wrapper. Simply run this file and after a few minutes, a new Ruby extension will appear in working_dir/.  To follow compilation progress, tail the file working_dir/rbpp_compile.log.
 
