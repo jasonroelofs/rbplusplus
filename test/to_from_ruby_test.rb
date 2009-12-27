@@ -18,6 +18,8 @@ context "Properly build known required to_ruby and from_ruby methods" do
     c = WrappedClass.new
     c.get_my_type(17).value.should.equal 17
 
+    using_const_string("super_long").should.equal 10
+
     # Running this gets a glibc double free error. Not sure if this is properly
     # fixable outside of implementing call and return policies in Rice.
 #    c.overload_0.class.should.equal MyType

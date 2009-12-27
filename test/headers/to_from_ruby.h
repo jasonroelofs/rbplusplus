@@ -54,7 +54,7 @@ namespace to_from_ruby {
    * Some types, Rice already wraps for us. Make sure this doesn't cause
    * a compiler error
    */
-  void usingConstString(const std::string& in);
+  int usingConstString(const std::string& in);
   
   /* template tests */
   
