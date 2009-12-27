@@ -20,7 +20,7 @@ context "Multiple file writer (default)" do
 
   specify "should properly split up code into multiple files" do
     files = Dir["#{@working_dir}/*"]
-    files.size.should == 12
+    files.size.should == 10
 
     %w(
       extconf.rb
@@ -32,8 +32,6 @@ context "Multiple file writer (default)" do
       _classes_IntAdder.rb.hpp
       _classes_ShouldFindMe.rb.hpp
       _classes_ShouldFindMe.rb.cpp
-      _rbpp_custom.rb.hpp
-      _rbpp_custom.rb.cpp
       adder.rb.cpp
     ).each do |wants|
       assert_not_nil files.find {|got| File.basename(got) == wants }, "Didn't find #{wants}"
@@ -42,18 +40,16 @@ context "Multiple file writer (default)" do
 
 end
 
-context "Multiple file writer with to_from_ruby" do
+context "Multiple file writer works with global _rbpp_custom" do
 
   setup do
     @working_dir = File.expand_path(File.dirname(__FILE__) + "/generated")
 
-    e = Extension.new "to_from_ruby"
+    e = Extension.new "enums"
     e.working_dir = @working_dir
-    e.sources full_dir("headers/to_from_ruby.h"),
-      :include_paths => full_dir("headers"),
-      :include_source_files => full_dir("headers/to_from_ruby_source.cpp")
+    e.sources full_dir("headers/enums.h")
 
-    e.namespace "to_from_ruby"
+    e.namespace "enums"
 
     e.build
     e.write

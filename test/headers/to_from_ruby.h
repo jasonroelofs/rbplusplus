@@ -26,7 +26,11 @@ namespace to_from_ruby {
   // Should also work with class methods
   class WrappedClass {
     public:
-      WrappedClass() {}
+      WrappedClass() { myType = new MyType(); }
+
+      ~WrappedClass() {
+        if(myType) { delete myType; }
+      }
 
       const MyType& getMyType(int value) {
         MyType *type = new MyType();
@@ -34,13 +38,16 @@ namespace to_from_ruby {
         return *type;
       }
       
-      const WrappedClass &overload() {
-        return *this;
+      const MyType &overload() {
+        return *myType;
       }
     
-      const WrappedClass &overload(int arg) {
-        return *this;
+      const MyType &overload(int arg) {
+        return *myType;
       }
+
+    private:
+      const MyType* myType;
   };
 
   /**

@@ -54,10 +54,6 @@ module RbPlusPlus
         unless @director
           check_allocation_strategies
         end
-
-        # For now, build a const& type converter for all class types until Rice has
-        # better management of to_ruby of class types, if it ever happens
-        add_global_child ConstConverterNode.new(self.code, self)
       end
 
       def write
