@@ -19,7 +19,7 @@ context "Allocation Strategies" do
   # instantiate an object with a non-public constructor
   # and it all dies.
   specify "properly figures out what allocation to do" do
-    assert_nothing_raised LoadError  do
+    should.not.raise LoadError  do
       require 'alloc_strats'
     end 
 
@@ -28,6 +28,13 @@ context "Allocation Strategies" do
 
     # Private constructor and destructor
     assert defined?(Neither)
+  end
+
+  specify "can get access to Neither object" do
+    n = Neither.get_instance
+    n.should.not.be.nil
+
+    n.process(4, 5).should.equal 20
   end
 
 end

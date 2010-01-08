@@ -18,7 +18,9 @@ namespace alloc_strats {
     public:
       NoConstructor* getConstructor() { return 0; }
 
-      Neither* getInstance() { return 0; }
+      static Neither* getInstance() { static Neither neither; return &neither; }
+
+      int process(int a, int b) { return a * b; }
   };
 }
 
