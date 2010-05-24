@@ -76,9 +76,6 @@ make Ruby wrapping extensions easier to write than ever.
   s.add_dependency "rbgccxml", "~> 0.9"
   s.add_dependency "rice", "~> 1.3.0"
 
-  s.add_development_dependency "test-unit", "1.2.3"
-  s.add_development_dependency "mocha", "~> 0.9"
-
   patterns = [
     'TODO',
     'Rakefile',
