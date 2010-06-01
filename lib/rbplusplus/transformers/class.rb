@@ -45,8 +45,8 @@ module RbGCCXML
     # where this method hasn't been used yet.
     #
     # klass should be the node for the class you want to wrap
-    def use_superclass(node)
-      cache[:use_superclass] = node
+    def use_superclass(klass)
+      cache[:use_superclass] = klass
     end
 
     def _get_superclass #:nodoc:
