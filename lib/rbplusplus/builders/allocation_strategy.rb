@@ -27,7 +27,6 @@ module RbPlusPlus
 namespace Rice {
   template<>
   struct Default_Allocation_Strategy< #{node_name} > {
-    static #{node_name} * allocate();
     static void free(#{node_name} * obj);
   };
 }
@@ -36,12 +35,6 @@ namespace Rice {
         declarations << code
 
         pre = "Rice::Default_Allocation_Strategy< #{node_name} >::"
-
-        tmp = "#{node_name} * #{pre}allocate() { return "
-        tmp += @public_constructor ? "new #{node_name};" : "NULL;"
-        tmp += " }"
-
-        registrations << tmp
 
         tmp = "void #{pre}free(#{node_name} * obj) { "
         tmp += @public_destructor ? "delete obj;" : ""
