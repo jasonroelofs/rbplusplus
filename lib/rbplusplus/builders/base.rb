@@ -64,8 +64,7 @@ module RbPlusPlus
         raise "Nodes must implement #build"
       end
 
-      # After #build has run, this then triggers the actual generation of the C++
-      # code and returns the final string.
+      # After #build has run, this then triggers the actual generation of the C++ code
       # All nodes must implement this.
       def write
         raise "Nodes must implement #write"
@@ -84,7 +83,13 @@ module RbPlusPlus
         # up sorted farther down the list
         @nodes =
           @nodes.sort_by do |a|
-            a.is_a?(ClassNode) ? superclass_count(a.code) : 0
+            if a.is_a?(ClassNode)
+              superclass_count(a.code)
+            elsif a.is_a?(ImplicitCasterNode) # Hmm, hack
+              1_000_000
+            else
+              0
+            end
           end
       end
 
@@ -111,7 +116,8 @@ module RbPlusPlus
         node.ignored? ||
           (node.moved_to && node.moved_to != self.code) ||
           !node.public? ||
-          (node.is_a?(RbGCCXML::Struct) && node.incomplete?)
+          (node.is_a?(RbGCCXML::Struct) && node.incomplete?) ||
+          node.is_a?(RbGCCXML::FundamentalType)
       end
 
       # Given a new node, build it and add it to our nodes list

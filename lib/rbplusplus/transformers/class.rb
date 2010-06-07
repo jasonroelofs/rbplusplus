@@ -129,6 +129,11 @@ module RbGCCXML
       cache[:build_director] = true
     end
 
+    # See RbGCCXML::Constructor::implicit_casting
+    def implicit_casting(state)
+      self.constructors.each {|c| c.implicit_casting(state) }
+    end
+
     private
 
     # Take the cache key, and the normal results, adds to the results

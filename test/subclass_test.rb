@@ -12,6 +12,8 @@ context "Extension with class hierachies" do
       # Rice doesn't support multiple-inheritance (neither does Ruby), so for now
       # until we can fake it, force people to specify
       node.classes("Multiple").use_superclass( node.classes("Base2") )
+
+      node.classes.implicit_casting(false)
     end
 
     require 'subclass'
