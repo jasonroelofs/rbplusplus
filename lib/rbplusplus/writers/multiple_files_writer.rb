@@ -253,14 +253,16 @@ module RbPlusPlus
               cpp.puts "#{@register_method}(#{parent_signature}) {"
             end
 
-            if (regs = @registrations.flatten.compact).any?
-              cpp.puts regs.join("\n")
+            if @register_methods
+              # Ug, hack. I've seriously got to rethink this whole
+              # code generation system ... again
+              @register_methods.reverse.each do |reg|
+                @registrations.insert(3, reg)
+              end
             end
 
-            if @register_methods
-              @register_methods.each do |m|
-                cpp.puts m
-              end
+            if (regs = @registrations.flatten.compact).any?
+              cpp.puts regs.join("\n")
             end
 
             # I really need a better way of handling this
