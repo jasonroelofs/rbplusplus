@@ -74,7 +74,6 @@ end
 
 # Transformer classes that reopen RbGCCXML classes to add functionality
 require 'rbplusplus/transformers/rbgccxml'
-require 'rbplusplus/transformers/node_cache'
 require 'rbplusplus/transformers/node'
 require 'rbplusplus/transformers/function'
 require 'rbplusplus/transformers/class'

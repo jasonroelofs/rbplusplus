@@ -15,15 +15,15 @@ module RbGCCXML
     #
     # This method can be called per Constructor or per Class.
     def implicit_casting(state)
-      cache[:implicit_casting] = state
+      @implicit_casting = state
     end
 
     def implicit_casting? #:nodoc:
-      if cache[:implicit_casting].nil?
-        cache[:implicit_casting] = true
+      if @implicit_casting.nil?
+        @implicit_casting = true
       end
 
-      cache[:implicit_casting]
+      @implicit_casting
     end
 
   end

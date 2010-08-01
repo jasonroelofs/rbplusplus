@@ -148,7 +148,7 @@ module RbPlusPlus
         if !node._disable_typedef_lookup?
           while found
             last_found = found
-            typedef = RbGCCXML::XMLParsing.find(:node_type => "Typedef", :type => found.attributes["id"])
+            typedef = RbGCCXML::NodeCache.all("Typedef").select {|t| t.attributes["type"] == found.attributes["id"]}.first
 
             # Some typedefs have the access attribute, some don't. We want those without the attribute
             # and those with the access="public". For this reason, we can't put :access => "public" in the
