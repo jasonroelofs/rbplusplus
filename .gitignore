@@ -4,3 +4,4 @@ doc
 pkg
 test/generated
 publish
+.bundle
