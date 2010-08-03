@@ -37,6 +37,7 @@ context "Ugly interfaces cleaner" do
         modder = node.namespaces("I_LEARN_C").classes("Modder").wrap_as("Modulus")
         modder.includes node.namespaces("I_LEARN_C").functions("mod")
         modder.includes node.namespaces("I_LEARN_C").functions("mod2").wrap_as("method_mod").as_instance_method
+        modder.use_constructor(modder.constructors.find(:arguments => []))
         m.includes modder
 
         nc = node.classes("NoConstructor")
