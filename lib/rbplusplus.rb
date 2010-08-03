@@ -33,6 +33,7 @@ module RbPlusPlus
     autoload :ClassNode,              "rbplusplus/builders/class"
     autoload :DirectorNode,           "rbplusplus/builders/director"
     autoload :ConstructorNode,        "rbplusplus/builders/constructor"
+    autoload :ImplicitCasterNode,     "rbplusplus/builders/implicit_caster"
     autoload :InstanceVariableNode,   "rbplusplus/builders/instance_variable"
 
     # Rice type-management nodes
@@ -73,10 +74,10 @@ end
 
 # Transformer classes that reopen RbGCCXML classes to add functionality
 require 'rbplusplus/transformers/rbgccxml'
-require 'rbplusplus/transformers/node_cache'
 require 'rbplusplus/transformers/node'
 require 'rbplusplus/transformers/function'
 require 'rbplusplus/transformers/class'
+require 'rbplusplus/transformers/constructor'
 require 'rbplusplus/transformers/method'
 require 'rbplusplus/transformers/namespace'
 

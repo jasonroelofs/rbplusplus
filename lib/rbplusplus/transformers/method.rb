@@ -19,9 +19,9 @@ module RbGCCXML
     # example of this functionality.
     def default_return_value(value = nil)
       if value
-        cache[:default_return_value] = value
+        @default_return_value = value
       else
-        cache[:default_return_value]
+        @default_return_value
       end
     end
   end

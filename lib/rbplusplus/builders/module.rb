@@ -45,7 +45,7 @@ module RbPlusPlus
       end
 
       def write
-        prefix = "#{rice_variable_type} #{rice_variable} = "
+        prefix = "\t#{rice_variable_type} #{rice_variable} = "
 
         if parent.rice_variable
           registrations << "#{prefix} Rice::define_module_under(#{parent.rice_variable}, \"#{@name}\");"

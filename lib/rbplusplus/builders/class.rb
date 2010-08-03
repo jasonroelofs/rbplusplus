@@ -66,10 +66,10 @@ module RbPlusPlus
         class_names = class_names.join(",")
 
         if parent.rice_variable
-          registrations << "#{prefix} Rice::define_class_under< #{class_names} >" +
+          registrations << "\t#{prefix} Rice::define_class_under< #{class_names} >" +
                              "(#{parent.rice_variable}, \"#{ruby_name}\");"
         else
-          registrations << "#{prefix} Rice::define_class< #{class_names} >(\"#{ruby_name}\");"
+          registrations << "\t#{prefix} Rice::define_class< #{class_names} >(\"#{ruby_name}\");"
         end
 
         handle_custom_code
@@ -79,7 +79,6 @@ module RbPlusPlus
 
       # Here we take the code manually added to the extension via #add_custom_code
       def handle_custom_code
-
         # Any declaration code, usually wrapper function definitions
         self.code._get_custom_declarations.flatten.each do |decl|
           declarations << decl
@@ -87,7 +86,7 @@ module RbPlusPlus
 
         # And the registration code to hook into Rice
         self.code._get_custom_wrappings.flatten.each do |wrap|
-          registrations << "#{wrap.gsub(/<class>/, self.rice_variable)}"
+          registrations << "\t#{wrap.gsub(/<class>/, self.rice_variable)}"
         end
       end
 
@@ -101,16 +100,12 @@ module RbPlusPlus
         # We check here if we're one of those classes and completely skip this step
         return if [self.code.constructors].flatten.empty?
 
-        # Find a public default constructor
-        found = [self.code.constructors.find(:arguments => [], :access => "public")].flatten
-        has_public_constructor = !found.empty?
-
         # See if the destructor is public
         has_public_destructor = self.code.destructor && self.code.destructor.public?
 
-        if !has_public_constructor || !has_public_destructor
+        if !has_public_destructor
           add_global_child AllocationStrategyNode.new(self,
-                            self.code, has_public_constructor, has_public_destructor)
+                            self.code, true, has_public_destructor)
         end
       end
 

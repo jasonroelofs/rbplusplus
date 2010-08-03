@@ -20,11 +20,11 @@ module RbPlusPlus
       def write
         second = parent.rice_variable ? ", #{parent.rice_variable}" : ""
 
-        registrations << "#{rice_variable_type} #{rice_variable} = " \
+        registrations << "\t#{rice_variable_type} #{rice_variable} = " \
           "Rice::define_enum<#{code.qualified_name}>(\"#{code.name}\"#{second});"
 
         code.values.each do |v|
-          registrations << "#{rice_variable}.define_value(\"#{v.name}\", #{v.qualified_name});"
+          registrations << "\t#{rice_variable}.define_value(\"#{v.name}\", #{v.qualified_name});"
         end
       end
 

@@ -27,7 +27,7 @@ module RbPlusPlus
       def build
         add_child IncludeNode.new(self, "rice/Director.hpp", :global)
         add_child IncludeNode.new(self, "rice/Constructor.hpp", :global)
-        
+
         # To ensure proper compilation, this director class needs
         # to implement all pure virtual methods found up the
         # inheritance heirarchy of this class. So here, we traverse
@@ -68,15 +68,15 @@ module RbPlusPlus
           end
         end
 
-        declarations << "#{@name}(#{args.join(", ")}) : #{@class_qualified_name}(#{supercall_args.join(", ")}), Rice::Director(self) { }"
+        declarations << "\t\t#{@name}(#{args.join(", ")}) : #{@class_qualified_name}(#{supercall_args.join(", ")}), Rice::Director(self) { }"
 
-        registrations << "#{self.parent.rice_variable}.define_director< #{@name} >();"
-        registrations << "#{self.parent.rice_variable}.define_constructor(Rice::Constructor< #{types.join(", ")} >());"
+        registrations << "\t#{self.parent.rice_variable}.define_director< #{@name} >();"
+        registrations << "\t#{self.parent.rice_variable}.define_constructor(Rice::Constructor< #{types.join(", ")} >());"
       end
 
       def write
         declarations << "class #{@name} : public #{@class_qualified_name}, public Rice::Director  {"
-        declarations << "public:"
+        declarations << "\tpublic:"
 
         # Handle constructors
         if @constructors.empty?
@@ -104,7 +104,7 @@ module RbPlusPlus
           def_arguments = def_arguments.length == 0 ? "" : def_arguments.join(", ")
 
           reverse = ""
-          up_or_raise = 
+          up_or_raise =
             if method.default_return_value
               reverse = "!"
               "return #{method.default_return_value}"
@@ -123,17 +123,17 @@ module RbPlusPlus
 
           # Write out the virtual method that forwards calls into Ruby
           declarations << ""
-          declarations << "virtual #{return_type} #{cpp_name}(#{def_arguments}) #{const} {"
-          declarations << "#{call_down};"
-          declarations << "}"
+          declarations << "\t\tvirtual #{return_type} #{cpp_name}(#{def_arguments}) #{const} {"
+          declarations << "\t\t\t#{call_down};"
+          declarations << "\t\t}"
 
           # Write out the wrapper method that gets exposed to Ruby that handles
           # going up the inheritance chain
           declarations << ""
-          declarations << "#{return_type} default_#{cpp_name}(#{def_arguments}) #{const} {"
-          declarations << "#{up_or_raise};"
-          declarations << "}"
-          
+          declarations << "\t\t#{return_type} default_#{cpp_name}(#{def_arguments}) #{const} {"
+          declarations << "\t\t\t#{up_or_raise};"
+          declarations << "\t\t}"
+
         end
 
         declarations << "};"

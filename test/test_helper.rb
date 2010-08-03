@@ -20,9 +20,4 @@ class Test::Unit::TestCase
     Logger.stubs(:error)
     Logger.stubs(:debug)
   end
-
-  def teardown
-    RbGCCXML::XMLParsing.clear_cache
-    NodeCache.clear
-  end
 end

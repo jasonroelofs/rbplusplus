@@ -10,7 +10,7 @@ module RbPlusPlus
 
       def write
         args = [code.parent.qualified_name, code.arguments.map {|a| a.cpp_type.to_cpp }].flatten.compact
-        registrations << "#{parent.rice_variable}.define_constructor(Rice::Constructor< #{args.join(",")} >());"
+        registrations << "\t#{parent.rice_variable}.define_constructor(Rice::Constructor< #{args.join(",")} >());"
       end
 
     end

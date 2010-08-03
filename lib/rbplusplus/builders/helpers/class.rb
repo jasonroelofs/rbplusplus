@@ -35,13 +35,20 @@ module RbPlusPlus
             "please use #use_contructor to select which one to use."
         end
 
-        # First, lets see if we have any non-generated constructors
-
         [to_use || real_constructors].flatten.each do |constructor|
           next if do_not_wrap?(constructor)
 
           if constructor.attributes[:artificial]
             next if ignore_artificial || constructor.arguments.length == 1
+          end
+
+          if implicit_converter?(constructor)
+            if constructor.implicit_casting?
+              parent.add_child ImplicitCasterNode.new(constructor, self)
+            end
+
+            # We don't want to expose these constructors to Rice
+            next
           end
 
           if @director
@@ -50,6 +57,14 @@ module RbPlusPlus
             add_child ConstructorNode.new(constructor, self)
           end
         end
+      end
+
+      # Is this constructor a converter constructor?
+      def implicit_converter?(constructor)
+        # Single argument
+        constructor.arguments.length == 1 &&
+          # We are wrapping the type converting from
+          !do_not_wrap?(constructor.arguments[0].cpp_type.base_type)
       end
 
       # Wrap up any class constants
