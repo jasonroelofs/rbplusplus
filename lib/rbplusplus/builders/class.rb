@@ -66,10 +66,10 @@ module RbPlusPlus
         class_names = class_names.join(",")
 
         if parent.rice_variable
-          registrations << "#{prefix} Rice::define_class_under< #{class_names} >" +
+          registrations << "\t#{prefix} Rice::define_class_under< #{class_names} >" +
                              "(#{parent.rice_variable}, \"#{ruby_name}\");"
         else
-          registrations << "#{prefix} Rice::define_class< #{class_names} >(\"#{ruby_name}\");"
+          registrations << "\t#{prefix} Rice::define_class< #{class_names} >(\"#{ruby_name}\");"
         end
 
         handle_custom_code
@@ -86,7 +86,7 @@ module RbPlusPlus
 
         # And the registration code to hook into Rice
         self.code._get_custom_wrappings.flatten.each do |wrap|
-          registrations << "#{wrap.gsub(/<class>/, self.rice_variable)}"
+          registrations << "\t#{wrap.gsub(/<class>/, self.rice_variable)}"
         end
       end
 

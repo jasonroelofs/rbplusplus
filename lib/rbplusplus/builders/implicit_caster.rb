@@ -15,7 +15,7 @@ module RbPlusPlus
 
       def write
         if @from != @to
-          registrations << "Rice::define_implicit_cast< #{@from}, #{@to} >();"
+          registrations << "\tRice::define_implicit_cast< #{@from}, #{@to} >();"
         end
       end
     end

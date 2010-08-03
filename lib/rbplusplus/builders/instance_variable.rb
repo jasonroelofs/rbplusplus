@@ -15,19 +15,19 @@ module RbPlusPlus
         if !code.cpp_type.const?
           method_name = "wrap_#{parent_name}_#{code.name}_set"
           declarations << "void #{method_name}(#{parent.code.qualified_name}* self, #{code.cpp_type.to_cpp} val) {"
-          declarations << "self->#{code.name} = val;"
+          declarations << "\tself->#{code.name} = val;"
           declarations << "}"
 
-          registrations << "#{parent.rice_variable}.define_method(\"#{ruby_name}=\", &#{method_name});"
+          registrations << "\t#{parent.rice_variable}.define_method(\"#{ruby_name}=\", &#{method_name});"
         end
 
         # Getter
         method_name = "wrap_#{parent_name}_#{code.name}_get"
         declarations << "#{code.cpp_type.to_cpp} #{method_name}(#{parent.code.qualified_name}* self) {"
-        declarations << "return self->#{code.name};"
+        declarations << "\treturn self->#{code.name};"
         declarations << "}"
 
-        registrations << "#{parent.rice_variable}.define_method(\"#{ruby_name}\", &#{method_name});"
+        registrations << "\t#{parent.rice_variable}.define_method(\"#{ruby_name}\", &#{method_name});"
       end
 
     end

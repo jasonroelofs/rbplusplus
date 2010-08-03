@@ -20,7 +20,7 @@ module RbPlusPlus
           end
 
         prefix = parent.rice_variable ? "#{parent.rice_variable}." : "Rice::Module(rb_mKernel)."
-        registrations << "#{prefix}const_set(\"#{code.name}\", to_ruby(#{set_to}));"
+        registrations << "\t#{prefix}const_set(\"#{code.name}\", to_ruby(#{set_to}));"
       end
 
     end

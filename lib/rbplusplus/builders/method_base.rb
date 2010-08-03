@@ -72,9 +72,9 @@ module RbPlusPlus
 
         funcall = "rb_funcall(#{block_var_name}, rb_intern(\"call\"), #{callback_values.join(", ")})"
         if return_type == "void"
-          declarations << "#{funcall};"
+          declarations << "\t#{funcall};"
         else
-          declarations << "return from_ruby<#{return_type} >(#{funcall});"
+          declarations << "\treturn from_ruby<#{return_type} >(#{funcall});"
         end
 
         declarations << "}"
@@ -96,7 +96,7 @@ module RbPlusPlus
         declarations << "\treturn Qnil;"
         declarations << "}"
 
-        registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", &#{wrapper_func});"
+        registrations << "\t#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", &#{wrapper_func});"
       end
 
       def wrap_normal_method
@@ -137,13 +137,14 @@ module RbPlusPlus
 
         const = self.code.const? ? " const" : ""
 
-        registrations << "{"
+        registrations << ""
+        registrations << "\t{"
 
-        registrations << "typedef #{return_type} ( #{method_ref} )( #{arguments.join(", ")} )#{const};"
-        registrations << "#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", " +
+        registrations << "\t\ttypedef #{return_type} ( #{method_ref} )( #{arguments.join(", ")} )#{const};"
+        registrations << "\t\t#{self.prefix}#{self.rice_method}(\"#{@ruby_name + self.suffix}\", " +
                           "#{usage_ref}( &#{code_path} )#{def_args});"
 
-        registrations << "}"
+        registrations << "\t}"
       end
 
       # See http://www.gccxml.org/Bug/view.php?id=9234
