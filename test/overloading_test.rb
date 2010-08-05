@@ -12,6 +12,8 @@ context "Extension with overloaded methods" do
       mathy.use_constructor(
         mathy.constructors.find(:arguments => [:int])
       )
+
+      mathy.methods("constMethod").find(:arguments => ["std::string"]).wrap_as("const_method_string")
     end
 
     require 'overload'
@@ -39,7 +41,7 @@ context "Extension with overloaded methods" do
     should.not.raise NameError do
       math.const_method_0(1).should.equal 1
       math.const_method_1(1).should.equal 2
-      math.const_method_2("love").should.equal 4
+      math.const_method_string("love").should.equal 4
     end
 
   end
