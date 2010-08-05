@@ -45,7 +45,9 @@ context "Ugly interfaces cleaner" do
         m.includes nc
 
         m.includes node.classes("Outside")
-        node.classes("Outside").includes node.classes("Inside")
+        inside = node.classes("Inside")
+        inside.use_constructor(inside.constructors.find(:arguments => []))
+        node.classes("Outside").includes inside
       end
     end
 
