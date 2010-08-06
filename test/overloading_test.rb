@@ -39,9 +39,9 @@ context "Extension with overloaded methods" do
 
     # Should properly handle const overloads as well
     should.not.raise NameError do
-      math.const_method_0(1).should.equal 1
-      math.const_method_1(1).should.equal 2
-      math.const_method_string("love").should.equal 4
+      math.const_method_0(1)
+      math.const_method_1(1)
+      math.const_method_string("love")
     end
 
   end
