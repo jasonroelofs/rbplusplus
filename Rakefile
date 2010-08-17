@@ -3,7 +3,7 @@ require 'rake/rdoctask'
 require 'rake/contrib/sshpublisher'
 
 PROJECT_NAME = "rb++"
-RBPLUSPLUS_VERSION = "0.9.1"
+RBPLUSPLUS_VERSION = "1.0"
 
 task :default => :test
 
@@ -70,11 +70,11 @@ spec = Gem::Specification.new do |s|
 
   s.description = <<-END
 Rb++ combines the powerful query interface of rbgccxml and the Rice library to 
-make Ruby wrapping extensions easier to write than ever.
+make Ruby wrapping extensions of C++ libraries easier to write than ever.
   END
 
-  s.add_dependency "rbgccxml", "~> 0.9"
-  s.add_dependency "rice", "~> 1.3.0"
+  s.add_dependency "rbgccxml", "~> 1.0"
+  s.add_dependency "rice", "~> 1.4.0"
 
   patterns = [
     'TODO',
@@ -90,6 +90,4 @@ make Ruby wrapping extensions easier to write than ever.
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
-  pkg.need_zip = true
-  pkg.need_tar = true
 end
