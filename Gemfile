@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 
-gem "rbgccxml", "~> 0.9.0"
-gem "rice", "1.3.2"
+gem "rbgccxml", "~> 1.0"
+gem "rice", "1.4.0"
 
 group :development do
   gem "test-spec"
