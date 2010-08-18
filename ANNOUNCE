@@ -5,20 +5,17 @@ What is rb++ / rbgccxml?
 
 What's New
 
-  * Full 1.9 support through the entire stack!
+  * Full 1.9.2 support through the entire stack!
   * MinGW / MSYS build support on Windows.
 
   rb++:
-    * Updated to work with the Rice::Director changes
-    * Fixed a bug where rb++ wasn't using any superclass on classes with multiple superclasses
-    * Generated extension handles exceptions cleaner
-    * Various other small bug fixes and tweaks
+    * Support for Rice::define_implicit_cast
+    * Re-added indentation and styling of the generated C++ code, should be a little easier to read.
 
   rbgccxml:
-    * Switched parsing from libxml-ruby to nokogiri
-    * Fixed crash on encountering <Union>, but no real handling of the type yet.
-    * Fixed a bug with older gcc versions on dealing with anonymous enumerations
-
+    * Now using SAX to parse XML instead of DOM. Startup speed can be slow as the XML tree gets 
+      built into memory but overall parsing and querying, especially of very large libraries, is 
+      many times faster.
 
 Project
 
