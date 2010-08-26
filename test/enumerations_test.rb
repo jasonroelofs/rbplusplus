@@ -1,27 +1,23 @@
 require 'test_helper'
 
-context "Wrapping enumerations" do
+describe "Wrapping enumerations" do
 
-  def setup
-    if !defined?(@@enums_built)
-      super
-      @@enums_built = true 
-      Extension.new "enums" do |e|
-        e.sources full_dir("headers/enums.h")
-        e.namespace "enums"
-        e.writer_mode :single
+  before(:all) do
+    Extension.new "enums" do |e|
+      e.sources full_dir("headers/enums.h")
+      e.namespace "enums"
+      e.writer_mode :single
 
-        e.module "Mod" do |m|
-          m.namespace "inner"
-        end
+      e.module "Mod" do |m|
+        m.namespace "inner"
       end
-
-      require 'enums'
     end
+
+    require 'enums'
   end
 
   specify "should wrap up enums properly" do
-    assert defined?(TestEnum)
+    lambda { TestEnum }.should_not raise_error(NameError)
 
     TestEnum::VALUE1.to_i.should == 0
     TestEnum::VALUE2.to_i.should == 1
@@ -29,12 +25,12 @@ context "Wrapping enumerations" do
   end
   
   specify "should only wrap public enums" do
-    assert !defined?(Tester::NotWrapped)
-    assert !defined?(Tester::AlsoNotWrapped)
+    lambda { Tester::NotWrapped }.should raise_error(NameError)
+    lambda { Tester::AlsoNotWrapped }.should raise_error(NameError)
   end
 
   specify "should wrap up enumerations at proper nesting" do
-    assert defined?(Tester::MyEnum)
+    lambda { Tester::TestEnum }.should_not raise_error(NameError)
 
     Tester::MyEnum::I_LIKE_MONEY.to_i.should == 3
     Tester::MyEnum::YOU_LIKE_MONEY_TOO.to_i.should == 4
@@ -42,7 +38,7 @@ context "Wrapping enumerations" do
   end
 
   specify "should work in user-defined modules" do
-    assert defined?(Mod::InnerEnum)
+    lambda { Mod::InnerEnum }.should_not raise_error(NameError)
 
     Mod::InnerEnum::INNER_1.to_i.should == 0
     Mod::InnerEnum::INNER_2.to_i.should == 1
@@ -52,9 +48,9 @@ context "Wrapping enumerations" do
     what_test_enum(TestEnum::VALUE1).should == "We gots enum 0";
 
     # Types should be adhered to
-    should.raise RuntimeError do
+    lambda do
       what_test_enum(Mod::InnerEnum::INNER_1)
-    end
+    end.should raise_error(RuntimeError)
 
     t = Tester.new
     t.get_enum_description(Tester::MyEnum::YOU_LIKE_MONEY_TOO).should == "You like money!"
@@ -67,26 +63,26 @@ context "Wrapping enumerations" do
   end
 
   specify "anonymous enumerations' values are added as constants to the parent class" do
-    assert defined?(Tester::ANON_ENUM_VAL1)
-    assert defined?(Tester::ANON_ENUM_VAL2)
-    assert defined?(Tester::ANON_ENUM_VAL3)
-    assert defined?(Tester::ANON_ENUM_VAL4)
+    lambda { Tester::ANON_ENUM_VAL1 }.should_not raise_error(NameError)
+    lambda { Tester::ANON_ENUM_VAL2 }.should_not raise_error(NameError)
+    lambda { Tester::ANON_ENUM_VAL3 }.should_not raise_error(NameError)
+    lambda { Tester::ANON_ENUM_VAL4 }.should_not raise_error(NameError)
 
-    Tester::ANON_ENUM_VAL1.should.equal 1
-    Tester::ANON_ENUM_VAL2.should.equal 2
-    Tester::ANON_ENUM_VAL3.should.equal 5
-    Tester::ANON_ENUM_VAL4.should.equal 3
+    Tester::ANON_ENUM_VAL1.should == 1
+    Tester::ANON_ENUM_VAL2.should == 2
+    Tester::ANON_ENUM_VAL3.should == 5
+    Tester::ANON_ENUM_VAL4.should == 3
   end
 
   specify "top-level anonymous enumerations' values are added to the global scope" do
-    assert defined?(OUTER_ANON_1)
-    assert defined?(OUTER_ANON_2)
-    assert defined?(FOURTY_TWO)
-    assert defined?(SEPERATE_OUTER_VALUE)
+    lambda { OUTER_ANON_1 }.should_not raise_error(NameError)
+    lambda { OUTER_ANON_2 }.should_not raise_error(NameError)
+    lambda { FOURTY_TWO }.should_not raise_error(NameError)
+    lambda { SEPERATE_OUTER_VALUE }.should_not raise_error(NameError)
 
-    OUTER_ANON_1.should.equal 0
-    OUTER_ANON_2.should.equal 1
-    FOURTY_TWO.should.equal 42
-    SEPERATE_OUTER_VALUE.should.equal 14
+    OUTER_ANON_1.should == 0
+    OUTER_ANON_2.should == 1
+    FOURTY_TWO.should == 42
+    SEPERATE_OUTER_VALUE.should == 14
   end
 end

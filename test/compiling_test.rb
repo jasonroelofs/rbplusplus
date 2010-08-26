@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Compiler settings" do
+describe "Compiler settings" do
 
   specify "should be able to specify include paths" do
     Extension.new "compiler" do |e|
@@ -11,7 +11,7 @@ context "Compiler settings" do
 
     require 'compiler'
 
-    assert defined?(func)
+    func(1, 2).should == 3
   end
 
   specify "should be able to specify library paths" do
@@ -27,7 +27,7 @@ context "Compiler settings" do
 
     contents = File.read(ext_file)
 
-    contents.should.match(%r(-L/usr/lib/testing/123))
+    contents.should =~ %r(-L/usr/lib/testing/123)
 
     # Clean up
     `rm -rf #{full_dir('generated')}/*`
@@ -44,8 +44,8 @@ context "Compiler settings" do
 
     contents = File.read(ext_file)
 
-    contents.should.match(%r(-L/usr/lib/testing/456))
-    contents.should.match(%r(-L/var/lib/stuff))
+    contents.should =~ %r(-L/usr/lib/testing/456)
+    contents.should =~ %r(-L/var/lib/stuff)
   end
 
   specify "should be able to link to external libraries" do
@@ -61,7 +61,7 @@ context "Compiler settings" do
 
     contents = File.read(ext_file)
 
-    contents.should.match(%r(-llib123))
+    contents.should =~ %r(-llib123)
     
     # Clean up
     `rm -rf #{full_dir('generated')}/*`
@@ -78,9 +78,9 @@ context "Compiler settings" do
 
     contents = File.read(ext_file)
 
-    contents.should.match(%r(-lponzor))
-    contents.should.match(%r(-lwonko))
-    contents.should.match(%r(-lprankit))
+    contents.should =~ %r(-lponzor)
+    contents.should =~ %r(-lwonko)
+    contents.should =~ %r(-lprankit)
   end
 
   specify "can add extra cxxflags for gccxml and compiling" do
@@ -95,8 +95,8 @@ context "Compiler settings" do
 
     contents = File.read(ext_file)
 
-    contents.should.match(%r(-I/i/love/scotch))
-    contents.should.match(%r(-D__AND_DEFINE_THAT))
+    contents.should =~ %r(-I/i/love/scotch)
+    contents.should =~ %r(-D__AND_DEFINE_THAT)
   end
 
   specify "can add extra ldflags for gccxml and compiling" do
@@ -111,24 +111,24 @@ context "Compiler settings" do
 
     contents = File.read(ext_file)
 
-    contents.should.match(%r(-R/wootage/to/you))
-    contents.should.match(%r(-lthisandthat))
-    contents.should.match(%r(-nothing_here))
+    contents.should =~ %r(-R/wootage/to/you)
+    contents.should =~ %r(-lthisandthat)
+    contents.should =~ %r(-nothing_here)
   end
 
   specify "should pass cxxflags to rbgccxml" do
-    should.not.raise do
+    lambda do
       e = Extension.new "parsing_test" 
       e.working_dir = full_dir("generated")
       e.sources full_dir("headers/requires_define.h"),
         :cxxflags => "-DMUST_BE_DEFINED"
       e.build
       e.write
-    end
+    end.should_not raise_error
   end
 
   specify "should be able to add additional headers as needed" do
-    should.not.raise do
+    lambda do
       e = Extension.new "external" 
       e.working_dir = full_dir("generated")
       e.sources full_dir("headers/external_mapping.h"), 
@@ -138,8 +138,8 @@ context "Compiler settings" do
 
       file = full_dir("generated/external.rb.cpp")
       contents = File.read(file)
-      contents.should.match(%r(headers/external_mapping_rice.h))
-    end
+      contents.should =~ %r(headers/external_mapping_rice.h)
+    end.should_not raise_error
   end
 
   specify "can specify other source files to be compiled into the extension" do

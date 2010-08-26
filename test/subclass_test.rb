@@ -19,25 +19,21 @@ context "Extension with class hierachies" do
     require 'subclass'
 
     # Ignored superclasses should not cause problems with wrapped subclasses
-    should.not.raise NameError do
-      Base.new.one.should == Sub.new.one
-      Base.new.zero.should == Sub.new.zero
-    end
+    Base.new.one.should == Sub.new.one
+    Base.new.zero.should == Sub.new.zero
 
     # Template superclasses shouldn't cause problems
-    should.not.raise NameError do
-      TemplateSub.new.zero.should == TemplateSub.new.custom
-    end
+    TemplateSub.new.zero.should == TemplateSub.new.custom
 
-    should.not.raise NameError do
+    lambda do
       TemplatePtr.new.custom
-    end
+    end.should_not raise_error(NameError)
 
-    should.not.raise NameError do
+    lambda do
       Multiple.new
-    end
+    end.should_not raise_error(NameError)
 
-    Multiple.superclass.should.equal Base2
+    Multiple.superclass.should == Base2
   end
 
 end

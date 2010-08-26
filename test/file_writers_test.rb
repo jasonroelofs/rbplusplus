@@ -1,8 +1,8 @@
 require 'test_helper'
 
-context "Multiple file writer (default)" do
+describe "Multiple file writer (default)" do
 
-  setup do
+  before(:each) do
     @working_dir = File.expand_path(File.dirname(__FILE__) + "/generated")
 
     e = Extension.new "adder"
@@ -34,15 +34,15 @@ context "Multiple file writer (default)" do
       _classes_ShouldFindMe.rb.cpp
       adder.rb.cpp
     ).each do |wants|
-      assert_not_nil files.find {|got| File.basename(got) == wants }, "Didn't find #{wants}"
+      files.find {|got| File.basename(got) == wants }.should_not be_nil
     end
   end
 
 end
 
-context "Multiple file writer works with global _rbpp_custom" do
+describe "Multiple file writer works with global _rbpp_custom" do
 
-  setup do
+  before(:each) do
     @working_dir = File.expand_path(File.dirname(__FILE__) + "/generated")
 
     e = Extension.new "enums"
@@ -63,15 +63,15 @@ context "Multiple file writer works with global _rbpp_custom" do
       _rbpp_custom.rb.hpp
       _rbpp_custom.rb.cpp
     ).each do |wants|
-      assert_not_nil files.find {|got| File.basename(got) == wants }, "Didn't find #{wants}"
+      files.find {|got| File.basename(got) == wants }.should_not be_nil
     end
   end
 
 end
 
-context "Single file writer" do
+describe "Single file writer" do
 
-  setup do
+  before(:each) do
     @working_dir = File.expand_path(File.dirname(__FILE__) + "/generated")
 
     e = Extension.new "adder"
@@ -95,15 +95,15 @@ context "Single file writer" do
       extconf.rb
       adder.rb.cpp
     ).each do |wants|
-      assert_not_nil files.find {|got| File.basename(got) == wants }, "Didn't find #{wants}"
+      files.find {|got| File.basename(got) == wants }.should_not be_nil
     end
   end
 
 end
 
-context "Single file writer with to_from_ruby" do
+describe "Single file writer with to_from_ruby" do
 
-  setup do
+  before(:each) do
     Extension.new "to_from_ruby" do |e|
       e.sources full_dir("headers/to_from_ruby.h"),
         :include_paths => full_dir("headers"),
@@ -116,8 +116,8 @@ context "Single file writer with to_from_ruby" do
   end
 
   specify "should have compiled properly" do
-    should.not.raise LoadError do
+    lambda do
       require 'to_from_ruby'
-    end
+    end.should_not raise_error(LoadError)
   end
 end

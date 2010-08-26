@@ -1,15 +1,11 @@
 require 'test_helper'
 
-context "Allocation Strategies" do
+describe "Allocation Strategies" do
 
-  def setup
-    if !defined?(@@alloc_strat_built)
-      super
-      @@alloc_strat_built = true 
-      Extension.new "alloc_strats" do |e|
-        e.sources full_dir("headers/alloc_strats.h")
-        node = e.namespace "alloc_strats"
-      end
+  before(:all) do
+    Extension.new "alloc_strats" do |e|
+      e.sources full_dir("headers/alloc_strats.h")
+      node = e.namespace "alloc_strats"
     end
   end
 
@@ -19,22 +15,26 @@ context "Allocation Strategies" do
   # instantiate an object with a non-public constructor
   # and it all dies.
   specify "properly figures out what allocation to do" do
-    should.not.raise LoadError  do
+    lambda do
       require 'alloc_strats'
-    end 
+    end.should_not raise_error(LoadError)
 
     # Private constructor, public destructor
-    assert defined?(NoConstructor)
+    lambda do
+      NoConstructor
+    end.should_not raise_error(NameError)
 
     # Private constructor and destructor
-    assert defined?(Neither)
+    lambda do
+      Neither
+    end.should_not raise_error(NameError)
   end
 
   specify "can get access to Neither object" do
     n = Neither.get_instance
-    n.should.not.be.nil
+    n.should_not be_nil
 
-    n.process(4, 5).should.equal 20
+    n.process(4, 5).should == 20
   end
 
 end

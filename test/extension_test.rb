@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Ruby Extension creation" do
+describe "Ruby Extension creation" do
 
   specify "should create a valid Ruby extension" do
     Extension.new "ext_test" do |e|
@@ -8,9 +8,9 @@ context "Ruby Extension creation" do
       e.writer_mode :single
     end
 
-    should.not.raise LoadError do
-      require("ext_test")
-    end
+    lambda do
+      require "ext_test"
+    end.should_not raise_error(LoadError)
   end
 
   specify "should create a valid Ruby extension without a block" do
@@ -22,13 +22,13 @@ context "Ruby Extension creation" do
     e.write
     e.compile
 
-    should.not.raise LoadError do
-      require("ext_test")
-    end
+    lambda do
+      require "ext_test"
+    end.should_not raise_error(LoadError)
   end
 
   specify "should properly build working dir as deep as needed" do
-    should.not.raise Errno::ENOENT do
+    lambda do
       path = File.join(File.expand_path(File.dirname(__FILE__)), "generated", "path1", "path2")
       Extension.new "extension" do |e|
         e.sources full_dir("headers/empty.h")
@@ -36,8 +36,8 @@ context "Ruby Extension creation" do
         e.writer_mode :single
       end
 
-      assert File.exists?(File.join(path, "extconf.rb"))
-    end
+      File.exists?(File.join(path, "extconf.rb")).should be_true
+    end.should_not raise_error(Errno::ENOENT)
   end
 end
 

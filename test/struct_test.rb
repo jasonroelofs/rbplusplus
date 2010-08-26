@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Nested Struct" do
+describe "Nested Struct" do
 
   specify "should be accessible" do
     Extension.new "nested" do |e|
@@ -10,13 +10,11 @@ context "Nested Struct" do
 
     require 'nested'
 
-    should.not.raise NameError do
-      Klass::NestedStruct.new.one.should == 1
-    end
+    Klass::NestedStruct.new.one.should == 1
 
-    should.raise NameError do
+    lambda do
       Klass::PrivateNestedStruct.new
-    end
+    end.should raise_error(NameError)
   end
   
 end

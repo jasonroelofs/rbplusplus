@@ -1,26 +1,24 @@
 require 'test_helper'
 
 context "Wrapping Classes within classes" do
-  def setup
-    if !defined?(@@nested_built)
-      super
-      @@nested_built = true 
-      Extension.new "nested" do |e|
-        e.sources full_dir("headers/nested_classes.h")
-        node = e.namespace "classes"
-      end
-
-      require 'nested'
+  before(:all) do
+    Extension.new "nested" do |e|
+      e.sources full_dir("headers/nested_classes.h")
+      node = e.namespace "classes"
     end
+
+    require 'nested'
   end
 
   specify "should properly make nested classes available" do
-    assert defined?(TestClass) 
-    assert defined?(TestClass::InnerClass) 
-    assert defined?(TestClass::InnerClass::Inner2) 
+    lambda do 
+      Kernel.const_get(TestClass) 
+      Kernel.const_get(TestClass::InnerClass) 
+      Kernel.const_get(TestClass::InnerClass::Inner2) 
+    end.should_not raise_error(NameError)
 
-    TestClass.new.should.not.be.nil
-    TestClass::InnerClass.new.should.not.be.nil
-    TestClass::InnerClass::Inner2.new.should.not.be.nil
+    TestClass.new.should_not be_nil
+    TestClass::InnerClass.new.should_not be_nil
+    TestClass::InnerClass::Inner2.new.should_not be_nil
   end
 end

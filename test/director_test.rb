@@ -2,32 +2,28 @@ require 'test_helper'
 
 context "Director proxy generation" do
 
-  def setup
-    if !defined?(@@director_built)
-      super
-      @@director_built = true
-      Extension.new "director" do |e|
-        e.sources full_dir("headers/director.h")
+  before(:all) do
+    Extension.new "director" do |e|
+      e.sources full_dir("headers/director.h")
 
-        node = e.namespace "director"
+      node = e.namespace "director"
 
-        # As director is pretty complicated to get right
-        # automatically for now, we force-specify which
-        # classes to have directors set on.
-        %w(Worker MultiplyWorker BadNameClass VirtualWithArgs NoConstructor VBase VOne VTwo).each do |k|
-          node.classes(k).director
-        end
-
-        node.classes("Worker").methods("doProcessImpl").default_return_value(0)
-
-        klass = node.classes("BadNameClass")
-        klass.wrap_as("BetterNamedClass")
-        klass.methods("_is_x_ok_to_run").wrap_as("x_ok?")
-        klass.methods("__do_someProcessing").wrap_as("do_processing")
+      # As director is pretty complicated to get right
+      # automatically for now, we force-specify which
+      # classes to have directors set on.
+      %w(Worker MultiplyWorker BadNameClass VirtualWithArgs NoConstructor VBase VOne VTwo).each do |k|
+        node.classes(k).director
       end
 
-      require 'director'
+      node.classes("Worker").methods("doProcessImpl").default_return_value(0)
+
+      klass = node.classes("BadNameClass")
+      klass.wrap_as("BetterNamedClass")
+      klass.methods("_is_x_ok_to_run").wrap_as("x_ok?")
+      klass.methods("__do_someProcessing").wrap_as("do_processing")
     end
+
+    require 'director'
   end
 
   specify "polymorphic calls extend into Ruby" do
@@ -40,7 +36,7 @@ context "Director proxy generation" do
     h = Handler.new
     h.add_worker(MyWorker.new)
 
-    h.process_workers(5).should.equal 15
+    h.process_workers(5).should == 15
   end
 
   specify "super calls on pure virtual raise exception" do
@@ -50,9 +46,9 @@ context "Director proxy generation" do
       end
     end
 
-    should.raise NotImplementedError do
+    lambda do
       SuperBadWorker.new.process(10)
-    end
+    end.should raise_error(NotImplementedError)
   end
 
   specify "allows super calls to continue back into C++ classes" do
@@ -62,9 +58,9 @@ context "Director proxy generation" do
       end
     end
 
-    should.not.raise NotImplementedError do
-      SuperGoodWorker.new.do_something(10).should.equal 50
-    end
+    lambda do
+      SuperGoodWorker.new.do_something(10).should == 50
+    end.should_not raise_error(NotImplementedError)
   end
 
   specify "can specify a default return value in the wrapper" do
@@ -79,25 +75,25 @@ context "Director proxy generation" do
     end
 
     w = MyAwesomeWorker.new
-    w.do_process(3).should.equal 10
+    w.do_process(3).should == 10
 
     h = Handler.new
     h.add_worker(w)
 
-    h.process_workers(10).should.equal 18
+    h.process_workers(10).should == 18
   end
 
   specify "properly adds all constructor arguments" do
     v = VirtualWithArgs.new 14, true
-    v.process_a("hi").should.equal 16
-    v.process_b.should.be true
+    v.process_a("hi").should == 16
+    v.process_b.should be_true
   end
 
   specify "takes into account renamed methods / classes" do
     c = BetterNamedClass.new
-    assert !c.x_ok?
+    c.x_ok?.should_not be_true
 
-    c.do_processing.should.equal 14
+    c.do_processing.should == 14
   end
 
   specify "handles no constructors" do
@@ -105,7 +101,7 @@ context "Director proxy generation" do
     end
 
     n = MyThing.new
-    n.do_something.should.equal 4
+    n.do_something.should == 4
   end
 
   specify "only builds method wrappers for virtual methods" do
@@ -117,13 +113,13 @@ context "Director proxy generation" do
 
     # Super calls still work
     w = NumberWorker.new
-    w.get_number.should.equal 27
+    w.get_number.should == 27
 
     # But polymorphism stops in the C++
     h = Handler.new
     h.add_worker(w)
 
-    h.add_worker_numbers.should.equal 12
+    h.add_worker_numbers.should == 12
   end
 
   specify "Directors implement all pure virtual methods up the inheritance tree" do
@@ -131,21 +127,22 @@ context "Director proxy generation" do
     v1 = VOne.new
     v2 = VTwo.new
 
-    v1.method_one.should.equal "methodOne"
+    v1.method_one.should == "methodOne"
 
-    should.raise NotImplementedError do
+    lambda do
       v1.method_two
-    end
-    should.raise NotImplementedError do
+    end.should raise_error(NotImplementedError)
+
+    lambda do
       v1.method_three
-    end
+    end.should raise_error(NotImplementedError)
 
-    v2.method_one.should.equal "methodOne"
-    v2.method_two.should.equal "methodTwo"
+    v2.method_one.should == "methodOne"
+    v2.method_two.should == "methodTwo"
 
-    should.raise NotImplementedError do
+    lambda do
       v2.method_three
-    end
+    end.should raise_error(NotImplementedError)
   end
 
   specify "handles superclasses of the class with virtual methods" do
@@ -158,21 +155,22 @@ context "Director proxy generation" do
     h = Handler.new
 
     h.add_worker(MultiplyWorker.new)
-    h.process_workers(5).should.equal 10
+    h.process_workers(5).should == 10
 
     h.add_worker(QuadWorker.new)
-    h.process_workers(5).should.equal 40
+    h.process_workers(5).should == 40
   end
 
   specify "multiple files writer properly handles directors and nested nodes" do
-    assert defined?(Worker::ZeeEnum)
-    assert defined?(Worker::ZeeEnum::VALUE)
-    Worker::ZeeEnum::VALUE.to_i.should.equal 4
+    lambda { Worker::ZeeEnum }.should_not raise_error(NameError)
+    lambda { Worker::ZeeEnum::VALUE }.should_not raise_error(NameError)
+
+    Worker::ZeeEnum::VALUE.to_i.should == 4
   end
 
   specify "inheritance types are registered properly" do
     two = VTwo.new
-    VBase::process(two).should.equal "methodTwo"
+    VBase::process(two).should == "methodTwo"
   end
 
 end

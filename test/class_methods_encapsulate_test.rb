@@ -1,28 +1,26 @@
 require 'test_helper'
 
-context "Correct handling of encapsulated methods" do
-  def setup
-    if !defined?(@@encapsulated)
-      super
-      @@encapsulated = true 
-      Extension.new "encapsulation" do |e|
-        e.sources full_dir("headers/class_methods.h")
-        node = e.namespace "encapsulation"
-      end
-
-      require 'encapsulation'
+describe "Correct handling of encapsulated methods" do
+  before(:all) do
+    Extension.new "encapsulation" do |e|
+      e.sources full_dir("headers/class_methods.h")
+      node = e.namespace "encapsulation"
     end
+
+    require 'encapsulation'
   end
 
   specify "should handle private/protected/public" do
     ext = Extended.new
     ext.public_method.should == 1
-    should.raise NoMethodError do
+
+    lambda do
       ext.private_method
-    end
-    should.raise NoMethodError do
+    end.should raise_error(NoMethodError)
+
+    lambda do
       ext.protected_method
-    end
+    end.should raise_error(NoMethodError)
   end
   
   specify "should handle virtual methods" do
@@ -36,24 +34,26 @@ context "Correct handling of encapsulated methods" do
     arg = ArgumentAccess.new
 
     # Single argument methods
-    should.raise NoMethodError do
+    lambda do
       arg.wrap_me_private
-    end
-    should.raise NoMethodError do
-      arg.wrap_me_protected
-    end
+    end.should raise_error(NoMethodError)
 
-    should.not.raise NoMethodError do
+    lambda do
+      arg.wrap_me_protected
+    end.should raise_error(NoMethodError)
+
+    lambda do
       arg.wrap_me_public ArgumentAccess::PublicStruct.new
-    end
+    end.should_not raise_error(NoMethodError)
     
     # Multiple argument methods
-    should.raise NoMethodError do
+    lambda do
       arg.wrap_me_many_no
-    end
-    should.not.raise NoMethodError do
+    end.should raise_error(NoMethodError)
+
+    lambda do
       arg.wrap_me_many_yes(1, 2.0, ArgumentAccess::PublicStruct.new)
-    end
+    end.should_not raise_error(NoMethodError)
   end
 end
 

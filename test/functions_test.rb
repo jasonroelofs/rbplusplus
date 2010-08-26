@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Extension with globally available functions" do
+describe "Extension with globally available functions" do
 
   specify "should make functions available" do
     Extension.new "functions" do |e|
@@ -10,17 +10,11 @@ context "Extension with globally available functions" do
 
     require 'functions'
 
-    should.not.raise NameError do
-      test1
-    end
+    lambda { test1 }.should_not raise_error(NameError)
 
-    should.not.raise NameError do
-      assert_in_delta 1.0, test2(2.0), 0.001
-    end
+    test2(2.0).should be_close(1.0, 0.001)
 
-    should.not.raise NameError do
-      test3(2, 4.2).should == 2
-    end
+    test3(2, 4.2).should == 2
   end
 
 end

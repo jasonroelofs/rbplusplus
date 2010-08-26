@@ -1,18 +1,14 @@
 require 'test_helper'
 
-context "properly handles and wraps function pointer arguments" do
+describe "properly handles and wraps function pointer arguments" do
 
-  def setup
-    if !defined?(@@function_pointers)
-      super
-      @@function_pointers = true 
-      Extension.new "function_pointers" do |e|
-        e.sources full_dir("headers/function_pointers.h")
-        node = e.namespace "function_pointers"
-      end
-
-      require 'function_pointers'
+  before(:all) do
+    Extension.new "function_pointers" do |e|
+      e.sources full_dir("headers/function_pointers.h")
+      node = e.namespace "function_pointers"
     end
+
+    require 'function_pointers'
   end
 
   specify "no arguments, no return" do
@@ -24,7 +20,7 @@ context "properly handles and wraps function pointer arguments" do
 
     call_callback
 
-    assert proc_called
+    proc_called.should be_true
   end
 
   specify "arguments, no return" do

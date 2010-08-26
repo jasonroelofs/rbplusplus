@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Extension with constructors out the whazoo" do
+describe "Extension with constructors out the whazoo" do
 
   specify "should make constructors available" do
     Extension.new "constructors" do |e|
@@ -15,17 +15,17 @@ context "Extension with constructors out the whazoo" do
 
     require 'constructors'
 
-    should.not.raise NameError do
+    lambda do
       # Test complex constructors
       d = DoubleStringHolder.new("one", "two")
       one = d.get_one
       d.get_one.should == "one"
       d.get_two.should == "two"
-    end
+    end.should_not raise_error(NameError)
     
-    should.raise TypeError do
+    lambda do
       PrivateConstructor.new
-    end
+    end.should raise_error(TypeError)
   end
 
 end

@@ -1,18 +1,14 @@
 require 'test_helper'
 
-context "Function pointers into class methods" do
+describe "Function pointers into class methods" do
 
-  def setup
-    if !defined?(@@function_pointers_class)
-      super
-      @@function_pointers_class = true 
-      Extension.new "function_pointers_class" do |e|
-        e.sources full_dir("headers/function_pointers_class.h")
-        node = e.namespace "function_pointers_class"
-      end
-
-      require 'function_pointers_class'
+  before(:all) do
+    Extension.new "function_pointers_class" do |e|
+      e.sources full_dir("headers/function_pointers_class.h")
+      node = e.namespace "function_pointers_class"
     end
+
+    require 'function_pointers_class'
   end
 
 

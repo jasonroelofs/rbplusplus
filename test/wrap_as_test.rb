@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Ugly interfaces cleaner" do
+describe "Ugly interfaces cleaner" do
 
   specify "should map functions detailed" do
     node = nil
@@ -53,56 +53,56 @@ context "Ugly interfaces cleaner" do
 
     require 'ui'
 
-    should.raise NoMethodError do
+    lambda do
       ui_ignore()
-    end
+    end.should raise_error(NoMethodError)
 
-    should.raise NoMethodError do
+    lambda do
       ui_add(1,2)
-    end
+    end.should raise_error(NoMethodError)
 
-    should.not.raise NoMethodError do
+    lambda do
       UI::Math::add(1,2).should == 3
-    end
+    end.should_not raise_error(NoMethodError)
 
-    should.raise NoMethodError do
+    lambda do
       ui_subtract(2,1)
-    end
+    end.should raise_error(NoMethodError)
 
-    should.not.raise NoMethodError do
+    lambda do
       UI::Math::subtract(2,1).should == 1
-    end
+    end.should_not raise_error(NoMethodError)
 
-    should.raise NameError do
+    lambda do
       C_UIVector.new
-    end
+    end.should raise_error(NameError)
 
-    should.not.raise NameError do
+    lambda do
       v = UI::Vector.new
       v.x = 3
       v.x.should == 3
-    end
+    end.should_not raise_error(NameError)
 
-    should.raise NameError do
+    lambda do
       UI::DMath::divide(1.0,2.0)
-    end
+    end.should raise_error(NameError)
 
-    should.not.raise NoMethodError do
-      UI::Modulus.mod(3,2).should.equal 1
-    end
+    lambda do
+      UI::Modulus.mod(3,2).should == 1
+    end.should_not raise_error(NameError)
 
-    UI::Modulus.new.method_mod(4, 3).should.equal 1
+    UI::Modulus.new.method_mod(4, 3).should == 1
 
-    should.not.raise NoMethodError do
-      UI::Math::divide(2,1).should.equal 2
-    end
+    lambda do
+      UI::Math::divide(2,1).should == 2
+    end.should_not raise_error(NoMethodError)
 
-    should.raise TypeError do
+    lambda do
       UI::NoConstructor.new
-    end
+    end.should raise_error(TypeError)
 
-    should.not.raise NoMethodError do
+    lambda do
       UI::Outside::Inside.new
-    end
+    end.should_not raise_error(NoMethodError)
   end
 end
