@@ -15,10 +15,7 @@ end
 
 module LoggerHelpers
   def silence_logging
-    Logger.stubs(:info)
-    Logger.stubs(:warn)
-    Logger.stubs(:error)
-    Logger.stubs(:debug)
+    Logger.silent!
   end
 end
 
@@ -32,8 +29,6 @@ RSpec.configure do |config|
   config.include(FileDirectoryHelpers)
   config.include(LoggerHelpers)
   config.include(TestHelpers)
-
-  config.mock_with :mocha
 
   config.before(:all) do
     clear_info

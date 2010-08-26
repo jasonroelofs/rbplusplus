@@ -15,6 +15,10 @@ module RbPlusPlus
         @@quiet = val
       end
 
+      def silent!
+        @@silent = true
+      end
+
       def verbose?
         @@verbose = false unless defined?(@@verbose)
         @@verbose
@@ -26,19 +30,19 @@ module RbPlusPlus
       end
 
       def info(msg)
-        $stdout.puts "(INFO) #{msg}" unless quiet?
+        $stdout.puts "(INFO) #{msg}" if !quiet? && !@@silent
       end
 
       def warn(type, msg)
-        $stdout.puts "(WARNING) #{msg}"
+        $stdout.puts "(WARNING) #{msg}" if !@@silent
       end
 
       def debug(msg)
-        $stdout.puts "(DEBUG) #{msg}" if verbose?
+        $stdout.puts "(DEBUG) #{msg}" if verbose? && !@@silent
       end
 
       def error(msg)
-        $stderr.puts "(ERROR) #{msg}"
+        $stderr.puts "(ERROR) #{msg}" if !@@silent
       end
     end
   end
