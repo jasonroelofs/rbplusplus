@@ -1,6 +1,10 @@
 require 'test_helper'
 
 describe "Compiler settings" do
+  before(:each) do
+    clear_info
+    silence_logging
+  end
 
   specify "should be able to specify include paths" do
     Extension.new "compiler" do |e|
