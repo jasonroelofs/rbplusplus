@@ -1,9 +1,9 @@
 require 'test_helper'
 
 describe "Compiler settings" do
+
   before(:each) do
-    clear_info
-    silence_logging
+    test_setup
   end
 
   specify "should be able to specify include paths" do

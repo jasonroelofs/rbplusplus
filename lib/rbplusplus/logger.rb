@@ -29,20 +29,25 @@ module RbPlusPlus
         @@quiet
       end
 
+      def silent?
+        @@silent = false unless defined?(@@silent)
+        @@silent
+      end
+
       def info(msg)
-        $stdout.puts "(INFO) #{msg}" if !quiet? && !@@silent
+        $stdout.puts "(INFO) #{msg}" if !quiet? && !silent?
       end
 
       def warn(type, msg)
-        $stdout.puts "(WARNING) #{msg}" if !@@silent
+        $stdout.puts "(WARNING) #{msg}" if !silent?
       end
 
       def debug(msg)
-        $stdout.puts "(DEBUG) #{msg}" if verbose? && !@@silent
+        $stdout.puts "(DEBUG) #{msg}" if verbose? && !silent?
       end
 
       def error(msg)
-        $stderr.puts "(ERROR) #{msg}" if !@@silent
+        $stderr.puts "(ERROR) #{msg}" if !silent?
       end
     end
   end

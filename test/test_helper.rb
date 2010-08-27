@@ -13,25 +13,26 @@ module FileDirectoryHelpers
   end
 end
 
-module LoggerHelpers
-  def silence_logging
-    Logger.silent!
-  end
-end
-
 module TestHelpers
   def clear_info
     `rm -rf #{full_dir('generated')}/*`
+  end
+
+  def silence_logging
+    RbPlusPlus::Logger.silent!
+  end
+
+  def test_setup
+    clear_info
+    silence_logging
   end
 end
 
 RSpec.configure do |config|
   config.include(FileDirectoryHelpers)
-  config.include(LoggerHelpers)
   config.include(TestHelpers)
 
   config.before(:all) do
-    clear_info
-    silence_logging
+    test_setup
   end
 end
