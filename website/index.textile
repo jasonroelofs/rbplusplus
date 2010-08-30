@@ -18,7 +18,6 @@ View the project's README and RDocs "here":rbplusplus/index.html.
 
 h3. Installation
 
-gem sources --add http://gemcutter.org
 gem install rbplusplus
 
 h3. Using rb++
