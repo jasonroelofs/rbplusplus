@@ -18,8 +18,8 @@ many thanks to Roman for his work, the major inspiration for this library.
 
 == Installation
 
-Rice builds and installs on any *nix system, including Mac OS X and Cygwin. Rice,
-and therefor rb++ will not work on Windows outside of Cygwin.
+Rice builds and installs on any *nix system, including Mac OS X. 
+Rice and rb++ have been shown to work under Cygwin and MinGW / MSYS.
 
   gem install rbplusplus
 
