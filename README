@@ -21,7 +21,6 @@ many thanks to Roman for his work, the major inspiration for this library.
 Rice builds and installs on any *nix system, including Mac OS X and Cygwin. Rice,
 and therefor rb++ will not work on Windows outside of Cygwin.
 
-  gem sources --add http://gemcutter.org
   gem install rbplusplus
 
 == The Project
