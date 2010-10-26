@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Director proxy generation" do
+describe "Director proxy generation" do
 
   before(:all) do
     Extension.new "director" do |e|

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Properly build known required to_ruby and from_ruby methods" do
+describe "Properly build known required to_ruby and from_ruby methods" do
 
   specify "should build for const & types as needed" do
     Extension.new "to_from_ruby" do |e|

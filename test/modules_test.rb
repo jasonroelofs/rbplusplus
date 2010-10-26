@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Extension with modules" do
+describe "Extension with modules" do
 
   before(:all) do
     Extension.new "modules" do |e|

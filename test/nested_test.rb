@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Wrapping Classes within classes" do
+describe "Wrapping Classes within classes" do
   before(:all) do
     Extension.new "nested" do |e|
       e.sources full_dir("headers/nested_classes.h")

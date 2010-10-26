@@ -1,6 +1,6 @@
 require 'test_helper'
 
-context "Extension with class hierachies" do
+describe "Extension with class hierachies" do
 
   specify "should make super classes methods available" do
     Extension.new "subclass" do |e|
