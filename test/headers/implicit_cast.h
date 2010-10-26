@@ -55,53 +55,6 @@ namespace implicit_cast {
   bool isRight(Degree* degree) {
     return degree->valueDegrees() == 90;
   }
-
-  /**
-   * Classes to show how to turn off the implicit casting
-   */
-  class Explicit
-  {
-    public:
-      Explicit(float v) {
-        value = v;
-      }
-
-      Explicit(const Degree &d) {
-        value = d.valueDegrees();
-      }
-
-      Explicit(const Radian &r) {
-        value = r.valueDegrees();
-      }
-
-      float value;
-  };
-
-  float explicitValue(Explicit e) {
-    return e.value;
-  }
-
-  class NotImplicit
-  {
-    public:
-      NotImplicit(float v, int a) {
-        value = v * a;
-      }
-
-      NotImplicit(const Degree &d) {
-        value = d.valueDegrees();
-      }
-
-      NotImplicit(const Radian &r) {
-        value = r.valueDegrees();
-      }
-
-      float value;
-  };
-
-  float notImplicitValue(NotImplicit i) {
-    return i.value;
-  }
 }
 
 #endif

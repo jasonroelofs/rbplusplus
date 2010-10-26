@@ -38,16 +38,18 @@ module RbPlusPlus
         [to_use || real_constructors].flatten.each do |constructor|
           next if do_not_wrap?(constructor)
 
-          if constructor.attributes[:artificial]
-            next if ignore_artificial || constructor.arguments.length == 1
+          Logger.debug "Wrapping constructor: #{constructor.attributes["demangled"]}"
+
+          if constructor.attributes["artificial"]
+            if ignore_artificial && constructor.arguments.length == 1
+              Logger.debug "Not wrapping artificial constructor #{constructor.attributes["demangled"]}"
+              next 
+            end
           end
 
-          if implicit_converter?(constructor)
-            if constructor.implicit_casting?
-              parent.add_child ImplicitCasterNode.new(constructor, self)
-            end
-
-            # We don't want to expose these constructors to Rice
+          if implicit_casting?(constructor)
+            Logger.debug "Wrapping implicit constructor #{constructor.to_cpp}"
+            parent.add_child ImplicitCasterNode.new(constructor, self)
             next
           end
 
@@ -60,9 +62,10 @@ module RbPlusPlus
       end
 
       # Is this constructor a converter constructor?
-      def implicit_converter?(constructor)
-        # Single argument
-        constructor.arguments.length == 1 &&
+      def implicit_casting?(constructor)
+        constructor.implicit_casting? &&
+          # Only works on single argument constructors
+          constructor.arguments.length == 1 &&
           # We are wrapping the type converting from
           !do_not_wrap?(constructor.arguments[0].cpp_type.base_type)
       end

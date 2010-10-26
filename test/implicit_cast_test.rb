@@ -10,11 +10,10 @@ describe "Specify types to allow implicit casting" do
       node = e.namespace "implicit_cast"
 
       # Can flag individual constructors
-      node.classes("Explicit").constructors.
-        find(:arguments => ["const Radian&"]).implicit_casting(false)
+      node.classes("Degree").constructors.find(:arguments => ["const Radian&"]).implicit_casting(true)
 
       # Or flag the class as a whole
-      node.classes("NotImplicit").implicit_casting(false)
+      node.classes("Radian").implicit_casting(true)
     end
 
     require 'implicit_cast'
@@ -37,31 +36,5 @@ describe "Specify types to allow implicit casting" do
     is_right(Degree.new(90)).should be_true
     is_right(Radian.new(2.0)).should be_false
   end
-
-  specify "can turn off implicit cast wrapping for a given constructor" do
-    lambda do
-      explicit_value(Radian.new(60.0))
-    end.should raise_error
-
-    lambda do
-      e = Explicit.new(14.0)
-      explicit_value(e).should be_close(14.0, 0.001)
-    end.should_not raise_error
-  end
-
-  specify "can turn off implicit casting for an entire class" do
-    n = NotImplicit.new(10.0, 3)
-    
-    not_implicit_value(n).should be_close(30.0, 0.001)
-
-    lambda do
-      not_implicit_value(Degree.new(15.0))
-    end.should raise_error
-
-    lambda do
-      not_implicit_value(Radian.new(1.0))
-    end.should raise_error
-  end
-
 end
 
