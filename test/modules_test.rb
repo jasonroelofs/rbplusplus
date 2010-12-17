@@ -57,7 +57,7 @@ describe "Extension with modules" do
 
   specify "should wrap up C++ functions in the module" do
     lambda { Functions }.should_not raise_error(NameError)
-    Functions::test2(2).should be_close(1.0, 0.001)
+    Functions::test2(2).should be_within(0.001).of(1.0)
     Functions::test3(4, 6).should == 4
   end
 

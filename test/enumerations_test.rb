@@ -30,7 +30,7 @@ describe "Wrapping enumerations" do
   end
 
   specify "should wrap up enumerations at proper nesting" do
-    lambda { Tester::TestEnum }.should_not raise_error(NameError)
+    lambda { Tester::MyEnum }.should_not raise_error(NameError)
 
     Tester::MyEnum::I_LIKE_MONEY.to_i.should == 3
     Tester::MyEnum::YOU_LIKE_MONEY_TOO.to_i.should == 4

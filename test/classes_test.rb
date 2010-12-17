@@ -35,7 +35,7 @@ describe "Extension with wrapped classes" do
     # Wrapped method names default to underscore'd
     adder = Adder.new
     adder.add_integers(1,2).should == 3
-    adder.add_floats(1.0, 2.0).should be_close(3.0, 0.001)
+    adder.add_floats(1.0, 2.0).should be_within(0.001).of(3.0)
     adder.add_strings("Hello", "World").should == "HelloWorld"
     adder.get_class_name.should == "Adder"
   end
@@ -73,7 +73,7 @@ describe "Extension with wrapped classes" do
     a.should_be_transformed = "TRANSFORM"
 
     a.value1.should == 10
-    a.value2.should be_close(15.5, 0.01)
+    a.value2.should be_within(0.01).of(15.5)
     a.value3.should == "This is a value!"
 
     a.should_be_transformed.should == "TRANSFORM"
