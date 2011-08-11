@@ -113,7 +113,6 @@ module RbPlusPlus
           next if File.directory?(f)
 
           options[:include_source_files] << f
-          options[:includes] << f if File.extname(f) =~ /hpp/i || File.extname(f) =~ /h/i
         end
       end
 
@@ -141,6 +140,11 @@ module RbPlusPlus
 
       if (files = options.delete(:include_source_files))
         @options[:include_source_files] << files
+        options[:includes] ||= []
+
+        files.each do |f|
+          options[:includes] << f if File.extname(f) =~ /hpp/i || File.extname(f) =~ /h/i
+        end
       end
       
       if (flags = options.delete(:includes))

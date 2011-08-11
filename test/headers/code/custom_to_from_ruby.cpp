@@ -1,11 +1,13 @@
 #include "custom_to_from_ruby.hpp"
 
 template<>
-Rice::Object to_ruby<short int>(short int const & a) {
-  return INT2NUM(a);
+Rice::Object to_ruby<MyType>(const MyType & a) {
+  return INT2NUM(a.value());
 }
 
 template<>
-short int from_ruby<short int>(Rice::Object x) {
-  return FIX2INT(x.value());
+MyType from_ruby<MyType>(Rice::Object x) {
+  MyType my;
+  my.setValue(FIX2INT(x.value()));
+  return my;
 }

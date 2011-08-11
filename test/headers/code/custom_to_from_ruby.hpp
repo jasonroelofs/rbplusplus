@@ -4,10 +4,12 @@
 #include <rice/Object.hpp>
 #include <rice/to_from_ruby.hpp>
 
-template<>
-Rice::Object to_ruby<short int>(short int const & a);
+#include "my_type.hpp"
 
 template<>
-short int from_ruby<short int>(Rice::Object x);
+Rice::Object to_ruby<MyType>(MyType const & a);
+
+template<>
+MyType from_ruby<MyType>(Rice::Object x);
 
 #endif

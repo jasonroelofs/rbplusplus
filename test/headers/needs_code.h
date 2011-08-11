@@ -1,9 +1,12 @@
 #ifndef __NEEDS_CODE_H__
 #define __NEEDS_CODE_H__
 
+#include "code/my_type.hpp"
+
 namespace needs_code {
-  const short getNumber(short in) {
-    return in;
+
+  const int getNumber(MyType in) {
+    return in.value();
   }
 }
 
