@@ -1,5 +1,5 @@
-require 'rake/gempackagetask'
-require 'rake/rdoctask'
+require 'rubygems/package_task'
+require 'rdoc/task'
 require 'rake/contrib/sshpublisher'
 
 PROJECT_NAME = "rb++"
@@ -89,5 +89,5 @@ make Ruby wrapping extensions of C++ libraries easier to write than ever.
   s.require_paths = ['lib']
 end
 
-Rake::GemPackageTask.new(spec) do |pkg|
+Gem::PackageTask.new(spec) do |pkg|
 end

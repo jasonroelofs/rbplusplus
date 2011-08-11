@@ -1,5 +1,7 @@
 source "http://rubygems.org"
 
+gem "rake"
+
 gem "rbgccxml", "~> 1.0"
 gem "rice", "~> 1.4.0"
 
