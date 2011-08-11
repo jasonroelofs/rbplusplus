@@ -20,7 +20,9 @@ describe "Using multiple include source files" do
 
     require 'code_dir'
 
-    get_number(2).should == 2
+    NeedCode1.new.get_number(2).should == 2
+    NeedCode2.new.get_number(2).should == 2
+    NeedCode3.new.get_number(2).should == 2
   end
 
 end

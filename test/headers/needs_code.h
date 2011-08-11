@@ -5,9 +5,26 @@
 
 namespace needs_code {
 
-  const int getNumber(MyType in) {
-    return in.value();
-  }
+  class NeedCode1 {
+    public:
+      const int getNumber(MyType in) {
+        return in.value();
+      }
+  };
+
+  class NeedCode2 {
+    public:
+      const int getNumber(MyType in) {
+        return in.value();
+      }
+  };
+
+  class NeedCode3 {
+    public:
+      const int getNumber(MyType in) {
+        return in.value();
+      }
+  };
 }
 
 #endif

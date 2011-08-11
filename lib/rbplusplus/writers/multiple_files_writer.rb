@@ -76,7 +76,7 @@ module RbPlusPlus
         # Write out from the bottom up, makes sure that children file writers
         # update their parents as needed
         @file_writers.each do |fw|
-          fw.write(@build_dir)
+          fw.write(@build_dir, self.builder.additional_includes)
         end
       end
 
@@ -151,8 +151,9 @@ module RbPlusPlus
           @nodes << node
         end
 
-        def write(build_dir)
+        def write(build_dir, custom_includes = [])
           @build_dir = build_dir
+          @custom_includes = custom_includes.flatten
 
           build_source
           write_header if @header
@@ -227,7 +228,12 @@ module RbPlusPlus
         def write_source
           File.open(File.join(@build_dir, @source), "w+") do |cpp|
             if (incls = @includes.flatten.compact).any?
-              cpp.puts "", incls.uniq.sort.reverse.join("\n"), ""
+              incl_output = incls.uniq.sort.reverse.join("\n")
+              cpp.puts "", incl_output, ""
+            end
+
+            @custom_includes.each do |incl|
+              cpp.puts "#include \"#{incl}\"" unless incl_output =~ %r{#{incl}}
             end
 
             if @register_method
