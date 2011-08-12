@@ -76,6 +76,11 @@ describe "Default arguments properly exposed" do
     modify2(1, Ops::REMOVE).should == 1
   end
 
+  specify "function calls" do
+    default_with_function.should == 3
+    default_with_function(CustomType.new(5)).should == 5
+  end
+
   specify "should properly handle argument type qualifiers like refs and consts" # do
 #    build_strings("I'd ").should == "I'd kick-it"
 #    build_strings("You won't", " do it").should == "You won't do it"

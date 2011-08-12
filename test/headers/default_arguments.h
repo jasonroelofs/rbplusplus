@@ -76,6 +76,18 @@ namespace default_args {
     return value;
   }
 
+  class CustomType {
+    public:
+      CustomType(int value) { theValue = value; };
+      int theValue;
+
+      // Function calls
+      static CustomType someValue() { return CustomType(3); }
+  };
+
+  int defaultWithFunction(CustomType x = CustomType::someValue()) {
+    return x.theValue;
+  }
 
 }
 
