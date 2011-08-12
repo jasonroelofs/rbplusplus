@@ -27,6 +27,7 @@ GEM
     rbgccxml (1.0.1)
       gccxml_gem (~> 0.9)
       nokogiri (~> 1.4.0)
+    rdoc (3.9.2)
     rice (1.4.2)
     rspec (2.3.0)
       rspec-core (~> 2.3.0)
@@ -46,5 +47,6 @@ DEPENDENCIES
   jekyll
   rake
   rbgccxml (~> 1.0)
+  rdoc
   rice (~> 1.4.0)
   rspec (~> 2.3.0)

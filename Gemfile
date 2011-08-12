@@ -7,6 +7,7 @@ gem "rice", "~> 1.4.0"
 
 group :development do
   gem "rspec", "~> 2.3.0"
+  gem "rdoc"
 
   gem "jekyll"
   gem "RedCloth"
