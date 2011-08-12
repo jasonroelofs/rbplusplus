@@ -142,7 +142,7 @@ module RbPlusPlus
         @options[:include_source_files] << files
         options[:includes] ||= []
 
-        files.each do |f|
+        [files].flatten.each do |f|
           options[:includes] << f if File.extname(f) =~ /hpp/i || File.extname(f) =~ /h/i
         end
       end
