@@ -1,8 +1,6 @@
 require 'rdoc/task'
 require 'rake/contrib/sshpublisher'
 
-PROJECT_NAME = "rb++"
-
 task :default => :test
 
 # We test this way because of what this library does.

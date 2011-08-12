@@ -1,7 +1,6 @@
-RBPLUSPLUS_VERSION = "1.0.2"
 Gem::Specification.new do |s|
   s.name = "rbplusplus"
-  s.version = RBPLUSPLUS_VERSION
+  s.version = "1.0.2"
   s.summary = 'Ruby library to generate Rice wrapper code'
   s.homepage = 'http://rbplusplus.rubyforge.org'
   s.rubyforge_project = "rbplusplus"
@@ -9,7 +8,7 @@ Gem::Specification.new do |s|
   s.email = 'jameskilton@gmail.com'
 
   s.description = <<-END
-Rb++ combines the powerful query interface of rbgccxml and the Rice library to 
+Rb++ combines the powerful query interface of rbgccxml and the Rice library to
 make Ruby wrapping extensions of C++ libraries easier to write than ever.
   END
 
