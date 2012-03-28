@@ -85,4 +85,8 @@ describe "Wrapping enumerations" do
     FOURTY_TWO.should == 42
     SEPERATE_OUTER_VALUE.should == 14
   end
+
+  specify "works with single element enumerations" do
+    Tester::SINGLE_VALUE.to_i.should == 12
+  end
 end

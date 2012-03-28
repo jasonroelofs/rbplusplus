@@ -161,8 +161,9 @@ module RbPlusPlus
       # default value. See default_arguments_test and headers/default_arguments.h
       # for an example.
       def fix_enumeration_value(enum, default_value)
+        enum_values = [enum.values].flatten
         found =
-          enum.values.select do |enum_value|
+          enum_values.select do |enum_value|
             enum_value.name == default_value
           end.first
 

@@ -16,6 +16,10 @@ namespace enums {
   };
 
   enum {
+    SINGLE_VALUE = 12
+  };
+
+  enum {
     OUTER_ANON_1,
     OUTER_ANON_2,
     FOURTY_TWO = 42

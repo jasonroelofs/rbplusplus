@@ -116,8 +116,10 @@ module RbPlusPlus
           next if do_not_wrap?(method)
           next if method_names.include?(method.name)
 
+          arguments = [method.arguments].flatten
+
           # Ignore methods that have non-public arguments anywhere
-          if !method.arguments.empty? && !method.arguments.select {|a| !a.cpp_type.base_type.public?}.empty?
+          if !arguments.empty? && !arguments.select {|a| !a.cpp_type.base_type.public?}.empty?
             Logger.info "Ignoring method #{method.qualified_name} due to non-public argument type(s)"
             next
           end
