@@ -18,7 +18,7 @@ task :test do
     # the exact ruby binary that's linked to the ruby running the Rakefile. Just saying
     # "ruby" will find the system's installed ruby and be worthless
     ruby = File.join(Config::CONFIG["bindir"], Config::CONFIG["RUBY_INSTALL_NAME"])
-    sh "#{ruby} -Itest #{file}"
+    sh "#{ruby} -S rspec -Itest #{file}"
   end
 end
 
