@@ -27,11 +27,11 @@ Rice and rb++ have been shown to work under Cygwin and MinGW / MSYS.
 
 Rb++'s source is in a git repository hosted on github:
 
-http://github.com/jameskilton/rbgplusplus/tree/master
+http://github.com/jasonroelofs/rbgplusplus/tree/master
 
 Clone with:
 
-  git clone git://github.com/jameskilton/rbplusplus.git
+  git clone git://github.com/jasonroelofs/rbplusplus.git
 
 == Getting Started
 

@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.homepage = 'http://rbplusplus.rubyforge.org'
   s.rubyforge_project = "rbplusplus"
   s.author = 'Jason Roelofs'
-  s.email = 'jameskilton@gmail.com'
+  s.email = 'jasongroelofs@gmail.com'
 
   s.description = <<-END
 Rb++ combines the powerful query interface of rbgccxml and the Rice library to
