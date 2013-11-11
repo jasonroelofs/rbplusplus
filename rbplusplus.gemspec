@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "rbplusplus"
-  s.version = "1.0.3"
+  s.version = "1.1.0"
   s.summary = 'Ruby library to generate Rice wrapper code'
   s.homepage = 'http://rbplusplus.rubyforge.org'
   s.rubyforge_project = "rbplusplus"
