@@ -17,7 +17,7 @@ task :test do
     # To allow multiple ruby installs (like a multiruby test suite), I need to get
     # the exact ruby binary that's linked to the ruby running the Rakefile. Just saying
     # "ruby" will find the system's installed ruby and be worthless
-    ruby = File.join(Config::CONFIG["bindir"], Config::CONFIG["RUBY_INSTALL_NAME"])
+    ruby = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["RUBY_INSTALL_NAME"])
     sh "#{ruby} -S rspec -Itest #{file}"
   end
 end

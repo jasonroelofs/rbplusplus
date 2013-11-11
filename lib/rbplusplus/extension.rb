@@ -236,7 +236,7 @@ module RbPlusPlus
     def compile
       Logger.info "Compiling. See rbpp_compile.log for details."
       require 'rbconfig'
-      ruby = File.join(Config::CONFIG["bindir"], Config::CONFIG["RUBY_INSTALL_NAME"])
+      ruby = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["RUBY_INSTALL_NAME"])
       FileUtils.cd @working_dir do
         system("#{ruby} extconf.rb > rbpp_compile.log 2>&1")
         system("rm -f *.so")
