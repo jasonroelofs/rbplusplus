@@ -20,13 +20,13 @@ module RbPlusPlus
       end
 
       def write
-        includes << "#include <rice/Allocation_Strategies.hpp>"
+        includes << "#include <rice/Data_Object.hpp>"
 
         node_name = self.code.qualified_name
         code = <<-END
 namespace Rice {
   template<>
-  struct Default_Allocation_Strategy< #{node_name} > {
+  struct Default_Free_Function< #{node_name} > {
     static void free(#{node_name} * obj);
   };
 }
@@ -34,7 +34,7 @@ namespace Rice {
 
         declarations << code
 
-        pre = "Rice::Default_Allocation_Strategy< #{node_name} >::"
+        pre = "Rice::Default_Free_Function< #{node_name} >::"
 
         tmp = "void #{pre}free(#{node_name} * obj) { "
         tmp += @public_destructor ? "delete obj;" : ""
