@@ -13,7 +13,7 @@ make Ruby wrapping extensions of C++ libraries easier to write than ever.
   END
 
   s.add_dependency "rbgccxml", "~> 1.0.0"
-  s.add_dependency "rice", "~> 1.4.0"
+  s.add_dependency "rice", "~> 1.5.0"
 
   patterns = [
     'TODO',
