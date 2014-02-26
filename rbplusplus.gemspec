@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "rbplusplus"
-  s.version = "1.1.0"
+  s.version = "1.2.0"
   s.license = "MIT"
   s.summary = 'Ruby library to generate Rice wrapper code'
   s.homepage = 'http://rbplusplus.rubyforge.org'
@@ -14,7 +14,7 @@ make Ruby wrapping extensions of C++ libraries easier to write than ever.
   END
 
   s.add_dependency "rbgccxml", "~> 1.0.0"
-  s.add_dependency "rice", "~> 1.5.0"
+  s.add_dependency "rice", "~> 1.6.0"
 
   patterns = [
     'TODO',
