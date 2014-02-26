@@ -1,6 +1,7 @@
 before_script:
   - sudo apt-get update
   - sudo apt-get install gccxml
+  - gem uninstall -a gccxml_gem
   - gem install gccxml_gem --platform ruby
 rvm:
   - 1.9.3
