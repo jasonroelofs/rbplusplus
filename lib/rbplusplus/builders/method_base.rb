@@ -92,6 +92,7 @@ module RbPlusPlus
         # Build the wrapper method that gets exposed to Ruby
         declarations << "VALUE #{wrapper_func}(#{arg}) {"
         declarations << "\t#{block_var_name} = rb_block_proc();"
+        declarations << "\trb_gc_register_address(&#{block_var_name});"
         declarations << "\t#{callee}(&#{proxy_method_name});"
         declarations << "\treturn Qnil;"
         declarations << "}"
