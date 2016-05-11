@@ -14,7 +14,7 @@ make Ruby wrapping extensions of C++ libraries easier to write than ever.
   END
 
   s.add_dependency "rbgccxml", "~> 1.0.0"
-  s.add_dependency "rice", "~> 1.6.0"
+  s.add_dependency "rice", "~> 2.1.0"
 
   patterns = [
     'TODO',
