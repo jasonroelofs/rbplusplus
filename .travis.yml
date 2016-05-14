@@ -1,7 +1,8 @@
+before_install:
+  - gem install bundler
 before_script:
   - sudo apt-get update
   - sudo apt-get install gccxml
-  - gem install bundler
   - gem uninstall -a --force gccxml_gem
   - gem install gccxml_gem --platform ruby
 rvm:
