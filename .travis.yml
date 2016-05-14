@@ -6,8 +6,10 @@ before_script:
   - gem uninstall -a --force gccxml_gem
   - gem install gccxml_gem --platform ruby
 rvm:
-  - 2.0.0
   - 2.1.0
   - 2.2.0
   - 2.3.0
   - ruby-head
+matrix:
+  allow_failures:
+    - rvm: ruby-head
