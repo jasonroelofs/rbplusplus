@@ -163,9 +163,10 @@ module RbPlusPlus
       # for an example.
       def fix_enumeration_value(enum, default_value)
         enum_values = [enum.values].flatten
+        just_base_name = default_value.split("::").last
         found =
           enum_values.select do |enum_value|
-            enum_value.name == default_value
+            enum_value.name == default_value || enum_value.name == just_base_name
           end.first
 
         found ? found.qualified_name : default_value
