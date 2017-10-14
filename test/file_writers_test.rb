@@ -26,15 +26,15 @@ describe "Multiple file writer (default)" do
       extconf.rb
       _Mod.rb.cpp
       _Mod.rb.hpp
-      _classes_Adder.rb.cpp
-      _classes_Adder.rb.hpp
-      _classes_IntAdder.rb.cpp
-      _classes_IntAdder.rb.hpp
-      _classes_ShouldFindMe.rb.hpp
-      _classes_ShouldFindMe.rb.cpp
+      __classes_Adder.rb.cpp
+      __classes_Adder.rb.hpp
+      __classes_IntAdder.rb.cpp
+      __classes_IntAdder.rb.hpp
+      __classes_ShouldFindMe.rb.hpp
+      __classes_ShouldFindMe.rb.cpp
       adder.rb.cpp
     ).each do |wants|
-      files.find {|got| File.basename(got) == wants }.should_not be_nil
+      files.find {|got| File.basename(got) == wants }.should_not be_nil, "Expected #{wants} to exist"
     end
   end
 

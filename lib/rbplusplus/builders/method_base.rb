@@ -150,7 +150,7 @@ module RbPlusPlus
 
       # See http://www.gccxml.org/Bug/view.php?id=9234
       #
-      # Basically due to inconsistencies within gcc, GCC-XML parses default arguments
+      # Basically due to inconsistencies within gcc, CastXML parses default arguments
       # with having enumeration values exactly as they are in the code. This means
       # that if the C++ doesn't fully namespace the enumeration, extension compilation
       # will fail because g++ can't find the enumeration.

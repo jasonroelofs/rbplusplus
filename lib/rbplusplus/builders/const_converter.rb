@@ -32,7 +32,7 @@ module RbPlusPlus
         includes << "#include \"#{self.code.file}\""
 
         declarations << "template<>"
-        declarations << "Rice::Object to_ruby<#{full_name} >(#{full_name} const & a);"
+        declarations << "Rice::Object to_ruby< #{full_name} >(#{full_name} const & a);"
 
         build_as = if self.parent.is_a?(EnumerationNode)
                      "new #{full_name}(a)"
@@ -41,8 +41,8 @@ module RbPlusPlus
                    end
 
         registrations << "template<>"
-        registrations << "Rice::Object to_ruby<#{full_name} >(#{full_name} const & a) {"
-        registrations << "\treturn Rice::Data_Object<#{full_name} >(#{build_as}, Rice::Data_Type<#{full_name} >::klass(), 0, 0);"
+        registrations << "Rice::Object to_ruby< #{full_name} >(#{full_name} const & a) {"
+        registrations << "\treturn Rice::Data_Object< #{full_name} >(#{build_as}, Rice::Data_Type< #{full_name} >::klass(), 0, 0);"
         registrations << "}"
       end
 

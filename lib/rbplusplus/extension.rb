@@ -3,7 +3,7 @@ require 'optparse'
 module RbPlusPlus
 
   # This is the starting class for Rb++ wrapping. All Rb++ projects start as such:
-  #   
+  #
   #   Extension.new "extension_name" do |e|
   #     ...
   #   end
@@ -18,8 +18,8 @@ module RbPlusPlus
   #
   # The following calls are required in both formats:
   #
-  #   e.sources - The directory / array / name of C++ header files to parse. 
-  #   
+  #   e.sources - The directory / array / name of C++ header files to parse.
+  #
   # In the non-block format, the following calls are required:
   #
   #   e.working_dir - Specify the directory where the code will be generated. This needs
@@ -32,8 +32,8 @@ module RbPlusPlus
   #
   #   e.write - Writes out the generated code into files
   #
-  #   e.compile - Compiles the generated code into a Ruby extension. 
-  #   
+  #   e.compile - Compiles the generated code into a Ruby extension.
+  #
   class Extension
 
     # Where will the generated code be put
@@ -45,14 +45,14 @@ module RbPlusPlus
     # Various options given by the user to help with
     # parsing, linking, compiling, etc.
     #
-    # See #sources for a list of the possible options 
+    # See #sources for a list of the possible options
     attr_accessor :options
 
     # Create a new Ruby extension with a given name. This name will be
     # the actual name of the extension, e.g. you'll have name.so and you will
     # call require 'name' when using your new extension.
     #
-    # This constructor can be standalone or take a block. 
+    # This constructor can be standalone or take a block.
     def initialize(name, &block)
       @name = name
       @modules = []
@@ -99,14 +99,22 @@ module RbPlusPlus
     # * <tt>:ldflags</tt> - Flag(s) to be added to command line for linking
     # * <tt>:includes</tt> -  Header file(s) to include at the beginning of each .rb.cpp file generated.
     # * <tt>:include_source_files</tt> - C++ source files that need to be compiled into the extension but not wrapped.
-    # * <tt>:include_source_dir</tt> - A combination option for reducing duplication, this option will 
-    #   query the given directory for source files, adding all to <tt>:include_source_files</tt> and 
-    #   adding all h/hpp files to <tt>:includes</tt> 
+    # * <tt>:include_source_dir</tt> - A combination option for reducing duplication, this option will
+    #   query the given directory for source files, adding all to <tt>:include_source_files</tt> and
+    #   adding all h/hpp files to <tt>:includes</tt>
     #
     def sources(dirs, options = {})
-      parser_options = {}
+      parser_options = {
+        :includes => [],
+        :cxxflags => [
+          # Force castxml into C++ mode
+          "-x c++",
+          # Allow things like `<::`
+          "-fpermissive"
+        ]
+      }
 
-      if (code_dir = options.delete(:include_source_dir)) 
+      if (code_dir = options.delete(:include_source_dir))
         options[:include_source_files] ||= []
         options[:includes] ||= []
         Dir["#{code_dir}/*"].each do |f|
@@ -118,11 +126,11 @@ module RbPlusPlus
 
       if (paths = options.delete(:include_paths))
         @options[:include_paths] << paths
-        parser_options[:includes] = paths
+        parser_options[:includes] << paths
       end
 
       if (lib_paths = options.delete(:library_paths))
-        @options[:library_paths] << lib_paths 
+        @options[:library_paths] << lib_paths
       end
 
       if (libs = options.delete(:libraries))
@@ -131,7 +139,7 @@ module RbPlusPlus
 
       if (flags = options.delete(:cxxflags))
         @options[:cxxflags] << flags
-        parser_options[:cxxflags] = flags
+        parser_options[:cxxflags] << flags
       end
 
       if (flags = options.delete(:ldflags))
@@ -146,7 +154,7 @@ module RbPlusPlus
           options[:includes] << f if File.extname(f) =~ /hpp/i || File.extname(f) =~ /h/i
         end
       end
-      
+
       if (flags = options.delete(:includes))
         includes = Dir.glob(flags)
         if(includes.length == 0)
@@ -195,8 +203,8 @@ module RbPlusPlus
       raise "Unknown writer mode #{mode}" unless [:multiple, :single].include?(mode)
       @writer_mode = mode
     end
-    
-    # Start the code generation process. 
+
+    # Start the code generation process.
     def build
       raise ConfigurationError.new("Must specify working directory") unless @working_dir
       raise ConfigurationError.new("Must specify which sources to wrap") unless @parser
@@ -217,7 +225,7 @@ module RbPlusPlus
       Logger.info "Writing code to files"
       prepare_working_dir
       process_other_source_files
-      
+
       # Create the code
       writer_class = @writer_mode == :multiple ? Writers::MultipleFilesWriter : Writers::SingleFileWriter
       writer_class.new(@builder, @working_dir).write
@@ -257,7 +265,7 @@ module RbPlusPlus
           exit
         end
 
-        opts.on("-v", "--verbose", "Show all progress messages (INFO, DEBUG, WARNING, ERROR)") do 
+        opts.on("-v", "--verbose", "Show all progress messages (INFO, DEBUG, WARNING, ERROR)") do
           Logger.verbose = true
         end
 
@@ -307,7 +315,7 @@ module RbPlusPlus
 
     # Cool little eval / binding hack, from need.rb
     def build_working_dir(&block)
-      file_name = 
+      file_name =
         if block.respond_to?(:source_location)
           block.source_location[0]
         else
@@ -331,7 +339,7 @@ module IRB # :nodoc:
       ARGV.replace(args)
       @__initialized = true
     end
-    
+
     workspace = WorkSpace.new(binding)
 
     irb = Irb.new(workspace)

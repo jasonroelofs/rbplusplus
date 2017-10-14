@@ -5,8 +5,6 @@
 using namespace std;
 
 namespace classes {
-  class Forwarder;
-
   class Adder {
     public:
       Adder();
