@@ -6,7 +6,7 @@ describe "Specify types to allow implicit casting" do
     Extension.new "implicit_cast" do |e|
       e.sources full_dir("headers/implicit_cast.h")
       e.writer_mode :single
-        
+
       node = e.namespace "implicit_cast"
 
       # Can flag individual constructors
@@ -25,16 +25,16 @@ describe "Specify types to allow implicit casting" do
   end
 
   specify "can use Degree in place of Radian" do
-    is_obtuse(Degree.new(75)).should be_false
+    is_obtuse(Degree.new(75)).should eq(false)
   end
 
   specify "can use Radian in place of Degree" do
-    is_acute(Radian.new(2.0)).should be_false
+    is_acute(Radian.new(2.0)).should eq(false)
   end
 
   specify "pointers also work fine" do
-    is_right(Degree.new(90)).should be_true
-    is_right(Radian.new(2.0)).should be_false
+    is_right(Degree.new(90)).should eq(true)
+    is_right(Radian.new(2.0)).should eq(false)
   end
 end
 

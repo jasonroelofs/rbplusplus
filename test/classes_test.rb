@@ -22,10 +22,6 @@ describe "Extension with wrapped classes" do
     require 'adder'
   end
 
-  specify "should make classes available as Ruby runtime constants" do
-    lambda { Adder }.should_not raise_error
-  end
-
   specify "should make wrapped classes constructable" do
     a = Adder.new
     a.should_not be_nil
@@ -46,15 +42,15 @@ describe "Extension with wrapped classes" do
   end
 
   specify "should use typedefs when findable" do
-    lambda { IntAdder }.should_not raise_error
+    IntAdder
   end
 
   specify "finds and uses multi-nested typedefs" do
-    lambda { ShouldFindMe }.should_not raise_error
+    ShouldFindMe
   end
 
   specify "can turn off typedef lookup for certain classes" do
-    lambda { DontFindMeBro }.should raise_error
+    lambda { DontFindMeBro }.should raise_error(NameError)
   end
 
   specify "makes class constants available" do
@@ -62,7 +58,7 @@ describe "Extension with wrapped classes" do
   end
 
   specify "can ignore constants" do
-    lambda { Adder::HideMe }.should raise_error
+    lambda { Adder::HideMe }.should raise_error(NameError)
   end
 
   specify "makes public instance variables accessible" do
@@ -84,7 +80,7 @@ describe "Extension with wrapped classes" do
 
     lambda do
       a.const_var = "This is a value!"
-    end.should raise_error
+    end.should raise_error(NoMethodError)
 
     a.const_var.should == 14
   end
@@ -103,10 +99,6 @@ describe "Extension with wrapped classes" do
     a = MyAdder.new
     a.add_integers(3, 7).should == 21
     a.add_strings("piz", "owned").should == "pizownedwoot"
-  end
-
-  specify "should not wrap incomplete types" do
-    lambda { Forwarder }.should raise_error
   end
 end
 

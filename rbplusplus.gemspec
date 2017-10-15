@@ -13,7 +13,7 @@ Rb++ combines the powerful query interface of rbgccxml and the Rice library to
 make Ruby wrapping extensions of C++ libraries easier to write than ever.
   END
 
-  s.add_dependency "rbgccxml", "~> 1.0"
+  s.add_dependency "rbgccxml", "~> 1.1"
   s.add_dependency "rice", "~> 2.1"
 
   patterns = [

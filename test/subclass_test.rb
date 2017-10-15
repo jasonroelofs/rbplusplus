@@ -25,14 +25,9 @@ describe "Extension with class hierachies" do
     # Template superclasses shouldn't cause problems
     TemplateSub.new.zero.should == TemplateSub.new.custom
 
-    lambda do
-      TemplatePtr.new.custom
-    end.should_not raise_error(NameError)
-
-    lambda do
-      Multiple.new
-    end.should_not raise_error(NameError)
-
+    # Shouldn't throw exceptions
+    TemplatePtr.new.custom
+    Multiple.new
     Multiple.superclass.should == Base2
   end
 

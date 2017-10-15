@@ -95,7 +95,7 @@ module RbPlusPlus
       # to allocate the class directly. If this code tries to use a non-public
       # constructor, we hit a compiler error.
       def check_allocation_strategies
-        # Due to the nature of GCC-XML's handling of templated classes, there are some
+        # Due to the nature of CastXML's handling of templated classes, there are some
         # classes that might not have any gcc-generated constructors or destructors.
         # We check here if we're one of those classes and completely skip this step
         return if [self.code.constructors].flatten.empty?

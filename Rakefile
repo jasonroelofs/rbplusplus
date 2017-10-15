@@ -1,5 +1,4 @@
 require 'rdoc/task'
-require 'rake/contrib/sshpublisher'
 
 task :default => :test
 
@@ -18,7 +17,7 @@ task :test do
     # the exact ruby binary that's linked to the ruby running the Rakefile. Just saying
     # "ruby" will find the system's installed ruby and be worthless
     ruby = File.join(RbConfig::CONFIG["bindir"], RbConfig::CONFIG["RUBY_INSTALL_NAME"])
-    sh "#{ruby} -S rspec -Itest #{file}"
+    sh "#{ruby} -Itest -S rspec #{file}"
   end
 end
 
@@ -28,29 +27,4 @@ Rake::RDocTask.new do |rd|
   rd.rdoc_files.exclude("**/jamis.rb")
   rd.template = File.expand_path(File.dirname(__FILE__) + "/lib/jamis.rb")
   rd.options << '--line-numbers' << '--inline-source'
-end
-
-RUBYFORGE_USERNAME = "jameskilton"
-PROJECT_WEB_PATH = "/var/www/gforge-projects/rbplusplus"
-
-namespace :web do
-  desc "Build website"
-  task :build => :rdoc do |t|
-    unless File.directory?("publish")
-      mkdir "publish"
-    end
-
-    sh "jekyll --pygment website publish/"
-    sh "cp -r html/* publish/rbplusplus/"
-  end
-
-  desc "Update the website" 
-  task :upload => "web:build"  do |t|
-    Rake::SshDirPublisher.new("#{RUBYFORGE_USERNAME}@rubyforge.org", PROJECT_WEB_PATH, "publish").upload
-  end
-
-  desc "Clean up generated website files" 
-  task :clean do
-    rm_rf "publish"
-  end
 end

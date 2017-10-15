@@ -1,15 +1,16 @@
+language: ruby
 before_install:
-  - gem install bundler
-before_script:
   - sudo apt-get update
-  - sudo apt-get install gccxml
-  - gem uninstall -a --force gccxml_gem
-  - gem install gccxml_gem --platform ruby
+  - sudo apt-get install cmake
+  - gem install bundler
+  - git clone https://github.com/CastXML/CastXML.git
+  - mkdir CastXMLBuild
+  - cd CastXMLBuild
+  - cmake ../CastXML
+  - make
+  - export PATH=$PWD/bin:$PATH
+  - cd ..
 rvm:
-  - 2.1.0
-  - 2.2.0
-  - 2.3.0
-  - ruby-head
-matrix:
-  allow_failures:
-    - rvm: ruby-head
+  - 2.2
+  - 2.3
+  - 2.4

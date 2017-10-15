@@ -15,19 +15,13 @@ describe "Allocation Strategies" do
   # instantiate an object with a non-public constructor
   # and it all dies.
   specify "properly figures out what allocation to do" do
-    lambda do
-      require 'alloc_strats'
-    end.should_not raise_error(LoadError)
+    require 'alloc_strats'
 
     # Private constructor, public destructor
-    lambda do
-      NoConstructor
-    end.should_not raise_error(NameError)
+    NoConstructor
 
     # Private constructor and destructor
-    lambda do
-      Neither
-    end.should_not raise_error(NameError)
+    Neither
   end
 
   specify "can get access to Neither object" do

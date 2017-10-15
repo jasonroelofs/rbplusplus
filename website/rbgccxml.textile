@@ -8,7 +8,7 @@ h1. rbgccxml
 
 h3. Synopsis
 
-Rbgccxml is a C++ source code querying library. It makes use of "GCC-XML":http://www.gccxml.org and "nokogiri":http://nokogiri.org/ to process the C++ code (currently only headers and not body code) into easy to read XML, then opens up a very simple but powerful query API for searching everything about the code.
+Rbgccxml is a C++ source code querying library. It makes use of "CastXML":https://github.com/CastXML/CastXML and "nokogiri":http://nokogiri.org/ to process the C++ code (currently only headers and not body code) into easy to read XML, then opens up a very simple but powerful query API for searching everything about the code.
 
 Rbgccxml is released under the "MIT Licence":http://github.com/jameskilton/rbgccxml/tree/master/MIT_LICENCE
 

@@ -20,7 +20,7 @@ describe "properly handles and wraps function pointer arguments" do
 
     call_callback
 
-    proc_called.should be_true
+    proc_called.should eq(true)
   end
 
   specify "arguments, no return" do

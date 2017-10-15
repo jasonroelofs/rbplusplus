@@ -19,26 +19,21 @@ describe "Extension with overloaded methods" do
     require 'overload'
 
     #Constructor overloading is broken in rice
-    #math = Mathy.new 
+    #math = Mathy.new
     math = Mathy.new(1)
-    
+
     math.times.should == 1
     math.times_1(3).should == 3
     math.times_2(3,2).should == 6
     math.times_3(3,2,3).should == 18
-    
-    lambda do
-      math.nothing_0
-      math.nothing_1(1)
-    end.should_not raise_error(NameError)
+
+    math.nothing_0
+    math.nothing_1(1)
 
     # Should properly handle const overloads as well
-    lambda do
-      math.const_method_0(1)
-      math.const_method_1(1)
-      math.const_method_string("love")
-    end.should_not raise_error(NameError)
-
+    math.const_method_0(1)
+    math.const_method_1(1)
+    math.const_method_string("love")
   end
 
 end

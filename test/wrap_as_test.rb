@@ -61,48 +61,36 @@ describe "Ugly interfaces cleaner" do
       ui_add(1,2)
     end.should raise_error(NoMethodError)
 
-    lambda do
-      UI::Math::add(1,2).should == 3
-    end.should_not raise_error(NoMethodError)
+    UI::Math::add(1,2).should == 3
 
     lambda do
       ui_subtract(2,1)
     end.should raise_error(NoMethodError)
 
-    lambda do
-      UI::Math::subtract(2,1).should == 1
-    end.should_not raise_error(NoMethodError)
+    UI::Math::subtract(2,1).should == 1
 
     lambda do
       C_UIVector.new
     end.should raise_error(NameError)
 
-    lambda do
-      v = UI::Vector.new
-      v.x = 3
-      v.x.should == 3
-    end.should_not raise_error(NameError)
+    v = UI::Vector.new
+    v.x = 3
+    v.x.should == 3
 
     lambda do
       UI::DMath::divide(1.0,2.0)
     end.should raise_error(NameError)
 
-    lambda do
-      UI::Modulus.mod(3,2).should == 1
-    end.should_not raise_error(NameError)
+    UI::Modulus.mod(3,2).should == 1
 
     UI::Modulus.new.method_mod(4, 3).should == 1
 
-    lambda do
-      UI::Math::divide(2,1).should == 2
-    end.should_not raise_error(NoMethodError)
+    UI::Math::divide(2,1).should == 2
 
     lambda do
       UI::NoConstructor.new
     end.should raise_error(TypeError)
 
-    lambda do
-      UI::Outside::Inside.new
-    end.should_not raise_error(NoMethodError)
+    UI::Outside::Inside.new
   end
 end

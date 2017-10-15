@@ -10,7 +10,7 @@ describe "Extension with globally available functions" do
 
     require 'functions'
 
-    lambda { test1 }.should_not raise_error(NameError)
+    test1
 
     test2(2.0).should be_within(0.001).of(1.0)
 

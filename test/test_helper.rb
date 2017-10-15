@@ -32,6 +32,10 @@ RSpec.configure do |config|
   config.include(FileDirectoryHelpers)
   config.include(TestHelpers)
 
+  config.expect_with(:rspec) do |c|
+    c.syntax = :should
+  end
+
   config.before(:all) do
     test_setup
   end

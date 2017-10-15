@@ -150,7 +150,7 @@ module RbPlusPlus
 
       # See http://www.gccxml.org/Bug/view.php?id=9234
       #
-      # Basically due to inconsistencies within gcc, GCC-XML parses default arguments
+      # Basically due to inconsistencies within gcc, CastXML parses default arguments
       # with having enumeration values exactly as they are in the code. This means
       # that if the C++ doesn't fully namespace the enumeration, extension compilation
       # will fail because g++ can't find the enumeration.
@@ -163,9 +163,10 @@ module RbPlusPlus
       # for an example.
       def fix_enumeration_value(enum, default_value)
         enum_values = [enum.values].flatten
+        just_base_name = default_value.split("::").last
         found =
           enum_values.select do |enum_value|
-            enum_value.name == default_value
+            enum_value.name == default_value || enum_value.name == just_base_name
           end.first
 
         found ? found.qualified_name : default_value
