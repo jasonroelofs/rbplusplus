@@ -1,4 +1,4 @@
-require 'generated/my_math'
+require './generated/my_math'
 
 m = MyMath.new
 
