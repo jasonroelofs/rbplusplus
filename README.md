@@ -14,7 +14,7 @@ many thanks to Roman for his work, the major inspiration for this library.
 == Requirements
 
 * rbgccxml
-* rice (http://rice.rubyforge.org)
+* rice (http://jasonroelofs.github.io/rice)
 
 == Installation
 
