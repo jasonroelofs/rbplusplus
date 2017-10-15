@@ -116,8 +116,6 @@ describe "Single file writer with to_from_ruby" do
   end
 
   specify "should have compiled properly" do
-    lambda do
-      require 'to_from_ruby'
-    end.should_not raise_error(LoadError)
+    require 'to_from_ruby'
   end
 end

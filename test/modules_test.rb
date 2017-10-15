@@ -42,28 +42,21 @@ describe "Extension with modules" do
   end
 
   specify "should be able to generate a module definition" do
-    lambda { Empty }.should_not raise_error(NameError)
-
     Empty.class.should == Module
   end
 
   specify "should wrap up C++ classes under the namespace as requested" do
-    lambda { Adder }.should raise_error(NameError)
-    lambda { Wrapper::Adder }.should_not raise_error(NameError)
-
     a = Wrapper::Adder.new
     a.get_class_name.should == "Adder"
   end
 
   specify "should wrap up C++ functions in the module" do
-    lambda { Functions }.should_not raise_error(NameError)
     Functions::test2(2).should be_within(0.001).of(1.0)
     Functions::test3(4, 6).should == 4
   end
 
   specify "should be able to nest modules and related definitions" do
     lambda { Subtracter }.should raise_error(NameError)
-    lambda { Nested::Nested::Inner::Subtracter }.should_not raise_error(NameError)
 
     s = Nested::Nested::Inner::Subtracter.new
     s.get_class_name.should == "Subtracter"

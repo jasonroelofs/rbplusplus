@@ -121,29 +121,25 @@ describe "Compiler settings" do
   end
 
   specify "should pass cxxflags to rbgccxml" do
-    lambda do
-      e = Extension.new "parsing_test" 
-      e.working_dir = full_dir("generated")
-      e.sources full_dir("headers/requires_define.h"),
-        :cxxflags => "-DMUST_BE_DEFINED"
-      e.build
-      e.write
-    end.should_not raise_error
+    e = Extension.new "parsing_test" 
+    e.working_dir = full_dir("generated")
+    e.sources full_dir("headers/requires_define.h"),
+      :cxxflags => "-DMUST_BE_DEFINED"
+    e.build
+    e.write
   end
 
   specify "should be able to add additional headers as needed" do
-    lambda do
-      e = Extension.new "external" 
-      e.working_dir = full_dir("generated")
-      e.sources full_dir("headers/external_mapping.h"), 
-        :includes => full_dir("headers/*rice.h")
-      e.build
-      e.write
+    e = Extension.new "external" 
+    e.working_dir = full_dir("generated")
+    e.sources full_dir("headers/external_mapping.h"), 
+      :includes => full_dir("headers/*rice.h")
+    e.build
+    e.write
 
-      file = full_dir("generated/external.rb.cpp")
-      contents = File.read(file)
-      contents.should =~ %r(headers/external_mapping_rice.h)
-    end.should_not raise_error
+    file = full_dir("generated/external.rb.cpp")
+    contents = File.read(file)
+    contents.should =~ %r(headers/external_mapping_rice.h)
   end
 
   specify "can specify other source files to be compiled into the extension" do

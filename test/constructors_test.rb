@@ -15,14 +15,12 @@ describe "Extension with constructors out the whazoo" do
 
     require 'constructors'
 
-    lambda do
-      # Test complex constructors
-      d = DoubleStringHolder.new("one", "two")
-      one = d.get_one
-      d.get_one.should == "one"
-      d.get_two.should == "two"
-    end.should_not raise_error(NameError)
-    
+    # Test complex constructors
+    d = DoubleStringHolder.new("one", "two")
+    one = d.get_one
+    d.get_one.should == "one"
+    d.get_two.should == "two"
+
     lambda do
       PrivateConstructor.new
     end.should raise_error(TypeError)

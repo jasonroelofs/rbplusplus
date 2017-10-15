@@ -17,8 +17,6 @@ describe "Wrapping enumerations" do
   end
 
   specify "should wrap up enums properly" do
-    lambda { TestEnum }.should_not raise_error(NameError)
-
     TestEnum::VALUE1.to_i.should == 0
     TestEnum::VALUE2.to_i.should == 1
     TestEnum::VALUE3.to_i.should == 2
@@ -30,16 +28,12 @@ describe "Wrapping enumerations" do
   end
 
   specify "should wrap up enumerations at proper nesting" do
-    lambda { Tester::MyEnum }.should_not raise_error(NameError)
-
     Tester::MyEnum::I_LIKE_MONEY.to_i.should == 3
     Tester::MyEnum::YOU_LIKE_MONEY_TOO.to_i.should == 4
     Tester::MyEnum::I_LIKE_YOU.to_i.should == 7
   end
 
   specify "should work in user-defined modules" do
-    lambda { Mod::InnerEnum }.should_not raise_error(NameError)
-
     Mod::InnerEnum::INNER_1.to_i.should == 0
     Mod::InnerEnum::INNER_2.to_i.should == 1
   end
@@ -63,11 +57,6 @@ describe "Wrapping enumerations" do
   end
 
   specify "anonymous enumerations' values are added as constants to the parent class" do
-    lambda { Tester::ANON_ENUM_VAL1 }.should_not raise_error(NameError)
-    lambda { Tester::ANON_ENUM_VAL2 }.should_not raise_error(NameError)
-    lambda { Tester::ANON_ENUM_VAL3 }.should_not raise_error(NameError)
-    lambda { Tester::ANON_ENUM_VAL4 }.should_not raise_error(NameError)
-
     Tester::ANON_ENUM_VAL1.should == 1
     Tester::ANON_ENUM_VAL2.should == 2
     Tester::ANON_ENUM_VAL3.should == 5
@@ -75,11 +64,6 @@ describe "Wrapping enumerations" do
   end
 
   specify "top-level anonymous enumerations' values are added to the global scope" do
-    lambda { OUTER_ANON_1 }.should_not raise_error(NameError)
-    lambda { OUTER_ANON_2 }.should_not raise_error(NameError)
-    lambda { FOURTY_TWO }.should_not raise_error(NameError)
-    lambda { SEPERATE_OUTER_VALUE }.should_not raise_error(NameError)
-
     OUTER_ANON_1.should == 0
     OUTER_ANON_2.should == 1
     FOURTY_TWO.should == 42

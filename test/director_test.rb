@@ -58,9 +58,7 @@ describe "Director proxy generation" do
       end
     end
 
-    lambda do
-      SuperGoodWorker.new.do_something(10).should == 50
-    end.should_not raise_error(NotImplementedError)
+    SuperGoodWorker.new.do_something(10).should == 50
   end
 
   specify "can specify a default return value in the wrapper" do
@@ -86,12 +84,12 @@ describe "Director proxy generation" do
   specify "properly adds all constructor arguments" do
     v = VirtualWithArgs.new 14, true
     v.process_a("hi").should == 16
-    v.process_b.should be_true
+    v.process_b.should eq(true)
   end
 
   specify "takes into account renamed methods / classes" do
     c = BetterNamedClass.new
-    c.x_ok?.should_not be_true
+    c.x_ok?.should_not eq(true)
 
     c.do_processing.should == 14
   end
@@ -162,9 +160,6 @@ describe "Director proxy generation" do
   end
 
   specify "multiple files writer properly handles directors and nested nodes" do
-    lambda { Worker::ZeeEnum }.should_not raise_error(NameError)
-    lambda { Worker::ZeeEnum::VALUE }.should_not raise_error(NameError)
-
     Worker::ZeeEnum::VALUE.to_i.should == 4
   end
 

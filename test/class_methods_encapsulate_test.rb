@@ -22,7 +22,7 @@ describe "Correct handling of encapsulated methods" do
       ext.protected_method
     end.should raise_error(NoMethodError)
   end
-  
+
   specify "should handle virtual methods" do
     ext_factory = ExtendedFactory.new
     ext = ext_factory.new_instance
@@ -42,18 +42,14 @@ describe "Correct handling of encapsulated methods" do
       arg.wrap_me_protected
     end.should raise_error(NoMethodError)
 
-    lambda do
-      arg.wrap_me_public ArgumentAccess::PublicStruct.new
-    end.should_not raise_error(NoMethodError)
-    
+    arg.wrap_me_public ArgumentAccess::PublicStruct.new
+
     # Multiple argument methods
     lambda do
       arg.wrap_me_many_no
     end.should raise_error(NoMethodError)
 
-    lambda do
-      arg.wrap_me_many_yes(1, 2.0, ArgumentAccess::PublicStruct.new)
-    end.should_not raise_error(NoMethodError)
+    arg.wrap_me_many_yes(1, 2.0, ArgumentAccess::PublicStruct.new)
   end
 end
 
